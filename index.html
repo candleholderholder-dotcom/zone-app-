@@ -1643,7 +1643,10 @@
             } else if (status === 'reject') {
                 switchActiveScreen('wait-screen');
 
-                // حقن تصميم الرفض والسبب والزر الفخم في الشاشة الكاملة
+                // تعريف المتغير وجلب النص المكتوب لضمان عدم تعليق الشاشة
+                const finalReason = typeof reasonText !== 'undefined' && reasonText !== '' ? reasonText : 'يرجى مراجعة الإدارة';
+
+                // حقن التصميم الفخم في الشاشة الكاملة مباشرة
                 document.getElementById('wait-screen').innerHTML = `
         <div style="background: #071220; border: 1.5px solid #ff4a4a; border-radius: 14px; 
                     padding: 40px 24px; text-align: center; direction: rtl; max-width: 480px; 
@@ -1655,7 +1658,7 @@
             <p style="color: #f0f5ff; font-size: 16px; background: #0f1c2e; padding: 16px; 
                       border-radius: 10px; border-right: 4px solid #ff4a4a; text-align: right; 
                       margin-bottom: 26px; line-height: 1.6; word-break: break-word;">
-                ${reasonText}
+                \${finalReason}
             </p>
             
             <button onclick="location.reload()" 
@@ -1667,6 +1670,7 @@
         </div>
     `;
             }
+
 
 
         }
