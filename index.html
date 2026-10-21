@@ -836,7 +836,10 @@
                 </div>
 
                 <!-- نموذج إنشاء حساب جديد -->
-                <form id="reg-form" style="display: none;" onsubmit="event.preventDefault(); proceedToSubscription();">
+                <form id="reg-form" novalidate style="display: none;"
+                    onsubmit="event.preventDefault(); if(this.checkValidity()){ proceedToSubscription(); }else{ showCustomToast(); }">
+
+
                     <div class="form-row">
                         <label>الاسم الكامل</label>
                         <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي" required>
@@ -846,7 +849,7 @@
                         <input type="tel" id="reg-phone" placeholder="09xxxxxxxx" required>
                     </div>
                     <div class="form-row">
-                        <label>المحافظة (الـ 14 محافظة سورية كاملة)</label>
+                        <label>المحافظة </label>
                         <select id="reg-city" required>
                             <option value="دمشق">دمشق</option>
                             <option value="ريف دمشق">ريف دمشق</option>
@@ -890,72 +893,77 @@
                         التالي <i class="fa-solid fa-arrow-left"></i>
                     </button>
                 </form>
+                <form id="login-form" novalidate
+                    onsubmit="event.preventDefault(); if(this.checkValidity()){ performLogin(); }else{ showCustomToast(); }">
 
-                <!-- نموذج تسجيل الدخول -->
-                <form id="login-form" onsubmit="event.preventDefault(); performLogin();">
-                    <div class="form-row">
-                        <label>رقم الهاتف</label>
-                        <input type="tel" id="login-phone" placeholder="09xxxxxxxx" required>
-                    </div>
-                    <div class="form-row">
-                        <label>كلمة المرور</label>
-                        <div class="pass-input-box">
-                            <input type="password" id="login-password" placeholder="••••••••" required>
-                            <i class="fa-solid fa-eye pass-eye-icon"
-                                onclick="togglePassEye('login-password', this)"></i>
-                        </div>
-                    </div>
-                    <div style="text-align: left; margin: 10px 0 16px 0;">
-                        <a href="javascript:void(0)" onclick="openResetPasswordFlow()"
-                            style="color: var(--accent-turquoise); font-size: 13.5px; text-decoration: none;">هل نسيت
-                            كلمة المرور؟</a>
-                    </div>
-                    <button type="submit" class="btn-action-primary">دخول إلى المنصة</button>
-                </form>
-
-                <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
-                <div id="reset-flow-container" style="display: none;">
-                    <div id="reset-stage-1">
-                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">أدخل رقم هاتفك المسجل
-                            لإرسال رمز التأكيد لحساب التلغرام الخاص بك مباشرة:</p>
+                    <!-- نموذج تسجيل الدخول -->
+                    <form id="login-form" novalidate onsubmit="event.preventDefault(); performLogin();">
                         <div class="form-row">
-                            <input type="tel" id="reset-phone-input" placeholder="09xxxxxxxx">
+                            <label>رقم الهاتف</label>
+                            <input type="tel" id="login-phone" placeholder="09xxxxxxxx" required>
                         </div>
-                        <button class="btn-action-primary" onclick="requestResetOtp()">إرسال كود التحقق</button>
-                    </div>
-
-                    <div id="reset-stage-2" style="display: none; text-align: center;">
-                        <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون من 5 أرقام المرسل
-                            لحسابك:</p>
-                        <div class="otp-inputs-flex">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-1" oninput="stepOtp(1)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-2" oninput="stepOtp(2)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-3" oninput="stepOtp(3)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-4" oninput="stepOtp(4)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-5" oninput="stepOtp(5)">
-                        </div>
-                    </div>
-
-                    <div id="reset-stage-3" style="display: none;">
                         <div class="form-row">
-                            <label>كلمة المرور الجديدة</label>
+                            <label>كلمة المرور</label>
                             <div class="pass-input-box">
-                                <input type="password" id="new-reset-pass" placeholder="••••••••">
+                                <input type="password" id="login-password" placeholder="••••••••" required>
                                 <i class="fa-solid fa-eye pass-eye-icon"
-                                    onclick="togglePassEye('new-reset-pass', this)"></i>
+                                    onclick="togglePassEye('login-password', this)"></i>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <label>تأكيد كلمة المرور</label>
-                            <div class="pass-input-box">
-                                <input type="password" id="confirm-reset-pass" placeholder="••••••••">
-                                <i class="fa-solid fa-eye pass-eye-icon"
-                                    onclick="togglePassEye('confirm-reset-pass', this)"></i>
+                        <div style="text-align: left; margin: 10px 0 16px 0;">
+                            <a href="javascript:void(0)" onclick="openResetPasswordFlow()"
+                                style="color: var(--accent-turquoise); font-size: 13.5px; text-decoration: none;">هل
+                                نسيت
+                                كلمة المرور؟</a>
+                        </div>
+                        <button type="submit" class="btn-action-primary">دخول إلى المنصة</button>
+                    </form>
+
+                    <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
+                    <div id="reset-flow-container" style="display: none;">
+                        <div id="reset-stage-1">
+                            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">أدخل رقم هاتفك
+                                المسجل
+                                لإرسال رمز التأكيد لحساب التلغرام الخاص بك مباشرة:</p>
+                            <div class="form-row">
+                                <input type="tel" id="reset-phone-input" placeholder="09xxxxxxxx">
+                            </div>
+                            <button class="btn-action-primary" onclick="requestResetOtp()">إرسال كود التحقق</button>
+                        </div>
+
+                        <div id="reset-stage-2" style="display: none; text-align: center;">
+                            <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون من 5 أرقام المرسل
+                                لحسابك:</p>
+                            <div class="otp-inputs-flex">
+                                <input type="text" maxlength="1" class="otp-box-digit" id="otp-1" oninput="stepOtp(1)">
+                                <input type="text" maxlength="1" class="otp-box-digit" id="otp-2" oninput="stepOtp(2)">
+                                <input type="text" maxlength="1" class="otp-box-digit" id="otp-3" oninput="stepOtp(3)">
+                                <input type="text" maxlength="1" class="otp-box-digit" id="otp-4" oninput="stepOtp(4)">
+                                <input type="text" maxlength="1" class="otp-box-digit" id="otp-5" oninput="stepOtp(5)">
                             </div>
                         </div>
-                        <button class="btn-action-primary" onclick="finalizeNewPassword()">تغيير كلمة المرور</button>
+
+                        <div id="reset-stage-3" style="display: none;">
+                            <div class="form-row">
+                                <label>كلمة المرور الجديدة</label>
+                                <div class="pass-input-box">
+                                    <input type="password" id="new-reset-pass" placeholder="••••••••">
+                                    <i class="fa-solid fa-eye pass-eye-icon"
+                                        onclick="togglePassEye('new-reset-pass', this)"></i>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>تأكيد كلمة المرور</label>
+                                <div class="pass-input-box">
+                                    <input type="password" id="confirm-reset-pass" placeholder="••••••••">
+                                    <i class="fa-solid fa-eye pass-eye-icon"
+                                        onclick="togglePassEye('confirm-reset-pass', this)"></i>
+                                </div>
+                            </div>
+                            <button class="btn-action-primary" onclick="finalizeNewPassword()">تغيير كلمة
+                                المرور</button>
+                        </div>
                     </div>
-                </div>
 
             </div>
         </div>
@@ -1523,12 +1531,13 @@
             const actionButtons = {
                 inline_keyboard: [
                     [
-                        { text: '✅ قبول', callback_data: `accept_${pendingUserData.phone}` },
-                        { text: '❌ رفض', callback_data: `reject_${pendingUserData.phone}` }
+                        { text: '✅ قبول الحساب', callback_data: `accept_${pendingUserData.phone}` },
+                        { text: '❌ رفض الحساب', callback_data: `ask_reject_${pendingUserData.phone}` }
                     ],
                     [
                         { text: '🎁 تفعيل الحساب مجاناً', callback_data: `gift_${pendingUserData.phone}` }
                     ]
+
                 ]
             };
 
@@ -1562,10 +1571,26 @@
                                         applyDecision('accept');
                                     } else if (action.startsWith('gift_')) {
                                         applyDecision('gift');
-                                    } else if (action.startsWith('reject_')) {
-                                        applyDecision('reject', 'عدم وضوح إشعار تحويل شام كاش');
+                                    } else if (action.startsWith('ask_reject_')) {
+                                        // إرسال رسالة للمشرف يطلب منه كتابة السبب رداً عليها
+                                        const userPhone = action.replace('ask_reject_', '');
+                                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                chat_id: ADMIN_CHAT_ID,
+                                                text: `📝 يرجى كتابة سبب الرفض في رسالة قادمة تبدأ بكلمة (سبب) متبوعة بمسافة ثم السبب.\nمثال:\nسبب الحساب وهمي\n\n(رقم الهاتف المستهدف: ${userPhone})`
+                                            })
+                                        });
                                     }
+
                                 }
+                                // الكود الذكي لقراءة سبب الرفض المكتوب في تليجرام
+                                if (update.message && update.message.text && update.message.text.startsWith('سبب ')) {
+                                    const reasonText = update.message.text.replace('سبب ', '').trim();
+                                    applyDecision('reject', reasonText);
+                                }
+
                             });
                         }
                     }).catch(() => { });
@@ -1590,20 +1615,60 @@
 
                 activeSession = alasql('SELECT * FROM platform_users WHERE phone = ?', [pendingUserData.phone])[0];
 
-                if (status === 'accept') {
-                    headerTitle.innerHTML = `<span style="color: var(--success);"><i class="fa-solid fa-circle-check"></i> تم تفعيل حسابك بنجاح!</span>`;
-                } else {
-                    headerTitle.innerHTML = `<span style="color: var(--turquoise-light);"><i class="fa-solid fa-gift"></i> تم تفعيل حسابك مجاناً!</span>`;
+                if (status === 'accept' || status === 'gift') {
+                    switchActiveScreen('wait-screen');
+
+                    // حقن التصميم الفخم في الشاشة الكاملة مباشرة
+                    document.getElementById('wait-screen').innerHTML = `
+        <div style="background: #071220; border: 1.5px solid #33E0E6; border-radius: 14px; 
+                    padding: 40px 24px; text-align: center; direction: rtl; max-width: 480px; 
+                    margin: 80px auto; box-shadow: 0 10px 30px rgba(51, 224, 230, 0.05); font-family: sans-serif;">
+            
+            <div style="font-size: 50px; margin-bottom: 20px;">✅</div>
+            <h3 style="color: #33E0E6; margin-bottom: 26px; font-size: 22px; font-weight: bold;">
+                ${status === 'gift' ? 'تم تفعيل حسابك مجاناً!' : 'تم قبول حسابك بنجاح!'}
+            </h3>
+            
+            <button onclick="location.reload()" 
+                    style="width: 100%; background: #33E0E6; color: #050d1a; font-weight: bold; 
+                           padding: 16px; border: none; border-radius: 10px; cursor: pointer; 
+                           font-size: 16px; box-shadow: 0 4px 20px rgba(51, 224, 230, 0.15);">
+                تصفير الحساب
+            </button>
+        </div>
+    `;
                 }
 
-                setTimeout(() => {
-                    loadMainProductsFeed();
-                    switchActiveScreen('home-screen');
-                }, 1800);
 
             } else if (status === 'reject') {
-                headerTitle.innerHTML = `<span style="color: var(--danger);"><i class="fa-solid fa-circle-xmark"></i> تم رفض الحساب بسبب: ${reasonText}</span>`;
+                switchActiveScreen('wait-screen');
+
+                // حقن تصميم الرفض والسبب والزر الفخم في الشاشة الكاملة
+                document.getElementById('wait-screen').innerHTML = `
+        <div style="background: #071220; border: 1.5px solid #ff4a4a; border-radius: 14px; 
+                    padding: 40px 24px; text-align: center; direction: rtl; max-width: 480px; 
+                    margin: 80px auto; box-shadow: 0 10px 30px rgba(255, 74, 74, 0.05); font-family: sans-serif;">
+            
+            <div style="font-size: 50px; margin-bottom: 20px;">❌</div>
+            <h3 style="color: #ff4a4a; margin-bottom: 16px; font-size: 22px; font-weight: bold;">تم رفض حسابك بسبب:</h3>
+            
+            <p style="color: #f0f5ff; font-size: 16px; background: #0f1c2e; padding: 16px; 
+                      border-radius: 10px; border-right: 4px solid #ff4a4a; text-align: right; 
+                      margin-bottom: 26px; line-height: 1.6; word-break: break-word;">
+                ${reasonText}
+            </p>
+            
+            <button onclick="location.reload()" 
+                    style="width: 100%; background: #33E0E6; color: #050d1a; font-weight: bold; 
+                           padding: 16px; border: none; border-radius: 10px; cursor: pointer; 
+                           font-size: 16px; box-shadow: 0 4px 20px rgba(51, 224, 230, 0.15);">
+                العودة لمراجعة البيانات
+            </button>
+        </div>
+    `;
             }
+
+
         }
 
         /* =========================================================
@@ -1872,6 +1937,42 @@
             switchActiveScreen('auth-screen');
             toggleAuth('login');
         }
+        // دالة إظهار التنبيه التركوازي بظل لوني خفيف جداً ومقاس مرتاح
+        function showCustomToast() {
+            const oldToast = document.querySelector('.custom-toast');
+            if (oldToast) oldToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+
+            // مقاس طويل ومرتاح، لون تركوازي فاتح، مع لمسة ظل لوني خافتة وناعمة جداً
+            toast.innerHTML = `
+        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
+                    background: #0b1a2d; 
+                    border: 1.5px solid #33E0E6; border-radius: 12px; 
+                    min-width: 450px; padding: 18px 36px; 
+                    display: flex; align-items: center; justify-content: center; gap: 16px; 
+                    box-shadow: 0 8px 24px rgba(51, 224, 230, 0.08); 
+                    z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1); 
+                    color: #fff; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; direction: rtl;">
+            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 22px;"></i>
+            <span style="font-weight: 500; font-size: 16px; white-space: nowrap; color: #f0f5ff;">
+                يرجى تكملة تعبئة المعلومات
+            </span>
+        </div>
+    `;
+
+            document.body.appendChild(toast);
+            const toastInner = toast.querySelector('div');
+
+            setTimeout(() => { toastInner.style.top = '32px'; }, 50);
+
+            setTimeout(() => {
+                toastInner.style.top = '-120px';
+                setTimeout(() => { toast.remove(); }, 500);
+            }, 3800);
+        }
+
     </script>
 </body>
 
