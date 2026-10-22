@@ -1954,6 +1954,81 @@
                 setTimeout(() => { toast.remove(); }, 500);
             }, 3800);
         }
+        // تحويل قائمة المحافظات الرمادية إلى نافذة كحلية تركوازية فخمة
+        document.addEventListener('DOMContentLoaded', () => {
+            const citySelect = document.getElementById('reg-city');
+            if (!citySelect) return;
+
+            // إخفاء القائمة الرمادية الأصلية وإنشاء زر فخم مكانها
+            citySelect.style.display = 'none';
+            const customBtn = document.createElement('div');
+            customBtn.style.cssText = `
+        width: 100%; padding: 13px 16px; background-color: var(--card-navy, #0b1a2d);
+        border: 1.5px solid var(--border-navy, #1b314e); border-radius: 12px; color: #fff;
+        font-size: 14.5px; cursor: pointer; display: flex; justify-content: space-between;
+        align-items: center; font-family: 'Cairo', sans-serif; transition: 0.3s;
+    `;
+            customBtn.innerHTML = `<span id="selected-city-text">${citySelect.value || 'اختر المحافظة'}</span> <i class="fas fa-chevron-down" style="color: #33E0E6; font-size: 14px;"></i>`;
+            citySelect.parentNode.insertBefore(customBtn, citySelect.nextSibling);
+
+            // إنشاء نافذة اختيار المحافظة بألوان التطبيق الكحلية والتركوازية
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+        position: fixed; inset: 0; background: rgba(5, 13, 26, 0.85); backdrop-filter: blur(6px);
+        display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px; direction: rtl;
+    `;
+
+            let optionsHtml = '';
+            Array.from(citySelect.options).forEach(opt => {
+                optionsHtml += `
+            <div class="custom-city-opt" data-val="${opt.value}" style="
+                padding: 14px 18px; margin-bottom: 8px; background: #0f223a; border: 1px solid #1b314e;
+                border-radius: 10px; color: #f0f5ff; font-family: 'Cairo', sans-serif; font-size: 15px;
+                font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
+            ">
+                <span>${opt.text}</span>
+                <i class="fas fa-location-dot" style="color: #33E0E6; opacity: 0.7;"></i>
+            </div>
+        `;
+            });
+
+            modal.innerHTML = `
+        <div style="background: #071220; border: 1.5px solid #33E0E6; border-radius: 18px; width: 100%; max-width: 400px; max-height: 75vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(51, 224, 230, 0.15); overflow: hidden;">
+            <div style="padding: 18px 20px; border-bottom: 1px solid #1b314e; display: flex; justify-content: space-between; align-items: center; background: #0b1a2d;">
+                <h3 style="color: #33E0E6; font-family: 'Cairo', sans-serif; font-size: 17px; margin: 0;">اختر المحافظة</h3>
+                <i class="fas fa-xmark" id="close-city-modal" style="color: #8a9fc2; font-size: 20px; cursor: pointer;"></i>
+            </div>
+            <div style="padding: 16px; overflow-y: auto;">
+                ${optionsHtml}
+            </div>
+        </div>
+    `;
+            document.body.appendChild(modal);
+
+            // فتح النافذة عند الضغط
+            customBtn.onclick = () => {
+                customBtn.style.borderColor = '#33E0E6';
+                customBtn.style.boxShadow = '0 0 12px rgba(51, 224, 230, 0.25)';
+                modal.style.display = 'flex';
+            };
+
+            // إغلاق النافذة
+            modal.querySelector('#close-city-modal').onclick = () => { modal.style.display = 'none'; };
+            modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+            // عند اختيار محافظة
+            modal.querySelectorAll('.custom-city-opt').forEach(item => {
+                item.onmouseover = () => { item.style.borderColor = '#33E0E6'; item.style.background = '#132b47'; };
+                item.onmouseout = () => { item.style.borderColor = '#1b314e'; item.style.background = '#0f223a'; };
+                item.onclick = () => {
+                    const val = item.getAttribute('data-val');
+                    citySelect.value = val;
+                    document.getElementById('selected-city-text').innerText = val;
+                    modal.style.display = 'none';
+                };
+            });
+        });
+
 
     </script>
 </body>
