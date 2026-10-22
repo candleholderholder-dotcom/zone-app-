@@ -1466,17 +1466,32 @@
         }
 
         function requestResetOtp() {
-            const ph = document.getElementById('reset-phone-input').value.trim();
+            let ph = document.getElementById('reset-phone-input').value.trim();
             if (!ph) {
-                alert('يرجى إدخال رقم الهاتف المسجل');
+                showCustomToast(); // تشغيل الرسالة المستطيلة لتنبيه تعبئة الحقول
                 return;
             }
 
-            const user = alasql('SELECT * FROM platform_users WHERE phone = ?', [ph])[0];
+            // توحيد وتجهيز صيغة الرقم للبحث بالصيغتين المحلية والدولية معاً
+            let localPhone = ph;
+            let internationalPhone = ph;
+            if (ph.startsWith('+963')) {
+                localPhone = '0' + ph.substring(4);
+            } else if (ph.startsWith('00963')) {
+                localPhone = '0' + ph.substring(5);
+            } else if (ph.startsWith('09')) {
+                internationalPhone = '+963' + ph.substring(1);
+            }
+
+            // البحث الذكي بالصيغتين
+            const users = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
+            const user = users && users[0];
+
             if (!user || !user.tg_chat_id) {
-                alert('لم يتم العثور على حساب مرتبط بتلغرام لهذا الرقم! يرجى التواصل مع الدعم.');
+                showAccountNotFoundToast(); // تشغيل الرسالة المستطيلة المتطابقة مية بالمية لعدم وجود الحساب
                 return;
             }
+
 
             generatedOtpCode = Math.floor(10000 + Math.random() * 90000).toString();
 
