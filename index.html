@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ZONE</title>
+    <link rel="preload" as="image" href="./logo/logo.jpg" fetchpriority="high">
 
     <!-- خط Cairo المعتمد لكامل المنصة -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -810,9 +811,9 @@
             <!-- الصورة مقصوصة الحواف الزائدة بنظافة -->
             <div
                 style="width: 144px; height: 144px; border-radius: 29px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
-                <img src="./logo/logo.png"
-                    onerror="if(this.src.includes('logo.png')) this.src='./logo/logo.PNG'; else if(this.src.includes('logo.PNG')) this.src='./logo/logo.jpg'; else if(this.src.includes('logo.jpg')) this.src='./logo/logo.JPG';"
-                    alt="ZONE" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
+                <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
+                    style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
+
 
             </div>
             <!-- الخط التركوازي الذي يمشي حول حواف المربع حتى يكتمل -->
@@ -1052,9 +1053,8 @@
                     <!-- الصورة مقصوصة الحواف الزائدة بنظافة -->
                     <div
                         style="width: 42px; height: 42px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
-                        <img src="./logo/logo.png"
-                            onerror="if(this.src.includes('logo.png')) this.src='./logo/logo.PNG'; else if(this.src.includes('logo.PNG')) this.src='./logo/logo.jpg'; else if(this.src.includes('logo.jpg')) this.src='./logo/logo.JPG';"
-                            alt="ZONE" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
+                        <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
+                            style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
 
                     </div>
                     <!-- الخط التركوازي الذي يمشي حول حواف شعار الهيدر حتى يكتمل -->
