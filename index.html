@@ -2059,6 +2059,43 @@
                 };
             });
         });
+        // دالة إظهار تنبيه عدم العثور على الحساب بنفس شكل ومقاس تنبيه تعبئة المعلومات تماماً
+        function showAccountNotFoundToast() {
+            const oldToast = document.querySelector('.account-not-found-toast');
+            if (oldToast) oldToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'account-not-found-toast';
+
+            // مقاس مستطيل متطابق 100% بالملي: مرن (width: 88%) ومحمي بخط Cairo العريض والاحترافي
+            toast.innerHTML = `
+        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
+                    background: #0b1a2d; 
+                    border: 1.5px solid #33E0E6; border-radius: 14px; 
+                    width: 88%; max-width: 450px; padding: 18px 16px; 
+                    display: flex; align-items: center; justify-content: center; gap: 12px; 
+                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15); 
+                    z-index: 999999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
+                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+            <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+                لم يتم العثور على الحساب المرتبط بهذا الرقم
+            </span>
+        </div>
+    `;
+
+            document.body.appendChild(toast);
+            const toastInner = toast.querySelector('div');
+
+            // النزول بنفس الارتفاع المتطابق لتبدو مستطيلة عائمة مستقلة
+            setTimeout(() => { toastInner.style.top = '35px'; }, 50);
+
+            setTimeout(() => {
+                toastInner.style.top = '-120px';
+                setTimeout(() => { toast.remove(); }, 500);
+            }, 4000);
+        }
+
 
 
     </script>
