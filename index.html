@@ -91,19 +91,17 @@
         }
 
         .splash-logo-wrapper {
-            width: 170px;
-            height: 170px;
-            aspect-ratio: 1 / 1;
-            background: linear-gradient(145deg, #0d1e33, #071220);
-            border: 2px solid var(--accent-turquoise);
-            border-radius: 40px;
-            box-shadow: 0 0 50px var(--turquoise-glow);
+            width: 150px;
+            height: 150px;
+            border-radius: 32px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 25px;
-            padding: 16px;
+            box-shadow: 0 8px 25px rgba(0, 173, 181, 0.15);
         }
+
 
         .splash-logo-wrapper svg {
             width: 100%;
@@ -807,21 +805,30 @@
 
     <!-- 1. الشاشة الترحيبية Splash Screen -->
     <div id="splash-screen">
-        <div class="splash-logo-wrapper">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" rx="22" fill="#0b1b2d" />
-                <path d="M22 22 H78 V44 H48 L72 44 L30 68 H78 V82 H22 V60 H52 L28 60 L70 36 H22 Z"
-                    fill="url(#zoneTurqGrad)" />
-                <polygon points="32,46 72,46 60,39 72,46 60,53" fill="#00ADB5" />
-                <polygon points="68,58 28,58 40,51 28,58 40,65" fill="#39e5ee" />
-                <defs>
-                    <linearGradient id="zoneTurqGrad" x1="22" y1="22" x2="78" y2="82" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#00ADB5" />
-                        <stop offset="1" stop-color="#39e5ee" />
-                    </linearGradient>
-                </defs>
+        <div class="splash-logo-wrapper"
+            style="position: relative; width: 150px; height: 150px; border-radius: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; background: transparent; border: none; box-shadow: 0 0 25px rgba(51, 224, 230, 0.25);">
+            <!-- الصورة مقصوصة الحواف الزائدة بنظافة -->
+            <div
+                style="width: 144px; height: 144px; border-radius: 29px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                <img src="logo/logo.png" onerror="this.src='logo/logo.jpg'" alt="ZONE"
+                    style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
+            </div>
+            <!-- الخط التركوازي الذي يمشي حول حواف المربع حتى يكتمل -->
+            <svg
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 6px #33E0E6);">
+                <rect x="2" y="2" width="146" height="146" rx="30" ry="30" fill="none" stroke="#33E0E6"
+                    stroke-width="3.5" stroke-dasharray="600" stroke-dashoffset="600"
+                    style="animation: drawTurquoiseBorder 2s ease-out forwards;" />
             </svg>
+            <style>
+                @keyframes drawTurquoiseBorder {
+                    to {
+                        stroke-dashoffset: 0;
+                    }
+                }
+            </style>
         </div>
+
         <div class="splash-title-huge">ZONE</div>
     </div>
 
@@ -836,7 +843,9 @@
                 </div>
 
                 <!-- نموذج إنشاء حساب جديد -->
-                <form id="reg-form" style="display: none;" onsubmit="event.preventDefault(); proceedToSubscription();">
+                <form id="reg-form" novalidate style="display: none;"
+                    onsubmit="event.preventDefault(); if(this.checkValidity()){ proceedToSubscription(); }else{ showCustomToast(); }">
+
                     <div class="form-row">
                         <label>الاسم الكامل</label>
                         <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي" required>
@@ -846,7 +855,7 @@
                         <input type="tel" id="reg-phone" placeholder="09xxxxxxxx" required>
                     </div>
                     <div class="form-row">
-                        <label>المحافظة (الـ 14 محافظة سورية كاملة)</label>
+                        <label>المحافظة</label>
                         <select id="reg-city" required>
                             <option value="دمشق">دمشق</option>
                             <option value="ريف دمشق">ريف دمشق</option>
@@ -892,7 +901,9 @@
                 </form>
 
                 <!-- نموذج تسجيل الدخول -->
-                <form id="login-form" onsubmit="event.preventDefault(); performLogin();">
+                <form id="login-form" novalidate
+                    onsubmit="event.preventDefault(); if(this.checkValidity()){ performLogin(); }else{ showCustomToast(); }">
+
                     <div class="form-row">
                         <label>رقم الهاتف</label>
                         <input type="tel" id="login-phone" placeholder="09xxxxxxxx" required>
@@ -1034,22 +1045,30 @@
         <div class="layout-wrapper">
             <!-- الهيدر العلوي: ZONE وبجانبها الشعار مباشرة -->
             <header class="app-top-header">
-                <div class="header-logo-icon">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="100" height="100" rx="22" fill="#0b1b2d" />
-                        <path d="M22 22 H78 V44 H48 L72 44 L30 68 H78 V82 H22 V60 H52 L28 60 L70 36 H22 Z"
-                            fill="url(#hdrTurqGrad)" />
-                        <polygon points="32,46 72,46 60,39 72,46 60,53" fill="#00ADB5" />
-                        <polygon points="68,58 28,58 40,51 28,58 40,65" fill="#39e5ee" />
-                        <defs>
-                            <linearGradient id="hdrTurqGrad" x1="22" y1="22" x2="78" y2="82"
-                                gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#00ADB5" />
-                                <stop offset="1" stop-color="#39e5ee" />
-                            </linearGradient>
-                        </defs>
+                <div class="header-logo-icon"
+                    style="position: relative; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; box-shadow: 0 0 12px rgba(51, 224, 230, 0.2);">
+                    <!-- الصورة مقصوصة الحواف الزائدة بنظافة -->
+                    <div
+                        style="width: 42px; height: 42px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                        <img src="logo/logo.png" onerror="this.src='logo/logo.jpg'" alt="ZONE"
+                            style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
+                    </div>
+                    <!-- الخط التركوازي الذي يمشي حول حواف شعار الهيدر حتى يكتمل -->
+                    <svg
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 4px #33E0E6);">
+                        <rect x="1.5" y="1.5" width="43" height="43" rx="10.5" ry="10.5" fill="none" stroke="#33E0E6"
+                            stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200"
+                            style="animation: drawHeaderBorder 2s ease-out forwards;" />
                     </svg>
+                    <style>
+                        @keyframes drawHeaderBorder {
+                            to {
+                                stroke-dashoffset: 0;
+                            }
+                        }
+                    </style>
                 </div>
+
                 <div class="header-brand-title">ZONE</div>
             </header>
 
@@ -1872,6 +1891,46 @@
             switchActiveScreen('auth-screen');
             toggleAuth('login');
         }
+        // دالة إظهار التنبيه التركوازي الفخم الطويل والمستريح بظل خفيف جداً
+        function showCustomToast() {
+            // حذف التنبيه القديم إن وجد لمنع التكرار
+            const oldToast = document.querySelector('.custom-toast');
+            if (oldToast) oldToast.remove();
+
+            // إنشاء عنصر التنبيه الجديد
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+
+            // تصميم ممتد، مريح، غير مفعوس، بلون تركوازي فاتح وأيقونة احترافية هندسية وظل لوني خفيف جداً خلف الحواف
+            toast.innerHTML = `
+        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
+                    background: #0b1a2d; 
+                    border: 1.5px solid #33E0E6; border-radius: 12px; 
+                    min-width: 460px; padding: 20px 40px; 
+                    display: flex; align-items: center; justify-content: center; gap: 16px; 
+                    box-shadow: 0 8px 24px rgba(51, 224, 230, 0.08); 
+                    z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
+                    color: #fff; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; direction: rtl;">
+            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 22px;"></i>
+            <span style="font-weight: 500; font-size: 16px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+                يرجى تكملة تعبئة المعلومات
+            </span>
+        </div>
+    `;
+
+            document.body.appendChild(toast);
+            const toastInner = toast.querySelector('div');
+
+            // انزلاق سلس لأسفل
+            setTimeout(() => { toastInner.style.top = '32px'; }, 50);
+
+            // اختفاء التنبيه بعد 3.5 ثوانٍ والانزلاق لأعلى
+            setTimeout(() => {
+                toastInner.style.top = '-120px';
+                setTimeout(() => { toast.remove(); }, 500);
+            }, 3800);
+        }
+
     </script>
 </body>
 
