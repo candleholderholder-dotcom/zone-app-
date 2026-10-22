@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZONE</title>
+    <link rel="preload" as="image" href="./logo/logo.jpg" fetchpriority="high">
+
+    <!-- خط Cairo المعتمد لكامل المنصة -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- مكتبة FontAwesome للأيقونات الرسمية -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- محرك قواعد البيانات AlaSQL عبر CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/alasql@4.1.3/dist/alasql.min.js"></script>
+
+    <style>
+        :root {
+            --primary-navy: #07111e;
+            --surface-navy: #0e1d30;
+            --card-navy: #152740;
+            --border-navy: #1f3757;
+            --accent-turquoise: #00ADB5;
+            --turquoise-light: #39e5ee;
+            --turquoise-glow: rgba(0, 173, 181, 0.35);
+            --text-main: #f8fafc;
+            --text-muted: #8fa0b5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--primary-navy);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* نظام الشاشات وإخفاء السابقة كلياً لمنع ظهورها عند التمرير */
+        .screen-container {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            flex-direction: column;
+            animation: fadeInPage 0.35s ease-out forwards;
+        }
+
+        .screen-container.active-screen {
+            display: flex;
+        }
+
+        @keyframes fadeInPage {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 1. الشاشة الترحيبية Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #11253e 0%, var(--primary-navy) 100%);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .splash-logo-wrapper {
+            width: 150px;
+            height: 150px;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 173, 181, 0.15);
+        }
+
+
+        .splash-logo-wrapper svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .splash-title-huge {
+            font-size: 64px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: var(--accent-turquoise);
+            text-shadow: 0 0 30px var(--turquoise-glow);
+            line-height: 1;
+        }
+
+        /* الحاوية الأساسية المرنة */
+        .layout-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 20px 95px 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        /* 2. شاشات المصادقة والدخول */
+        .auth-card-box {
+            background-color: var(--surface-navy);
+            border: 1px solid var(--border-navy);
+            border-radius: 24px;
+            padding: 35px 28px;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-toggle-group {
+            display: flex;
+            background-color: var(--primary-navy);
+            border-radius: 14px;
+            padding: 5px;
+            margin-bottom: 26px;
+            border: 1px solid var(--border-navy);
+        }
+
+        .auth-toggle-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: var(--transition-smooth);
+        }
+
+        .auth-toggle-btn.active {
+            background-color: var(--accent-turquoise);
+            color: var(--primary-navy);
+            box-shadow: 0 4px 15px var(--turquoise-glow);
+        }
+
+        .form-row {
+            margin-bottom: 16px;
+        }
+
+        .form-row label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .form-row input,
+        .form-row select {
+            width: 100%;
+            padding: 13px 16px;
+            background-color: var(--card-navy);
+            border: 1.5px solid var(--border-navy);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14.5px;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .form-row input:focus,
+        .form-row select:focus {
+            border-color: var(--accent-turquoise);
+            box-shadow: 0 0 12px var(--turquoise-glow);
+        }
+
+        .pass-input-box {
+            position: relative;
+        }
+
+        .pass-eye-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .pass-eye-icon:hover {
+            color: var(--accent-turquoise);
+        }
+
+        .btn-action-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
+            border: none;
+            border-radius: 12px;
+            color: var(--primary-navy);
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px var(--turquoise-glow);
+            transition: var(--transition-smooth);
+        }
+
+        .btn-action-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 173, 181, 0.5);
+        }
+
+        .btn-tg-connect {
+            width: 100%;
+            padding: 13px;
+            background-color: rgba(0, 173, 181, 0.08);
+            border: 1.5px dashed var(--accent-turquoise);
+            border-radius: 12px;
+            color: var(--accent-turquoise);
+            font-weight: 700;
+            font-size: 14.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-tg-connect.success-linked {
+            background-color: rgba(16, 185, 129, 0.15);
+            border: 1.5px solid var(--success);
+            color: var(--success);
+            cursor: default;
+        }
+
+        /* مربعات OTP الخمسة */
+        .otp-inputs-flex {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 22px 0;
+            direction: ltr;
+        }
+
+        .otp-box-digit {
+            width: 50px;
+            height: 56px;
+            background-color: var(--card-navy);
+            border: 2px solid var(--border-navy);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .otp-box-digit.active-success {
+            border-color: var(--success) !important;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.6) !important;
+            color: var(--success);
+        }
+
+        /* 3. شاشة باقات الاشتراك */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .plan-item-box {
+            background-color: var(--surface-navy);
+            border: 2px solid var(--border-navy);
+            border-radius: 20px;
+            padding: 26px 20px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .plan-item-box:hover {
+            border-color: var(--accent-turquoise);
+            box-shadow: 0 10px 30px var(--turquoise-glow);
+            transform: translateY(-3px);
+        }
+
+        .discount-pill {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 14px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        /* نوافذ المودال */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(4, 10, 18, 0.88);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content-card {
+            background: var(--surface-navy);
+            border: 1px solid var(--border-navy);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 440px;
+            padding: 28px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            position: relative;
+        }
+
+        .qr-wrapper {
+            margin: 18px auto;
+            width: 210px;
+            height: 210px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(0, 173, 181, 0.3);
+            border: 2px solid var(--accent-turquoise);
+        }
+
+        .qr-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .verified-holder-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+
+        .verified-holder-info i {
+            color: #38bdf8;
+        }
+
+        /* شاشة معالجة الطلب (Spinner أنيق فقط) */
+        .wait-processing-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            min-height: 50vh;
+        }
+
+        .custom-loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border-navy);
+            border-top: 4px solid var(--accent-turquoise);
+            border-radius: 50%;
+            animation: spinCircle 1s linear infinite;
+            margin-bottom: 22px;
+        }
+
+        @keyframes spinCircle {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 4. الهيدر العلوي */
+        .app-top-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-navy);
+        }
+
+        .header-logo-icon {
+            width: 36px;
+            height: 36px;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-logo-icon svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .header-brand-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--accent-turquoise);
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        /* شاشة الفراغ (الشبح اللطيف) */
+        .ghost-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            min-height: 55vh;
+        }
+
+        .ghost-svg-holder {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+            animation: floatGhost 3.5s ease-in-out infinite;
+        }
+
+        @keyframes floatGhost {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-14px);
+            }
+        }
+
+        .ghost-lead-text {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .ghost-sub-text {
+            font-size: 15px;
+            color: var(--text-muted);
+            max-width: 380px;
+        }
+
+        /* كروت الإعلانات المعروضة */
+        .posts-responsive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .product-card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .product-card {
+            background-color: var(--surface-navy);
+            border: 1px solid var(--border-navy);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .product-card:hover {
+            border-color: var(--accent-turquoise);
+            box-shadow: 0 10px 25px var(--turquoise-glow);
+        }
+
+        .product-images-trio {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            height: 130px;
+            background-color: var(--primary-navy);
+        }
+
+        .product-images-trio img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .product-details {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--accent-turquoise);
+            margin-bottom: 12px;
+        }
+
+        .product-card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        /* شريط التراجع السفلي المستقل عند ضغط "تم البيع" */
+        .undo-countdown-bottom-bar {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1.5px solid var(--danger);
+            border-radius: 14px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: fadeInPage 0.25s ease;
+        }
+
+        .undo-left-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 13.5px;
+            font-weight: 700;
+        }
+
+        .undo-left-info i {
+            color: var(--danger);
+            font-size: 16px;
+        }
+
+        .undo-timer-badge {
+            background-color: var(--danger);
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .undo-revert-btn {
+            background-color: var(--card-navy);
+            border: 1px solid var(--danger);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .undo-revert-btn:hover {
+            background-color: var(--danger);
+        }
+
+        /* 3 مربعات رفع الصور */
+        .photo-uploader-triplet {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .photo-upload-slot {
+            height: 100px;
+            background-color: var(--card-navy);
+            border: 2px dashed var(--border-navy);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .photo-upload-slot:hover {
+            border-color: var(--accent-turquoise);
+        }
+
+        .photo-upload-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .photo-upload-slot i {
+            font-size: 22px;
+            color: var(--accent-turquoise);
+            margin-bottom: 4px;
+        }
+
+        .photo-upload-slot span {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* زر الدعم الفني العائم بشعار التلغرام */
+        .support-bubble-btn {
+            position: fixed;
+            bottom: 90px;
+            left: 25px;
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #00ADB5, #00838F);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            box-shadow: 0 6px 20px var(--turquoise-glow);
+            z-index: 4999;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .support-bubble-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* الشريط السفلي: خياران نصيان + زر (+) */
+        .bottom-app-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: rgba(7, 17, 30, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-navy);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 5000;
+            padding: 0 20px;
+        }
+
+        .nav-link-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            background: none;
+            border: none;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-link-btn i {
+            font-size: 19px;
+            margin-bottom: 4px;
+        }
+
+        .nav-link-btn.active {
+            color: var(--accent-turquoise);
+            text-shadow: 0 0 10px var(--turquoise-glow);
+        }
+
+        .nav-center-add {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-navy);
+            font-size: 24px;
+            box-shadow: 0 0 20px var(--turquoise-glow);
+            cursor: pointer;
+            transform: translateY(-16px);
+            border: 4px solid var(--primary-navy);
+            transition: var(--transition-smooth);
+        }
+
+        .nav-center-add:hover {
+            transform: translateY(-20px) scale(1.05);
+        }
+
+        /* نافذة اختيار التواصل (واتساب أو تليغرام) */
+        .contact-modal-choices {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .contact-choice-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #fff;
+            transition: var(--transition-smooth);
+        }
+
+        .contact-choice-btn.wa {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+
+        .contact-choice-btn.tg {
+            background: linear-gradient(135deg, #00ADB5, #00838F);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. الشاشة الترحيبية Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-logo-wrapper"
+            style="position: relative; width: 150px; height: 150px; border-radius: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; background: transparent; border: none; box-shadow: 0 0 25px rgba(51, 224, 230, 0.25);">
+            <!-- الصورة مقصوصة الحواف الزائدة بنظافة -->
+            <div
+                style="width: 144px; height: 144px; border-radius: 29px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
+                    style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
+
+
+            </div>
+            <!-- الخط التركوازي الذي يمشي حول حواف المربع حتى يكتمل -->
+            <svg
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 6px #33E0E6);">
+                <rect x="2" y="2" width="146" height="146" rx="30" ry="30" fill="none" stroke="#33E0E6"
+                    stroke-width="3.5" stroke-dasharray="600" stroke-dashoffset="600"
+                    style="animation: drawTurquoiseBorder 2s ease-out forwards;" />
+            </svg>
+            <style>
+                @keyframes drawTurquoiseBorder {
+                    to {
+                        stroke-dashoffset: 0;
+                    }
+                }
+            </style>
+        </div>
+
+        <div class="splash-title-huge">ZONE</div>
+    </div>
+
+    <!-- 2. شاشة تسجيل الدخول وإنشاء الحساب (الـ 14 محافظة سورية) -->
+    <div id="auth-screen" class="screen-container">
+        <div class="layout-wrapper" style="justify-content: center;">
+            <div class="auth-card-box">
+                <div class="auth-toggle-group">
+                    <button class="auth-toggle-btn active" id="tab-login-btn" onclick="toggleAuth('login')">تسجيل
+                        الدخول</button>
+                    <button class="auth-toggle-btn" id="tab-reg-btn" onclick="toggleAuth('reg')">حساب جديد</button>
+                </div>
+
+                <!-- نموذج إنشاء حساب جديد -->
+                <form id="reg-form" novalidate style="display: none;"
+                    onsubmit="event.preventDefault(); if(this.checkValidity()){ proceedToSubscription(); }else{ showCustomToast(); }">
+
+                    <div class="form-row">
+                        <label>الاسم الكامل</label>
+                        <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي" required>
+                    </div>
+                    <div class="form-row">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" id="reg-phone" placeholder="09xxxxxxxx" required>
+                    </div>
+                    <div class="form-row">
+                        <label>المحافظة</label>
+                        <select id="reg-city" required>
+                            <option value="دمشق">دمشق</option>
+                            <option value="ريف دمشق">ريف دمشق</option>
+                            <option value="حلب">حلب</option>
+                            <option value="حمص">حمص</option>
+                            <option value="حماة">حماة</option>
+                            <option value="اللاذقية">اللاذقية</option>
+                            <option value="طرطوس">طرطوس</option>
+                            <option value="إدلب">إدلب</option>
+                            <option value="دير الزور">دير الزور</option>
+                            <option value="الرقة">الرقة</option>
+                            <option value="الحسكة">الحسكة</option>
+                            <option value="درعا">درعا</option>
+                            <option value="السويداء">السويداء</option>
+                            <option value="القنيطرة">القنيطرة</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>الجامعة</label>
+                        <input type="text" id="reg-university" placeholder="اسم الجامعة أو المعهد" required>
+                    </div>
+                    <div class="form-row">
+                        <label>الفرع الدراسي</label>
+                        <input type="text" id="reg-major" placeholder="التخصص الجامعي" required>
+                    </div>
+                    <div class="form-row">
+                        <label>كلمة المرور</label>
+                        <div class="pass-input-box">
+                            <input type="password" id="reg-password" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye pass-eye-icon" onclick="togglePassEye('reg-password', this)"></i>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-tg-connect" id="btn-tg-linker"
+                        onclick="startTelegramVerification()">
+                        <i class="fa-brands fa-telegram"></i>
+                        <span id="tg-btn-label">ربط حساب التلغرام</span>
+                    </button>
+
+                    <button type="submit" class="btn-action-primary">
+                        التالي <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </form>
+
+                <!-- نموذج تسجيل الدخول -->
+                <form id="login-form" novalidate
+                    onsubmit="event.preventDefault(); if(this.checkValidity()){ performLogin(); }else{ showCustomToast(); }">
+
+                    <div class="form-row">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" id="login-phone" placeholder="09xxxxxxxx" required>
+                    </div>
+                    <div class="form-row">
+                        <label>كلمة المرور</label>
+                        <div class="pass-input-box">
+                            <input type="password" id="login-password" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye pass-eye-icon"
+                                onclick="togglePassEye('login-password', this)"></i>
+                        </div>
+                    </div>
+                    <div style="text-align: left; margin: 10px 0 16px 0;">
+                        <a href="javascript:void(0)" onclick="openResetPasswordFlow()"
+                            style="color: var(--accent-turquoise); font-size: 13.5px; text-decoration: none;">هل نسيت
+                            كلمة المرور؟</a>
+                    </div>
+                    <button type="submit" class="btn-action-primary">دخول إلى المنصة</button>
+                </form>
+
+                <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
+                <div id="reset-flow-container" style="display: none;">
+                    <div id="reset-stage-1">
+                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">أدخل رقم هاتفك المسجل
+                            لإرسال رمز التأكيد لحساب التلغرام الخاص بك مباشرة:</p>
+                        <div class="form-row">
+                            <input type="tel" id="reset-phone-input" placeholder="09xxxxxxxx">
+                        </div>
+                        <button class="btn-action-primary" onclick="requestResetOtp()">إرسال كود التحقق</button>
+                    </div>
+
+                    <div id="reset-stage-2" style="display: none; text-align: center;">
+                        <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون من 5 أرقام المرسل
+                            لحسابك:</p>
+                        <div class="otp-inputs-flex">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-1" oninput="stepOtp(1)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-2" oninput="stepOtp(2)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-3" oninput="stepOtp(3)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-4" oninput="stepOtp(4)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-5" oninput="stepOtp(5)">
+                        </div>
+                    </div>
+
+                    <div id="reset-stage-3" style="display: none;">
+                        <div class="form-row">
+                            <label>كلمة المرور الجديدة</label>
+                            <div class="pass-input-box">
+                                <input type="password" id="new-reset-pass" placeholder="••••••••">
+                                <i class="fa-solid fa-eye pass-eye-icon"
+                                    onclick="togglePassEye('new-reset-pass', this)"></i>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label>تأكيد كلمة المرور</label>
+                            <div class="pass-input-box">
+                                <input type="password" id="confirm-reset-pass" placeholder="••••••••">
+                                <i class="fa-solid fa-eye pass-eye-icon"
+                                    onclick="togglePassEye('confirm-reset-pass', this)"></i>
+                            </div>
+                        </div>
+                        <button class="btn-action-primary" onclick="finalizeNewPassword()">تغيير كلمة المرور</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. شاشة باقات الاشتراك -->
+    <div id="subs-screen" class="screen-container">
+        <div class="layout-wrapper">
+            <h2 style="font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 8px;">اختر باقة الاشتراك
+            </h2>
+            <p style="color: var(--text-muted); text-align: center; margin-bottom: 25px;">انضم لسوق المستلزمات الطلابية
+                السورية الأكبر</p>
+
+            <div class="plans-grid">
+                <div class="plan-item-box" onclick="selectPlanAndPay('monthly', '1$')">
+                    <div>
+                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة الاشتراك الشهري</h3>
+                        <p style="color: var(--text-muted); font-size: 14px;">تفعيل فوري ومرن لكافة الميزات</p>
+                    </div>
+                    <div style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">1
+                        دولار <span style="font-size: 14px; color: var(--text-muted);">/ شهرياً</span></div>
+                </div>
+
+                <div class="plan-item-box" onclick="selectPlanAndPay('yearly', '10$')">
+                    <div class="discount-pill">توفير 16%</div>
+                    <div>
+                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة الاشتراك السنوي</h3>
+                        <p style="color: var(--text-muted); font-size: 14px;">تفعيل لمدة سنة كاملة مع أولوية الظهور</p>
+                    </div>
+                    <div style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">10
+                        دولار <span style="font-size: 14px; color: var(--text-muted);">/ سنوياً</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة Modal للدفع عبر شام كاش -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="modal-content-card">
+            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">دفع الاشتراك - شام كاش</h3>
+            <p style="font-size: 13.5px; color: var(--text-muted);">امسح رمز الاستجابة السريع للتحويل المالي</p>
+
+            <div class="qr-wrapper">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=26ee871407869d05ad94223e7b4f1402&color=07111e"
+                    alt="شام كاش QR" id="cham-cash-qr">
+            </div>
+
+            <div class="verified-holder-info">
+                <span>المستلم المالي الرسمي: محمد يحيى جمال</span>
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <p
+                style="font-size: 11px; color: var(--text-muted); margin-top: 4px; direction: ltr; font-family: monospace;">
+                26ee871407869d05ad94223e7b4f1402</p>
+
+            <button class="btn-action-primary" style="margin-top: 20px;" onclick="triggerPaymentVerification()">التحقق
+                من الدفع</button>
+            <button onclick="closePaymentModal()"
+                style="background: none; border: none; color: var(--text-muted); margin-top: 10px; cursor: pointer; font-size: 13px;">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- شاشة معالجة الطلب (فقط: جاري معالجة الطلب مع Spinner) -->
+    <div id="wait-approval-screen" class="screen-container">
+        <div class="layout-wrapper" style="justify-content: center; align-items: center;">
+            <div class="wait-processing-box">
+                <div class="custom-loader"></div>
+                <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main);" id="wait-header-title">جاري
+                    معالجة الطلب</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. الواجهة الرئيسية (Main Layout) -->
+    <div id="home-screen" class="screen-container">
+        <div class="layout-wrapper">
+            <!-- الهيدر العلوي: ZONE وبجانبها الشعار مباشرة -->
+            <header class="app-top-header">
+                <div class="header-logo-icon"
+                    style="position: relative; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; box-shadow: 0 0 12px rgba(51, 224, 230, 0.2);">
+                    <!-- الصورة مقصوصة الحواف الزائدة بنظافة -->
+                    <div
+                        style="width: 42px; height: 42px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                        <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
+                            style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
+
+                    </div>
+                    <!-- الخط التركوازي الذي يمشي حول حواف شعار الهيدر حتى يكتمل -->
+                    <svg
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 4px #33E0E6);">
+                        <rect x="1.5" y="1.5" width="43" height="43" rx="10.5" ry="10.5" fill="none" stroke="#33E0E6"
+                            stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200"
+                            style="animation: drawHeaderBorder 2s ease-out forwards;" />
+                    </svg>
+                    <style>
+                        @keyframes drawHeaderBorder {
+                            to {
+                                stroke-dashoffset: 0;
+                            }
+                        }
+                    </style>
+                </div>
+
+                <div class="header-brand-title">ZONE</div>
+            </header>
+
+            <!-- شاشة الفراغ (الشبح اللطيف) -->
+            <div class="ghost-empty-state" id="empty-state-box">
+                <div class="ghost-svg-holder">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 15C32 15 24 30 24 48V82L33 76L42 82L50 76L58 82L67 76L76 82V48C76 30 68 15 50 15Z"
+                            fill="url(#ghostGrad)" />
+                        <circle cx="40" cy="45" r="4.5" fill="#07111e" />
+                        <circle cx="60" cy="45" r="4.5" fill="#07111e" />
+                        <ellipse cx="50" cy="54" rx="4" ry="2.5" fill="#07111e" />
+                        <ellipse cx="32" cy="51" rx="3.5" ry="2" fill="#39e5ee" opacity="0.6" />
+                        <ellipse cx="68" cy="51" rx="3.5" ry="2" fill="#39e5ee" opacity="0.6" />
+                        <defs>
+                            <linearGradient id="ghostGrad" x1="50" y1="15" x2="50" y2="82"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#39e5ee" />
+                                <stop offset="1" stop-color="#0f2b45" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h3 class="ghost-lead-text">المكان مهجور تماماً..</h3>
+                <p class="ghost-sub-text">انشر إعلانك هلق واكسر الصمت!</p>
+            </div>
+
+            <!-- شبكة كروت الإعلانات -->
+            <div class="posts-responsive-grid" id="posts-container-grid" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- شاشة الملف الشخصي (أنا) -->
+    <div id="me-screen" class="screen-container">
+        <div class="layout-wrapper" style="max-width: 600px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="font-size: 22px; font-weight: 800;">الملف الشخصي</h2>
+                <button onclick="toggleProfileEditMode()" id="edit-profile-btn"
+                    style="background: var(--surface-navy); border: 1px solid var(--accent-turquoise); color: var(--accent-turquoise); width: 42px; height: 42px; border-radius: 50%; cursor: pointer;">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+            </div>
+
+            <div class="form-row">
+                <label>الاسم الكامل</label>
+                <input type="text" id="prof-name" disabled>
+            </div>
+            <div class="form-row">
+                <label>رقم الهاتف</label>
+                <input type="tel" id="prof-phone" disabled>
+            </div>
+            <div class="form-row">
+                <label>المحافظة</label>
+                <input type="text" id="prof-city" disabled>
+            </div>
+            <div class="form-row">
+                <label>الجامعة</label>
+                <input type="text" id="prof-university" disabled>
+            </div>
+            <div class="form-row">
+                <label>الفرع الدراسي</label>
+                <input type="text" id="prof-major" disabled>
+            </div>
+
+            <button class="btn-action-primary" id="save-prof-btn" style="display: none; margin-top: 15px;"
+                onclick="saveProfileUpdates()">حفظ التعديلات</button>
+            <button onclick="logoutSession()"
+                style="width: 100%; padding: 14px; background: transparent; border: 1px solid var(--danger); color: var(--danger); border-radius: 12px; font-weight: 700; margin-top: 20px; cursor: pointer;">تسجيل
+                الخروج</button>
+        </div>
+    </div>
+
+    <!-- زر الدعم الفني العائم بشعار التلغرام (في الرئيسية فقط) -->
+    <a href="https://t.me/Zoneapplication" target="_blank" class="support-bubble-btn" id="floating-support-btn"
+        style="display: none;">
+        <i class="fa-brands fa-telegram"></i>
+    </a>
+
+    <!-- الشريط السفلي: الرئيسية و انا فقط + زر (+) في المنتصف -->
+    <nav class="bottom-app-bar" id="app-nav-bar" style="display: none;">
+        <button class="nav-link-btn active" id="nav-btn-home" onclick="navTo('home-screen')">
+            <i class="fa-solid fa-store"></i>
+            <span>الرئيسية</span>
+        </button>
+        <div class="nav-center-add" onclick="openCreateAdModal()">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <button class="nav-link-btn" id="nav-btn-me" onclick="navTo('me-screen')">
+            <i class="fa-solid fa-user"></i>
+            <span>انا</span>
+        </button>
+    </nav>
+
+    <!-- Modal إضافة إعلان جديد مع 3 مربعات مخصصة لرفع الصور -->
+    <div class="modal-overlay" id="add-ad-modal">
+        <div class="modal-content-card" style="text-align: right; max-width: 480px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <h3 style="font-size: 18px; font-weight: 800;">إضافة إعلان جديد</h3>
+                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;"
+                    onclick="closeCreateAdModal()"></i>
+            </div>
+
+            <div class="form-row">
+                <label>اسم المادة / الشيء المعلن عنه</label>
+                <input type="text" id="ad-title" placeholder="كتاب، مسطرة، آلة حاسبة...">
+            </div>
+
+            <div class="form-row">
+                <label>السعر بالليرة السورية</label>
+                <input type="number" id="ad-price" placeholder="مثال: 50000">
+            </div>
+
+            <!-- 3 مربعات مخصصة لرفع ومعاينة الصور -->
+            <label
+                style="font-size: 13.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 8px;">صور
+                المنتج (3 صور)</label>
+            <div class="photo-uploader-triplet">
+                <div class="photo-upload-slot" onclick="triggerFileInput(1)">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>الصورة 1</span>
+                    <img id="preview-img-1" alt="Preview 1">
+                    <input type="file" id="file-slot-1" accept="image/*" style="display: none;"
+                        onchange="handleImageSelection(event, 1)">
+                </div>
+                <div class="photo-upload-slot" onclick="triggerFileInput(2)">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>الصورة 2</span>
+                    <img id="preview-img-2" alt="Preview 2">
+                    <input type="file" id="file-slot-2" accept="image/*" style="display: none;"
+                        onchange="handleImageSelection(event, 2)">
+                </div>
+                <div class="photo-upload-slot" onclick="triggerFileInput(3)">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>الصورة 3</span>
+                    <img id="preview-img-3" alt="Preview 3">
+                    <input type="file" id="file-slot-3" accept="image/*" style="display: none;"
+                        onchange="handleImageSelection(event, 3)">
+                </div>
+            </div>
+
+            <button class="btn-action-primary" onclick="submitNewAd()">نشر الإعلان الآن</button>
+        </div>
+    </div>
+
+    <!-- Modal خيارات التواصل (واتساب أو تليغرام) عند النقر على أيقونة الهاتف -->
+    <div class="modal-overlay" id="contact-choice-modal">
+        <div class="modal-content-card" style="max-width: 380px;">
+            <div
+                style="width: 50px; height: 50px; background: rgba(0, 173, 181, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; color: var(--accent-turquoise); font-size: 22px;">
+                <i class="fa-solid fa-phone"></i>
+            </div>
+            <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">طريقة التواصل</h3>
+            <p style="font-size: 13.5px; color: var(--text-muted);">اختر التطبيق المفضل لديك للتواصل مع المعلن:</p>
+
+            <div class="contact-modal-choices">
+                <button class="contact-choice-btn wa" id="btn-choice-wa">
+                    <i class="fa-brands fa-whatsapp"></i> واتساب
+                </button>
+                <button class="contact-choice-btn tg" id="btn-choice-tg">
+                    <i class="fa-brands fa-telegram"></i> تليغرام
+                </button>
+            </div>
+            <button onclick="closeContactModal()"
+                style="background: none; border: none; color: var(--text-muted); margin-top: 16px; cursor: pointer; font-size: 13px;">إلغاء</button>
+        </div>
+    </div>
+    <script>
+        /* =========================================================
+           1. الثوابت البرمجية وإعدادات الربط مع التلغرام
+           ========================================================= */
+        const BOT_TOKEN = '8714980380:AAH5TzjGwMyKASdoBDMZNLV8tA0ME8p7ALE';
+        const ADMIN_CHAT_ID = '8717720399';
+        const BOT_USERNAME = '@Zonewebsite_bot';
+        const SUPPORT_USERNAME = '@Zoneapplication';
+
+        let activeSession = null;
+        let pendingUserData = null;
+        let chosenPlan = { type: 'monthly', cost: '1$' };
+        let generatedOtpCode = null;
+        let telegramPollingTimer = null;
+        let lastTelegramUpdateId = 0;
+        let uploadedImages = ['', '', ''];
+        let undoTimersMap = {};
+
+        /* =========================================================
+           2. تهيئة قاعدة البيانات المحلية عبر AlaSQL
+           ========================================================= */
+        function initializeDatabase() {
+            alasql(`CREATE TABLE IF NOT EXISTS platform_users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            fullname STRING,
+            phone STRING UNIQUE,
+            city STRING,
+            university STRING,
+            major STRING,
+            password STRING,
+            is_active INT,
+            tg_chat_id STRING
+        )`);
+
+            alasql(`CREATE TABLE IF NOT EXISTS items_feed (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            owner_phone STRING,
+            owner_name STRING,
+            title STRING,
+            price STRING,
+            photo1 STRING,
+            photo2 STRING,
+            photo3 STRING,
+            created_at STRING
+        )`);
+        }
+
+        /* =========================================================
+           3. إدارة التبديل الكامل بين الشاشات (SPA Navigator)
+           ========================================================= */
+        function switchActiveScreen(targetId) {
+            document.querySelectorAll('.screen-container').forEach(screen => {
+                screen.style.display = 'none';
+                screen.classList.remove('active-screen');
+            });
+
+            const activeScreen = document.getElementById(targetId);
+            if (activeScreen) {
+                activeScreen.style.display = 'flex';
+                activeScreen.classList.add('active-screen');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            }
+
+            const isMainApp = (targetId === 'home-screen' || targetId === 'me-screen');
+            document.getElementById('app-nav-bar').style.display = isMainApp ? 'flex' : 'none';
+            document.getElementById('floating-support-btn').style.display = (targetId === 'home-screen') ? 'flex' : 'none';
+        }
+
+        // إخفاء الـ Splash Screen نهائياً بعد 2.5 ثانية مع display: none
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeDatabase();
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.transition = 'opacity 0.4s ease';
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    switchActiveScreen('auth-screen');
+                }, 400);
+            }, 2500);
+        });
+
+        /* =========================================================
+           4. المصادقة والتحقق الفعلي عبر بوت التلغرام
+           ========================================================= */
+        function toggleAuth(type) {
+            document.getElementById('tab-login-btn').classList.toggle('active', type === 'login');
+            document.getElementById('tab-reg-btn').classList.toggle('active', type === 'reg');
+            document.getElementById('login-form').style.display = (type === 'login') ? 'block' : 'none';
+            document.getElementById('reg-form').style.display = (type === 'reg') ? 'block' : 'none';
+            document.getElementById('reset-flow-container').style.display = 'none';
+        }
+
+        function togglePassEye(fieldId, iconElement) {
+            const input = document.getElementById(fieldId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconElement.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                iconElement.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // ربط حساب التلغرام الفعلي عند إرسال /start وإرسال رسالة ترحيبية للمستخدم
+        function startTelegramVerification() {
+            const botRaw = BOT_USERNAME.replace('@', '');
+            window.open(`https://t.me/${botRaw}?start=auth_zone`, '_blank');
+
+            const btnLabel = document.getElementById('tg-btn-label');
+            btnLabel.innerText = 'بانتظار إرسال /start للبوت...';
+
+            let pollingAttempts = 0;
+            const linkerInterval = setInterval(() => {
+                pollingAttempts++;
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastTelegramUpdateId + 1}`)
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.ok && res.result.length > 0) {
+                            for (let update of res.result) {
+                                lastTelegramUpdateId = update.update_id;
+                                if (update.message && update.message.text && update.message.text.includes('/start')) {
+                                    clearInterval(linkerInterval);
+                                    const userChatId = update.message.chat.id;
+                                    if (pendingUserData) {
+                                        pendingUserData.tg_chat_id = userChatId;
+                                    } else {
+                                        pendingUserData = { tg_chat_id: userChatId };
+                                    }
+
+                                    // إرسال الرسالة الترحيبية للمستخدم نفسه
+                                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            chat_id: userChatId,
+                                            text: 'تم ربط حسابك بمنصة ZONE بنجاح! 🚀'
+                                        })
+                                    });
+
+                                    const btn = document.getElementById('btn-tg-linker');
+                                    btn.classList.add('success-linked');
+                                    btnLabel.innerHTML = 'تم ربط الحساب بنجاح ✓';
+                                    break;
+                                }
+                            }
+                        }
+                    }).catch(() => { });
+
+                if (pollingAttempts > 25) {
+                    clearInterval(linkerInterval);
+                    if (!document.getElementById('btn-tg-linker').classList.contains('success-linked')) {
+                        btnLabel.innerText = 'إعادة محاولة الربط';
+                    }
+                }
+            }, 2500);
+        }
+
+        function proceedToSubscription() {
+            const fullname = document.getElementById('reg-fullname').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const city = document.getElementById('reg-city').value;
+            const university = document.getElementById('reg-university').value.trim();
+            const major = document.getElementById('reg-major').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+
+            pendingUserData = {
+                fullname,
+                phone,
+                city,
+                university,
+                major,
+                password,
+                tg_chat_id: (pendingUserData && pendingUserData.tg_chat_id) ? pendingUserData.tg_chat_id : ''
+            };
+            switchActiveScreen('subs-screen');
+        }
+
+        function performLogin() {
+            const phone = document.getElementById('login-phone').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+
+            const userRecord = alasql('SELECT * FROM platform_users WHERE phone = ? AND password = ?', [phone, pass])[0];
+            if (userRecord) {
+                activeSession = userRecord;
+                loadMainProductsFeed();
+                switchActiveScreen('home-screen');
+            } else {
+                alert('البيانات المدخلة غير صحيحة أو أن الحساب قيد المراجعة!');
+            }
+        }
+
+        /* استعادة كلمة المرور وإرسال OTP حصرياً لحساب المستخدم بالصيغة المطلوبة */
+        function openResetPasswordFlow() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('reg-form').style.display = 'none';
+            document.getElementById('reset-flow-container').style.display = 'block';
+            document.getElementById('reset-stage-1').style.display = 'block';
+            document.getElementById('reset-stage-2').style.display = 'none';
+            document.getElementById('reset-stage-3').style.display = 'none';
+        }
+
+        function requestResetOtp() {
+            const ph = document.getElementById('reset-phone-input').value.trim();
+            if (!ph) {
+                alert('يرجى إدخال رقم الهاتف المسجل');
+                return;
+            }
+
+            const user = alasql('SELECT * FROM platform_users WHERE phone = ?', [ph])[0];
+            if (!user || !user.tg_chat_id) {
+                alert('لم يتم العثور على حساب مرتبط بتلغرام لهذا الرقم! يرجى التواصل مع الدعم.');
+                return;
+            }
+
+            generatedOtpCode = Math.floor(10000 + Math.random() * 90000).toString();
+
+            // إرسال الكود للمستخدم نفسه حصراً وبالصيغة الدقيقة المحددة
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: user.tg_chat_id,
+                    text: `ZONE Verification Code\n${generatedOtpCode}`
+                })
+            });
+
+            document.getElementById('reset-stage-1').style.display = 'none';
+            document.getElementById('reset-stage-2').style.display = 'block';
+            document.getElementById('otp-1').focus();
+        }
+
+        function stepOtp(index) {
+            const currentInput = document.getElementById(`otp-${index}`);
+            if (currentInput.value && index < 5) {
+                document.getElementById(`otp-${index + 1}`).focus();
+            }
+
+            let enteredCode = '';
+            for (let i = 1; i <= 5; i++) {
+                enteredCode += document.getElementById(`otp-${i}`).value;
+            }
+
+            if (enteredCode.length === 5) {
+                if (enteredCode === generatedOtpCode) {
+                    for (let i = 1; i <= 5; i++) {
+                        setTimeout(() => {
+                            document.getElementById(`otp-${i}`).classList.add('active-success');
+                        }, i * 130);
+                    }
+
+                    setTimeout(() => {
+                        document.getElementById('reset-stage-2').style.display = 'none';
+                        document.getElementById('reset-stage-3').style.display = 'block';
+                    }, 900);
+                } else {
+                    alert('كود التحقق غير صحيح، يرجى المحاولة مجدداً!');
+                    for (let i = 1; i <= 5; i++) {
+                        document.getElementById(`otp-${i}`).value = '';
+                    }
+                    document.getElementById('otp-1').focus();
+                }
+            }
+        }
+
+        function finalizeNewPassword() {
+            const p1 = document.getElementById('new-reset-pass').value;
+            const p2 = document.getElementById('confirm-reset-pass').value;
+            if (!p1 || p1 !== p2) {
+                alert('كلمات المرور غير متطابقة!');
+                return;
+            }
+            const ph = document.getElementById('reset-phone-input').value.trim();
+            alasql('UPDATE platform_users SET password = ? WHERE phone = ?', [p1, ph]);
+            alert('تم تعيين كلمة المرور الجديدة بنجاح! يمكنك الآن تسجيل الدخول.');
+            toggleAuth('login');
+        }
+
+        /* =========================================================
+           5. شاشة الباقات، معالجة الطلب، وأزرار التلغرام التفاعلية للمدير
+           ========================================================= */
+        function selectPlanAndPay(type, cost) {
+            chosenPlan = { type, cost };
+            document.getElementById('payment-modal').classList.add('active');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.remove('active');
+        }
+
+        function triggerPaymentVerification() {
+            closePaymentModal();
+            switchActiveScreen('wait-approval-screen');
+            document.getElementById('wait-header-title').innerText = 'جاري معالجة الطلب';
+
+            const notifyMessage = `🔔 طلب تفعيل حساب طالب جديد:
+👤 الاسم: ${pendingUserData.fullname}
+📱 الهاتف: ${pendingUserData.phone}
+📍 المحافظة: ${pendingUserData.city}
+🏛️ الجامعة: ${pendingUserData.university}
+📚 الفرع: ${pendingUserData.major}
+💳 الباقة: ${chosenPlan.type === 'monthly' ? 'شهري (1$)' : 'سنوي (10$)'}
+🏦 المستلم: محمد يحيى جمال`;
+
+            const actionButtons = {
+                inline_keyboard: [
+                    [
+                        { text: '✅ قبول', callback_data: `accept_${pendingUserData.phone}` },
+                        { text: '❌ رفض', callback_data: `reject_${pendingUserData.phone}` }
+                    ],
+                    [
+                        { text: '🎁 تفعيل الحساب مجاناً', callback_data: `gift_${pendingUserData.phone}` }
+                    ]
+                ]
+            };
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: ADMIN_CHAT_ID,
+                    text: notifyMessage,
+                    reply_markup: actionButtons
+                })
+            }).then(() => {
+                listenForAdminVerification();
+            }).catch(() => {
+                setTimeout(() => applyDecision('accept'), 4000);
+            });
+        }
+
+        function listenForAdminVerification() {
+            if (telegramPollingTimer) clearInterval(telegramPollingTimer);
+            telegramPollingTimer = setInterval(() => {
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastTelegramUpdateId + 1}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.ok && data.result.length > 0) {
+                            data.result.forEach(update => {
+                                lastTelegramUpdateId = update.update_id;
+                                if (update.callback_query) {
+                                    const action = update.callback_query.data;
+                                    if (action.startsWith('accept_')) {
+                                        applyDecision('accept');
+                                    } else if (action.startsWith('gift_')) {
+                                        applyDecision('gift');
+                                    } else if (action.startsWith('reject_')) {
+                                        applyDecision('reject', 'عدم وضوح إشعار تحويل شام كاش');
+                                    }
+                                }
+                            });
+                        }
+                    }).catch(() => { });
+            }, 2500);
+        }
+
+        function applyDecision(status, reasonText = '') {
+            if (telegramPollingTimer) clearInterval(telegramPollingTimer);
+            const headerTitle = document.getElementById('wait-header-title');
+
+            if (status === 'accept' || status === 'gift') {
+                alasql('INSERT INTO platform_users VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)', [
+                    Date.now(),
+                    pendingUserData.fullname,
+                    pendingUserData.phone,
+                    pendingUserData.city,
+                    pendingUserData.university,
+                    pendingUserData.major,
+                    pendingUserData.password,
+                    pendingUserData.tg_chat_id
+                ]);
+
+                activeSession = alasql('SELECT * FROM platform_users WHERE phone = ?', [pendingUserData.phone])[0];
+
+                if (status === 'accept') {
+                    headerTitle.innerHTML = `<span style="color: var(--success);"><i class="fa-solid fa-circle-check"></i> تم تفعيل حسابك بنجاح!</span>`;
+                } else {
+                    headerTitle.innerHTML = `<span style="color: var(--turquoise-light);"><i class="fa-solid fa-gift"></i> تم تفعيل حسابك مجاناً!</span>`;
+                }
+
+                setTimeout(() => {
+                    loadMainProductsFeed();
+                    switchActiveScreen('home-screen');
+                }, 1800);
+
+            } else if (status === 'reject') {
+                headerTitle.innerHTML = `<span style="color: var(--danger);"><i class="fa-solid fa-circle-xmark"></i> تم رفض الحساب بسبب: ${reasonText}</span>`;
+            }
+        }
+
+        /* =========================================================
+           6. الواجهة الرئيسية، الإعلانات، وشريط التراجع الذكي (Undo Bar)
+           ========================================================= */
+        function loadMainProductsFeed() {
+            const items = alasql('SELECT * FROM items_feed ORDER BY id DESC');
+            const emptyState = document.getElementById('empty-state-box');
+            const feedGrid = document.getElementById('posts-container-grid');
+
+            if (!items || items.length === 0) {
+                emptyState.style.display = 'flex';
+                feedGrid.style.display = 'none';
+                feedGrid.innerHTML = '';
+            } else {
+                emptyState.style.display = 'none';
+                feedGrid.style.display = 'grid';
+                feedGrid.innerHTML = '';
+
+                items.forEach(item => {
+                    const isOwner = activeSession && (activeSession.phone === item.owner_phone);
+                    const cardContainer = document.createElement('div');
+                    cardContainer.id = `ad-container-${item.id}`;
+                    cardContainer.className = 'product-card-container';
+
+                    cardContainer.innerHTML = `
+                    <div class="product-card" id="card-inner-${item.id}">
+                        <div class="product-images-trio">
+                            <img src="${item.photo1}" alt="صورة 1">
+                            <img src="${item.photo2}" alt="صورة 2">
+                            <img src="${item.photo3}" alt="صورة 3">
+                        </div>
+                        <div class="product-details">
+                            <div class="product-title">${item.title}</div>
+                            <div class="product-price">${Number(item.price).toLocaleString()} ل.س</div>
+                            <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+                                <i class="fa-solid fa-user-graduate"></i> المعلن: ${item.owner_name}
+                            </div>
+                            <div class="product-card-actions">
+                                <button class="nav-link-btn" style="flex:1; border:1px solid var(--border-navy); border-radius:10px; padding:8px;" onclick="shareAdItem('${item.title}', '${item.price}')">
+                                    <i class="fa-solid fa-share-nodes"></i> مشاركة
+                                </button>
+                                <button class="nav-link-btn" style="flex:1; background:var(--accent-turquoise); color:var(--primary-navy); border-radius:10px; padding:8px; font-weight:800;" onclick="openContactOptions('${item.owner_phone}')">
+                                    <i class="fa-solid fa-phone"></i> تواصل
+                                </button>
+                                ${isOwner ? `
+                                    <button class="nav-link-btn" id="btn-sold-${item.id}" style="border:1.5px solid var(--danger); color:var(--danger); border-radius:10px; padding:8px 12px; font-weight:700;" onclick="triggerSoldUndoCountdown(${item.id})">
+                                        تم البيع
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="undo-slot-${item.id}"></div>
+                `;
+                    feedGrid.appendChild(cardContainer);
+                });
+            }
+        }
+
+        // زر "تم البيع" مع ظهور شريط التراجع أسفل الكرت مع العداد التنازلي
+        function triggerSoldUndoCountdown(postId) {
+            const undoSlot = document.getElementById(`undo-slot-${postId}`);
+            const soldBtn = document.getElementById(`btn-sold-${postId}`);
+            if (!undoSlot || undoTimersMap[postId]) return;
+
+            if (soldBtn) soldBtn.style.display = 'none';
+
+            let secondsLeft = 5;
+            undoSlot.innerHTML = `
+            <div class="undo-countdown-bottom-bar" id="bar-${postId}">
+                <div class="undo-left-info">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span>جاري حذف الإعلان نهائياً...</span>
+                    <span class="undo-timer-badge" id="countdown-val-${postId}">${secondsLeft}</span>
+                </div>
+                <button class="undo-revert-btn" onclick="cancelSoldUndo(${postId})">تراجع</button>
+            </div>
+        `;
+
+            undoTimersMap[postId] = {
+                interval: setInterval(() => {
+                    secondsLeft--;
+                    const badge = document.getElementById(`countdown-val-${postId}`);
+                    if (badge) badge.innerText = secondsLeft;
+
+                    if (secondsLeft <= 0) {
+                        clearInterval(undoTimersMap[postId].interval);
+                        delete undoTimersMap[postId];
+                        alasql('DELETE FROM items_feed WHERE id = ?', [postId]);
+                        const container = document.getElementById(`ad-container-${postId}`);
+                        if (container) container.remove();
+
+                        // التحقق مما إذا فرغت الإعلانات لعرض الشبح اللطيف
+                        const remaining = alasql('SELECT COUNT(*) as cnt FROM items_feed')[0].cnt;
+                        if (remaining === 0) {
+                            loadMainProductsFeed();
+                        }
+                    }
+                }, 1000)
+            };
+        }
+
+        function cancelSoldUndo(postId) {
+            if (undoTimersMap[postId]) {
+                clearInterval(undoTimersMap[postId].interval);
+                delete undoTimersMap[postId];
+                const undoSlot = document.getElementById(`undo-slot-${postId}`);
+                if (undoSlot) undoSlot.innerHTML = '';
+                const soldBtn = document.getElementById(`btn-sold-${postId}`);
+                if (soldBtn) soldBtn.style.display = 'flex';
+            }
+        }
+
+        // نافذة اختيار التواصل (واتساب أو تليغرام)
+        function openContactOptions(phone) {
+            const cleanNumber = phone.startsWith('0') ? phone.substring(1) : phone;
+            document.getElementById('btn-choice-wa').onclick = () => {
+                window.open(`https://wa.me/963${cleanNumber}`, '_blank');
+                closeContactModal();
+            };
+            document.getElementById('btn-choice-tg').onclick = () => {
+                window.open(`https://t.me/+963${cleanNumber}`, '_blank');
+                closeContactModal();
+            };
+            document.getElementById('contact-choice-modal').classList.add('active');
+        }
+
+        function closeContactModal() {
+            document.getElementById('contact-choice-modal').classList.remove('active');
+        }
+
+        function shareAdItem(title, price) {
+            const shareMsg = encodeURIComponent(`شاهد هذا العرض من منصة ZONE: ${title} بسعر ${price} ل.س!`);
+            window.open(`https://t.me/share/url?url=https://zone-sy.com&text=${shareMsg}`, '_blank');
+        }
+
+        /* =========================================================
+           7. مربعات رفع ومعاينة الصور وإضافة الإعلان
+           ========================================================= */
+        function openCreateAdModal() {
+            uploadedImages = ['', '', ''];
+            for (let i = 1; i <= 3; i++) {
+                const preview = document.getElementById(`preview-img-${i}`);
+                preview.src = '';
+                preview.style.display = 'none';
+            }
+            document.getElementById('ad-title').value = '';
+            document.getElementById('ad-price').value = '';
+            document.getElementById('add-ad-modal').classList.add('active');
+        }
+
+        function closeCreateAdModal() {
+            document.getElementById('add-ad-modal').classList.remove('active');
+        }
+
+        function triggerFileInput(slotIndex) {
+            document.getElementById(`file-slot-${slotIndex}`).click();
+        }
+
+        function handleImageSelection(event, slotIndex) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgData = e.target.result;
+                    uploadedImages[slotIndex - 1] = imgData;
+                    const preview = document.getElementById(`preview-img-${slotIndex}`);
+                    preview.src = imgData;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function submitNewAd() {
+            const title = document.getElementById('ad-title').value.trim();
+            const price = document.getElementById('ad-price').value.trim();
+
+            if (!title || !price) {
+                alert('يرجى كتابة اسم المادة والسعر بالليرة السورية');
+                return;
+            }
+
+            const fallbackPhotos = [
+                'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400',
+                'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400',
+                'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400'
+            ];
+
+            const p1 = uploadedImages[0] || fallbackPhotos[0];
+            const p2 = uploadedImages[1] || fallbackPhotos[1];
+            const p3 = uploadedImages[2] || fallbackPhotos[2];
+
+            alasql('INSERT INTO items_feed VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+                Date.now(),
+                activeSession.phone,
+                activeSession.fullname,
+                title,
+                price,
+                p1,
+                p2,
+                p3,
+                new Date().toLocaleDateString('ar-SY')
+            ]);
+
+            closeCreateAdModal();
+            loadMainProductsFeed();
+        }
+
+        /* =========================================================
+           8. شاشة الملف الشخصي (انا) والتعديل
+           ========================================================= */
+        function navTo(screenId) {
+            document.getElementById('nav-btn-home').classList.toggle('active', screenId === 'home-screen');
+            document.getElementById('nav-btn-me').classList.toggle('active', screenId === 'me-screen');
+
+            if (screenId === 'me-screen') {
+                displayProfileDetails();
+            }
+            switchActiveScreen(screenId);
+        }
+
+        function displayProfileDetails() {
+            if (!activeSession) return;
+            document.getElementById('prof-name').value = activeSession.fullname;
+            document.getElementById('prof-phone').value = activeSession.phone;
+            document.getElementById('prof-city').value = activeSession.city;
+            document.getElementById('prof-university').value = activeSession.university;
+            document.getElementById('prof-major').value = activeSession.major;
+        }
+
+        function toggleProfileEditMode() {
+            const isCurrentlyDisabled = document.getElementById('prof-name').disabled;
+            document.getElementById('prof-name').disabled = !isCurrentlyDisabled;
+            document.getElementById('prof-city').disabled = !isCurrentlyDisabled;
+            document.getElementById('prof-university').disabled = !isCurrentlyDisabled;
+            document.getElementById('prof-major').disabled = !isCurrentlyDisabled;
+            document.getElementById('save-prof-btn').style.display = isCurrentlyDisabled ? 'block' : 'none';
+        }
+
+        function saveProfileUpdates() {
+            activeSession.fullname = document.getElementById('prof-name').value.trim();
+            activeSession.city = document.getElementById('prof-city').value.trim();
+            activeSession.university = document.getElementById('prof-university').value.trim();
+            activeSession.major = document.getElementById('prof-major').value.trim();
+
+            alasql('UPDATE platform_users SET fullname = ?, city = ?, university = ?, major = ? WHERE phone = ?',
+                [activeSession.fullname, activeSession.city, activeSession.university, activeSession.major, activeSession.phone]);
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: ADMIN_CHAT_ID,
+                    text: `📝 تم تحديث بيانات حساب في ZONE:\n👤 الطالب: ${activeSession.fullname}\n📞 الرقم: ${activeSession.phone}\n📍 المحافظة: ${activeSession.city}\n🏛️ الجامعة: ${activeSession.university}\n📚 الفرع: ${activeSession.major}`
+                })
+            });
+
+            alert('تم حفظ البيانات وتحديثها بنجاح!');
+            toggleProfileEditMode();
+        }
+
+        function logoutSession() {
+            activeSession = null;
+            switchActiveScreen('auth-screen');
+            toggleAuth('login');
+        }
+        // دالة إظهار التنبيه التركوازي الفخم الطويل والمستريح بظل خفيف جداً
+        function showCustomToast() {
+            // حذف التنبيه القديم إن وجد لمنع التكرار
+            const oldToast = document.querySelector('.custom-toast');
+            if (oldToast) oldToast.remove();
+
+            // إنشاء عنصر التنبيه الجديد
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+
+            // تصميم ممتد، مريح، غير مفعوس، بلون تركوازي فاتح وأيقونة احترافية هندسية وظل لوني خفيف جداً خلف الحواف
+            toast.innerHTML = `
+        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
+                    background: #0b1a2d; 
+                    border: 1.5px solid #33E0E6; border-radius: 12px; 
+                    min-width: 460px; padding: 20px 40px; 
+                    display: flex; align-items: center; justify-content: center; gap: 16px; 
+                    box-shadow: 0 8px 24px rgba(51, 224, 230, 0.08); 
+                    z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
+                    color: #fff; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; direction: rtl;">
+            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 22px;"></i>
+            <span style="font-weight: 500; font-size: 16px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+                يرجى تكملة تعبئة المعلومات
+            </span>
+        </div>
+    `;
+
+            document.body.appendChild(toast);
+            const toastInner = toast.querySelector('div');
+
+            // انزلاق سلس لأسفل
+            setTimeout(() => { toastInner.style.top = '32px'; }, 50);
+
+            // اختفاء التنبيه بعد 3.5 ثوانٍ والانزلاق لأعلى
+            setTimeout(() => {
+                toastInner.style.top = '-120px';
+                setTimeout(() => { toast.remove(); }, 500);
+            }, 3800);
+        }
+
+    </script>
+</body>
+
+</html>
