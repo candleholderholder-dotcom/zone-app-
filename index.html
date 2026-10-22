@@ -1921,30 +1921,29 @@
         }
         // دالة إظهار التنبيه التركوازي الفخم الطويل والمستريح بظل خفيف جداً
         function showCustomToast() {
-            // حذف التنبيه القديم إن وجد لمنع التكرار
             const oldToast = document.querySelector('.custom-toast');
             if (oldToast) oldToast.remove();
 
-            // إنشاء عنصر التنبيه الجديد
             const toast = document.createElement('div');
             toast.className = 'custom-toast';
 
-            // تصميم ممتد، مريح، غير مفعوس، بلون تركوازي فاتح وأيقونة احترافية هندسية وظل لوني خفيف جداً خلف الحواف
+            // أبعاد مرنة ذكية تتكيف مع الموبايل والكمبيوتر وتمنع التفعيس تماماً مع خط Cairo
             toast.innerHTML = `
         <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
                     background: #0b1a2d; 
-                    border: 1.5px solid #33E0E6; border-radius: 12px; 
-                    min-width: 460px; padding: 20px 40px; 
-                    display: flex; align-items: center; justify-content: center; gap: 16px; 
-                    box-shadow: 0 8px 24px rgba(51, 224, 230, 0.08); 
-                    z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
-                    color: #fff; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; direction: rtl;">
-            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 22px;"></i>
-            <span style="font-weight: 500; font-size: 16px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+                    border: 1.5px solid #33E0E6; border-radius: 14px; 
+                    width: 88%; max-width: 450px; padding: 18px 16px; 
+                    display: flex; align-items: center; justify-content: center; gap: 12px; 
+                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15); 
+                    z-index: 999999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
+                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+            <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
                 يرجى تكملة تعبئة المعلومات
             </span>
         </div>
     `;
+
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
