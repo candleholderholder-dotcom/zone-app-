@@ -853,7 +853,15 @@
         </div>
 
         <div class="splash-title-huge">ZONE</div>
+        <!-- عبارة الحقوق الفخمة لشركة Novinium Soft منسقة في الأسفل تماماً -->
+        <div
+            style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); 
+                        color: #8a9fc2; font-family: 'Cairo', sans-serif; font-size: 13.5px; 
+                        font-weight: 600; letter-spacing: 0.8px; opacity: 0.75; white-space: nowrap; pointer-events: none;">
+            Owned by <span style="color: #33E0E6; font-weight: 700;">Novinium Soft</span>
+        </div>
     </div>
+
 
     <!-- 2. شاشة تسجيل الدخول وإنشاء الحساب (الـ 14 محافظة سورية) -->
     <div id="auth-screen" class="screen-container">
@@ -1586,8 +1594,7 @@
                 inline_keyboard: [
                     [
                         { text: '✅ قبول', callback_data: `accept_${pendingUserData.phone}` },
-                        { text: '❌ رفض', callback_data: `ask_reject_${pendingUserData.phone}` }
-
+                        { text: '❌ رفض', callback_data: `reject_${pendingUserData.phone}` }
                     ],
                     [
                         { text: '🎁 تفعيل الحساب مجاناً', callback_data: `gift_${pendingUserData.phone}` }
@@ -1610,105 +1617,24 @@
             });
         }
 
-        // متغيرات الذاكرة المؤقتة لحفظ حالة الرفض بانتظار كتابة المشرف للسبب
-        // ذاكرة مؤقتة محمية لاستقبال نص سبب الرفض
-        if (typeof activeRejectPhone === 'undefined') {
-            window.activeRejectPhone = null;
-            window.activeRejectMessageId = null;
-        }
-
         function listenForAdminVerification() {
-            if (typeof lastTelegramUpdateId === 'undefined') {
-                window.lastTelegramUpdateId = 0;
-            }
-
             if (telegramPollingTimer) clearInterval(telegramPollingTimer);
             telegramPollingTimer = setInterval(() => {
-                fetch(`https://telegram.org{BOT_TOKEN}/getUpdates?offset=${window.lastTelegramUpdateId + 1}`)
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastTelegramUpdateId + 1}`)
                     .then(r => r.json())
                     .then(data => {
-                        if (data.ok && data.result && data.result.length > 0) {
+                        if (data.ok && data.result.length > 0) {
                             data.result.forEach(update => {
-                                window.lastTelegramUpdateId = update.update_id;
-
-                                // 1. استقبال ضغطات الأزرار (Callback Queries)
+                                lastTelegramUpdateId = update.update_id;
                                 if (update.callback_query) {
                                     const action = update.callback_query.data;
-
-                                    // معالجة ضغطة القبول أو التفعيل المجاني
-                                    if (action.startsWith('accept_') || action.startsWith('gift_')) {
-                                        const isGift = action.startsWith('gift_');
-                                        applyDecision(isGift ? 'gift' : 'accept');
-
-                                        const phone = isGift ? action.replace('gift_', '') : action.replace('accept_', '');
-                                        const resetText = isGift ? '🎁 تم التفعيل مجاناً | 🔄 تصفير الحساب' : '✅ تم قبول الحساب | 🔄 تصفير الحساب';
-
-                                        fetch(`https://telegram.org{BOT_TOKEN}/editMessageReplyMarkup`, {
-                                            method: 'POST',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify({
-                                                chat_id: ADMIN_CHAT_ID,
-                                                message_id: update.callback_query.message.message_id,
-                                                reply_markup: {
-                                                    inline_keyboard: [[{ text: resetText, callback_data: `reset_account_${phone}` }]]
-                                                }
-                                            })
-                                        });
+                                    if (action.startsWith('accept_')) {
+                                        applyDecision('accept');
+                                    } else if (action.startsWith('gift_')) {
+                                        applyDecision('gift');
+                                    } else if (action.startsWith('reject_')) {
+                                        applyDecision('reject', 'عدم وضوح إشعار تحويل شام كاش');
                                     }
-                                    // معالجة ضغطة طلب الرفض وكتابة السبب
-                                    else if (action.startsWith('ask_reject_')) {
-                                        const phone = action.replace('ask_reject_', '');
-                                        window.activeRejectPhone = phone;
-                                        window.activeRejectMessageId = update.callback_query.message.message_id;
-
-                                        fetch(`https://telegram.org{BOT_TOKEN}/sendMessage`, {
-                                            method: 'POST',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify({
-                                                chat_id: ADMIN_CHAT_ID,
-                                                text: `📝 يرجى كتابة سبب الرفض كرسالة نصية الآن ليتم إرسالها للمستخدم (رقم الهاتف: ${phone}):`
-                                            })
-                                        });
-                                    }
-                                    // معالجة ضغطة زر تصفير الحساب وطرد المستخدم قسرياً
-                                    else if (action.startsWith('reset_account_')) {
-                                        const phoneToReset = action.replace('reset_account_', '');
-                                        alasql('UPDATE platform_users SET is_active = false, session_token = null WHERE phone = ?', [phoneToReset]);
-
-                                        fetch(`https://telegram.org{BOT_TOKEN}/editMessageText`, {
-                                            method: 'POST',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify({
-                                                chat_id: ADMIN_CHAT_ID,
-                                                message_id: update.callback_query.message.message_id,
-                                                text: `⚠️ تم تصفير هذا الحساب وطرد صاحبه بنجاح من التطبيق بسبب انتهاء صلاحية باقة الاشتراك.\nرقم الهاتف: ${phoneToReset}`
-                                            })
-                                        });
-                                    }
-                                }
-
-                                // 2. استقبال الرسائل النصية وكتابة سبب الرفض
-                                else if (update.message && update.message.text && window.activeRejectPhone) {
-                                    const rejectReason = update.message.text;
-
-                                    alasql('UPDATE platform_users SET is_active = false, status = "rejected", reject_reason = ? WHERE phone = ?', [rejectReason, window.activeRejectPhone]);
-
-                                    if (typeof applyDecision === 'function') {
-                                        applyDecision('reject');
-                                    }
-
-                                    fetch(`https://telegram.org{BOT_TOKEN}/editMessageText`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                                            chat_id: ADMIN_CHAT_ID,
-                                            message_id: window.activeRejectMessageId,
-                                            text: `❌ تم رفض الحساب بنجاح وطرد صاحبه.\n📞 الرقم: ${window.activeRejectPhone}\n📝 السبب: ${rejectReason}`
-                                        })
-                                    });
-
-                                    window.activeRejectPhone = null;
-                                    window.activeRejectMessageId = null;
                                 }
                             });
                         }
