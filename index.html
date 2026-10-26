@@ -1629,13 +1629,78 @@
                             data.result.forEach(update => {
                                 lastTelegramUpdateId = update.update_id;
                                 if (update.callback_query) {
-                                    const action = update.callback_query.data;
-                                    if (action.startsWith('accept_')) {
-                                        applyDecision('accept');
-                                    } else if (action.startsWith('gift_')) {
-                                        applyDecision('gift');
+                                    const cb = update.callback_query;
+                                    const action = cb.data;
+                                    const msgId = cb.message.message_id;
+                                    const chatId = cb.message.chat.id;
+
+                                    // إيقاف دائرة التحميل على الزر في التليجرام
+                                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ callback_query_id: cb.id })
+                                    });
+
+                                    if (action.startsWith('accept_') || action.startsWith('gift_')) {
+                                        const phone = action.split('_')[1];
+                                        const type = action.startsWith('accept_') ? 'accept' : 'gift';
+
+                                        // إخفاء الأزرار الثلاثة وإظهار زر تصفير الحساب فقط
+                                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                chat_id: chatId,
+                                                message_id: msgId,
+                                                reply_markup: {
+                                                    inline_keyboard: [
+                                                        [{ text: '🔄 تصفير الحساب', callback_data: `reset_${phone}` }]
+                                                    ]
+                                                }
+                                            })
+                                        });
+
+                                        applyDecision(type);
+
                                     } else if (action.startsWith('reject_')) {
+                                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                chat_id: chatId,
+                                                message_id: msgId,
+                                                reply_markup: { inline_keyboard: [] }
+                                            })
+                                        });
                                         applyDecision('reject', 'عدم وضوح إشعار تحويل شام كاش');
+
+                                    } else if (action.startsWith('reset_')) {
+                                        const phoneToReset = action.split('_')[1];
+
+                                        // تغيير نص الزر في البوت بعد التصفير
+                                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                chat_id: chatId,
+                                                message_id: msgId,
+                                                reply_markup: {
+                                                    inline_keyboard: [
+                                                        [{ text: '🚫 تم تصفير الحساب وطرد المستخدم', callback_data: 'done' }]
+                                                    ]
+                                                }
+                                            })
+                                        });
+
+                                        // مسح الحساب من القاعدة وطرد المستخدم لشاشة الدخول
+                                        try {
+                                            alasql('DELETE FROM platform_users WHERE phone = ?', [phoneToReset]);
+                                        } catch (e) { }
+                                        activeSession = null;
+                                        logoutSession();
+
+                                        // إظهار الرسالة الفخمة من فوق بنفس الشكل
+                                        showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك');
                                     }
                                 }
                             });
@@ -1945,33 +2010,38 @@
             toggleAuth('login');
         }
         // دالة إظهار التنبيه التركوازي الفخم الطويل والمستريح بظل خفيف جداً
-        function showCustomToast(customText = 'يرجى تكملة تعبئة المعلومات') {
-            const existingToast = document.getElementById('custom- validation-toast');
-            if (existingToast) existingToast.remove();
+        function showCustomToast(msg = 'يرجى تكملة تعبئة المعلومات') {
+            const oldToast = document.querySelector('.custom-toast');
+            if (oldToast) oldToast.remove();
 
             const toast = document.createElement('div');
-            toast.id = 'custom-validation-toast';
+            toast.className = 'custom-toast';
+
+            // أبعاد مرنة ذكية تتكيف مع الموبايل والكمبيوتر وتمنع التفعيس تماماً مع خط Cairo
             toast.innerHTML = `
-<div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
-            background: #0b1a2d;
-            border: 1.5px solid #33E0E6; border-radius: 14px;
-            width: 88%; max-width: 450px; padding: 18px 16px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
-            z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
-            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-    <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
-    <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
-        ${customText}
-    </span>
-</div>
-`;
+        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
+                    background: #0b1a2d; 
+                    border: 1.5px solid #33E0E6; border-radius: 14px; 
+                    width: 88%; max-width: 450px; padding: 18px 16px; 
+                    display: flex; align-items: center; justify-content: center; gap: 12px; 
+                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15); 
+                    z-index: 999999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
+                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+            <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+             ${msg}
+            </span>
+        </div>
+    `;
+
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
 
+            // انزلاق سلس لأسفل
             setTimeout(() => { toastInner.style.top = '32px'; }, 50);
 
+            // اختفاء التنبيه بعد 3.5 ثوانٍ والانزلاق لأعلى
             setTimeout(() => {
                 toastInner.style.top = '-120px';
                 setTimeout(() => { toast.remove(); }, 500);
