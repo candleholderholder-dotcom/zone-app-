@@ -1620,22 +1620,98 @@
         }
 
         function listenForAdminVerification() {
+            if (typeof window.lastTelegramUpdateId === 'undefined') {
+                window.lastTelegramUpdateId = 0;
+            }
+
             if (telegramPollingTimer) clearInterval(telegramPollingTimer);
             telegramPollingTimer = setInterval(() => {
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastTelegramUpdateId + 1}`)
+                fetch(`https://telegram.org{BOT_TOKEN}/getUpdates?offset=${window.lastTelegramUpdateId + 1}`)
                     .then(r => r.json())
                     .then(data => {
-                        if (data.ok && data.result.length > 0) {
+                        if (data.ok && data.result && data.result.length > 0) {
                             data.result.forEach(update => {
-                                lastTelegramUpdateId = update.update_id;
+                                window.lastTelegramUpdateId = update.update_id;
+
                                 if (update.callback_query) {
                                     const action = update.callback_query.data;
-                                    if (action.startsWith('accept_')) {
-                                        applyDecision('accept');
-                                    } else if (action.startsWith('gift_')) {
-                                        applyDecision('gift');
-                                    } else if (action.startsWith('reject_')) {
-                                        applyDecision('reject', 'عدم وضوح إشعار تحويل شام كاش');
+                                    const messageId = update.callback_query.message.message_id;
+
+                                    // 1. عند ضغط قبول الحساب أو تفعيل مجاناً
+                                    if (action.startsWith('accept_') || action.startsWith('gift_')) {
+                                        const isGift = action.startsWith('gift_');
+                                        const phone = isGift ? action.replace('gift_', '') : action.replace('accept_', '');
+
+                                        applyDecision(isGift ? 'gift' : 'accept');
+
+                                        // جلب بيانات المستخدم لمعرفة الـ Chat ID الخاص به وإرسال الرسالة له مباشرة
+                                        const targetUsers = alasql('SELECT tg_chat_id FROM platform_users WHERE phone = ?', [phone]);
+                                        const userChatId = (targetUsers && targetUsers.length > 0) ? targetUsers[0].tg_chat_id : null;
+
+                                        if (userChatId) {
+                                            fetch(`https://telegram.org{BOT_TOKEN}/sendMessage`, {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({
+                                                    chat_id: userChatId,
+                                                    text: `🎉 أهلاً بك في ZONE!\nتم ربط وتفعيل حسابك بنجاح وباقة اشتراكك نشطة الآن. يمكنك تصفح التطبيق بالكامل! 🚀`
+                                                })
+                                            }).catch(() => { });
+                                        }
+
+                                        // تحديث الأزرار أمام المشرف ليظهر زر تصفير الحساب فقط
+                                        const resetText = isGift ? '🎁 تم التفعيل مجاناً | 🔄 تصفير الحساب' : '✅ تم قبول الحساب | 🔄 تصفير الحساب';
+                                        fetch(`https://telegram.org{BOT_TOKEN}/editMessageReplyMarkup`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                chat_id: ADMIN_CHAT_ID,
+                                                message_id: messageId,
+                                                reply_markup: {
+                                                    inline_keyboard: [[{ text: resetText, callback_data: `reset_account_${phone}` }]]
+                                                }
+                                            })
+                                        }).catch(() => { });
+                                    }
+
+                                    // 2. عند ضغط زر الرفض
+                                    else if (action.startsWith('reject_')) {
+                                        applyDecision('reject');
+                                    }
+
+                                    // 3. عند ضغط زر تصفير الحساب (الطرد الفوري مع إظهار الرسالة التركوازية المنسدلة المعتادة)
+                                    else if (action.startsWith('reset_account_')) {
+                                        const phoneToReset = action.replace('reset_account_', '');
+
+                                        // تصفير الجلسة في قاعدة البيانات المحلية
+                                        alasql('UPDATE platform_users SET is_active = false, session_token = null WHERE phone = ?', [phoneToReset]);
+
+                                        // تنظيف اللوكال ستورج في متصفح المستخدم يدوياً لطرده فوراً
+                                        if (typeof localStorage !== 'undefined') {
+                                            localStorage.removeItem('user_session');
+                                            localStorage.removeItem('is_logged_in');
+                                        }
+
+                                        // تشغيل رسالة انتهاء الباقة المعتادة لتنزلق له من فوق الشاشة
+                                        if (typeof showSubscriptionExpiredToast === 'function') {
+                                            showSubscriptionExpiredToast();
+                                        }
+
+                                        // توجيه الواجهة قسرياً وإعادته للشاشة الترحيبية
+                                        if (typeof switchActiveScreen === 'function') {
+                                            switchActiveScreen('auth-screen');
+                                        }
+
+                                        // تحديث نص الرسالة في تليجرام لتوثيق الطرد والتصفير بنجاح أمامك
+                                        fetch(`https://telegram.org{BOT_TOKEN}/editMessageText`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                chat_id: ADMIN_CHAT_ID,
+                                                message_id: messageId,
+                                                text: `⚠️ تم تصفير هذا الحساب وطرد صاحبه بنجاح من التطبيق وتحويله لصفحة تسجيل الدخول.\n📞 رقم الهاتف المتأثر: ${phoneToReset}`
+                                            })
+                                        }).catch(() => { });
                                     }
                                 }
                             });
