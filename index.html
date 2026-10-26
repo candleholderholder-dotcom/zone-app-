@@ -1618,7 +1618,6 @@
                 setTimeout(() => applyDecision('accept'), 4000);
             });
         }
-
         function listenForAdminVerification() {
             if (telegramPollingTimer) clearInterval(telegramPollingTimer);
             telegramPollingTimer = setInterval(() => {
@@ -1677,7 +1676,9 @@
                                     } else if (action.startsWith('reset_')) {
                                         const phoneToReset = action.split('_')[1];
 
-                                        // تغيير نص الزر في البوت بعد التصفير
+                                        // إيقاف المؤقت وتحديث الزر في التليجرام
+                                        if (telegramPollingTimer) clearInterval(telegramPollingTimer);
+
                                         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
@@ -1692,20 +1693,93 @@
                                             })
                                         });
 
-                                        // مسح الحساب من القاعدة وطرد المستخدم لشاشة الدخول
+                                        // مسح الحساب من القاعدة وتصفير الجلسة
                                         try {
                                             alasql('DELETE FROM platform_users WHERE phone = ?', [phoneToReset]);
                                         } catch (e) { }
                                         activeSession = null;
-                                        logoutSession();
 
-                                        // إظهار الرسالة الفخمة من فوق بنفس الشكل
-                                        showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك');
+                                        // طرد المستخدم لشاشة الدخول
+                                        switchActiveScreen('auth-screen');
+                                        if (typeof toggleAuth === 'function') {
+                                            toggleAuth('login');
+                                        }
+
+                                        // إظهار الرسالة من الأعلى
+                                        setTimeout(() => {
+                                            showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك');
+                                        }, 150);
                                     }
                                 }
                             });
                         }
                     }).catch(() => { });
+            }, 2500);
+        }
+
+        function applyDecision(status, reasonText = '') {
+            // تم مسح سطر إيقاف المؤقت من هنا لكي يستمر البوت بالاستماع لزر التصفير
+            const headerTitle = document.getElementById('wait-header-title');
+
+            if (status === 'accept' || status === 'gift') {
+                alasql('INSERT INTO platform_users VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)', [
+                    Date.now(),
+                    pendingUserData.fullname,
+                    pendingUserData.phone,
+                    pendingUserData.city,
+                    pendingUserData.university,
+                    pendingUserData.major,
+                    pendingUserData.password,
+                    pendingUserData.tg_chat_id
+                ]);
+
+                activeSession = alasql('SELECT * FROM platform_users WHERE phone = ?', [pendingUserData.phone])[0];
+
+                if (status === 'accept') {
+                    headerTitle.innerHTML = `<span style="color: var(--success);"><i class="fa-solid fa-circle-check"></i> تم تفعيل حسابك بنجاح!</span>`;
+                } else {
+                    headerTitle.innerHTML = `<span style="color: var(--turquoise-light);"><i class="fa-solid fa-gift"></i> تم تفعيل حسابك مجاناً!</span>`;
+                }
+
+                setTimeout(() => {
+                    loadMainProductsFeed();
+                    switchActiveScreen('home-screen');
+                }, 1800);
+
+            } else if (status === 'reject') {
+                if (telegramPollingTimer) clearInterval(telegramPollingTimer);
+                headerTitle.innerHTML = `<span style="color: var(--danger);"><i class="fa-solid fa-circle-xmark"></i> تم رفض الحساب بسبب: ${reasonText}</span>`;
+            }
+        }
+        // تغيير نص الزر في البوت بعد التصفير
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                message_id: msgId,
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: '🚫 تم تصفير الحساب وطرد المستخدم', callback_data: 'done' }]
+                    ]
+                }
+            })
+        });
+
+        // مسح الحساب من القاعدة وطرد المستخدم لشاشة الدخول
+        try {
+            alasql('DELETE FROM platform_users WHERE phone = ?', [phoneToReset]);
+        } catch (e) { }
+        activeSession = null;
+        logoutSession();
+
+        // إظهار الرسالة الفخمة من فوق بنفس الشكل
+        showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك');
+                                    }
+                                }
+                            });
+                        }
+                    }).catch (() => { });
             }, 2500);
         }
 
