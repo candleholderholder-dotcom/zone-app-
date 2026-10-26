@@ -1478,45 +1478,40 @@
         function requestResetOtp() {
             let ph = document.getElementById('reset-phone-input').value.trim();
             if (!ph) {
-                showCustomToast(); // تشغيل الرسالة المستطيلة لتنبيه تعبئة الحقول
+                showCustomToast('يرجى تعبئة الحقول');
                 return;
             }
 
-            // توحيد وتجهيز صيغة الرقم للبحث بالصيغتين المحلية والدولية معاً
             let localPhone = ph;
             let internationalPhone = ph;
-            if (ph.startsWith('+963')) {
-                localPhone = '0' + ph.substring(4);
-            } else if (ph.startsWith('00963')) {
-                localPhone = '0' + ph.substring(5);
-            } else if (ph.startsWith('09')) {
-                internationalPhone = '+963' + ph.substring(1);
-            }
+            if (ph.startsWith('+963')) localPhone = '0' + ph.substring(4);
+            else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
+            else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
 
-            // البحث الذكي بالصيغتين
+            // البحث عن المستخدم في قاعدة البيانات
             const users = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
             const user = users && users[0];
 
-            // إذا الرقم غير موجود فعلاً في قاعدة البيانات، تفتح رسالة عدم العثور على الحساب
-            if (!user) {
+            // إذا الرقم غير مسجل أو غير مربوط بالتليجرام، نظهر رسالة عدم العثور على الحساب
+            if (!user || !user.tg_chat_id) {
                 showAccountNotFoundToast();
                 return;
             }
 
+            // توليد كود التحقق (5 أرقام)
             generatedOtpCode = Math.floor(10000 + Math.random() * 90000).toString();
 
-            // إرسال الكود لحساب المستخدم (أو لحساب الأدمن إذا لم يكن للمستخدم tg_chat_id)
-            const targetChatId = (user.tg_chat_id && user.tg_chat_id !== '') ? user.tg_chat_id : ADMIN_CHAT_ID;
+            // إرسال الكود حصراً إلى حساب التليجرام الخاص بالمستخدم (user.tg_chat_id) وبدون أي نص زائد
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    chat_id: targetChatId,
-                    text: `💬 كود استعادة كلمة المرور للحساب (${user.phone}):\nZONE Verification Code\n${generatedOtpCode}`
+                    chat_id: user.tg_chat_id,
+                    text: generatedOtpCode
                 })
             });
 
-            // تصفير المربعات الخمسة وإزالة أي لون سابق قبل فتحها
+            // تجهيز المربعات الخمسة وتفريغها
             for (let i = 1; i <= 5; i++) {
                 const box = document.getElementById(`otp-${i}`);
                 if (box) {
@@ -1545,13 +1540,13 @@
 
             if (enteredCode.length === 5) {
                 if (enteredCode === generatedOtpCode) {
-                    // تلوين حواف المربعات فقط باللون الأخضر بالتدريج (بدون تلوين الداخل)
+                    // تلوين حواف المربعات الخمسة بالأخضر حصراً بالتدريج (بدون تلوين الداخل)
                     for (let i = 1; i <= 5; i++) {
                         setTimeout(() => {
                             const box = document.getElementById(`otp-${i}`);
                             box.style.transition = 'border-color 0.25s ease, box-shadow 0.25s ease';
-                            box.style.borderColor = '#10b981'; // حواف خضراء فقط
-                            box.style.backgroundColor = 'transparent'; // الداخل يبقى شفافاً غير ملون
+                            box.style.borderColor = '#10b981';
+                            box.style.backgroundColor = 'transparent';
                             box.style.boxShadow = '0 0 8px rgba(16, 185, 129, 0.25)';
                         }, i * 140);
                     }
@@ -1559,7 +1554,7 @@
                     setTimeout(() => {
                         document.getElementById('reset-stage-2').style.display = 'none';
                         document.getElementById('reset-stage-3').style.display = 'block';
-                        addEyeIconsToResetPasswords(); // إضافة أيقونة العين لحقول كلمة المرور الجديدة
+                        addEyeIconsToResetPasswords();
                     }, 950);
                 } else {
                     showCustomToast('كود التحقق غير صحيح، يرجى المحاولة مجدداً');
@@ -1571,6 +1566,57 @@
             }
         }
 
+        // دالة إضافة أيقونة العين لإظهار وإخفاء كلمة المرور الجديدة وتأكيدها
+        function addEyeIconsToResetPasswords() {
+            ['new-reset-pass', 'confirm-reset-pass'].forEach(id => {
+                const input = document.getElementById(id);
+                if (!input || input.parentElement.querySelector('.pass-eye-toggle')) return;
+
+                const wrapper = input.parentElement;
+                wrapper.style.position = 'relative';
+
+                const eye = document.createElement('i');
+                eye.className = 'fa-solid fa-eye pass-eye-toggle';
+                eye.style.cssText = 'position: absolute; left: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #8fa3bf; font-size: 15px; z-index: 10;';
+
+                eye.onclick = () => {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        eye.className = 'fa-solid fa-eye-slash pass-eye-toggle';
+                        eye.style.color = '#33E0E6';
+                    } else {
+                        input.type = 'password';
+                        eye.className = 'fa-solid fa-eye pass-eye-toggle';
+                        eye.style.color = '#8fa3bf';
+                    }
+                };
+
+                wrapper.appendChild(eye);
+            });
+        }
+
+        function finalizeNewPassword() {
+            const p1 = document.getElementById('new-reset-pass').value;
+            const p2 = document.getElementById('confirm-reset-pass').value;
+            if (!p1 || p1 !== p2) {
+                showCustomToast('كلمات المرور غير متطابقة');
+                return;
+            }
+
+            const ph = document.getElementById('reset-phone-input').value.trim();
+            let localPhone = ph;
+            let internationalPhone = ph;
+            if (ph.startsWith('+963')) localPhone = '0' + ph.substring(4);
+            else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
+            else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
+
+            // تحديث كلمة المرور في قاعدة البيانات للمستخدم صاحب الرقم حصراً
+            alasql('UPDATE platform_users SET password = ? WHERE phone = ? OR phone = ?', [p1, localPhone, internationalPhone]);
+
+            // إظهار الرسالة العلوية بنفس التصميم والمقاسات والألوان ومكتوب فيها حصراً كما طلبت
+            showCustomToast('تم تعيين كلمة مرور جديدة');
+            toggleAuth('login');
+        }
         // دالة إضافة أيقونة العين لإظهار وإخفاء كلمة المرور الجديدة وتأكيدها تلقائياً
         function addEyeIconsToResetPasswords() {
             ['new-reset-pass', 'confirm-reset-pass'].forEach(id => {
