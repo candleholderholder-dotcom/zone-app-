@@ -1444,7 +1444,7 @@
                 return;
             }
 
-            // التحقق الصارم: إذا لم يتم ربط الحساب بالتليجرام (لا يوجد tg_chat_id)، نمنعه ونظهر الرسالة المطلوبة تماماً
+            // التحقق الصارم: منع المتابعة إذا لم يتم ربط الحساب بالتليجرام
             if (!pendingUserData || !pendingUserData.tg_chat_id) {
                 showCustomToast('يرجى ربط حسابك بالبوت');
                 return;
@@ -1489,7 +1489,7 @@
             const users = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
             const user = users && users[0];
 
-            // إذا الرقم غير مسجل أو ليس لديه tg_chat_id مرتبط، نظهر رسالة عدم العثور على الحساب
+            // إذا الرقم غير مسجل أو ليس لديه tg_chat_id مرتبط
             if (!user || !user.tg_chat_id) {
                 showAccountNotFoundToast();
                 return;
@@ -1498,13 +1498,13 @@
             // توليد كود التحقق (5 أرقام)
             generatedOtpCode = Math.floor(10000 + Math.random() * 90000).toString();
 
-            // إرسال الكود حصراً إلى حساب التليجرام الخاص بالمستخدم صاحب الرقم (user.tg_chat_id)
+            // إرسال الكود حصراً لحساب المستخدم مع العنوان المطلوب بالضبط
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: user.tg_chat_id,
-                    text: generatedOtpCode
+                    text: `ZONE Verification Code\n${generatedOtpCode}`
                 })
             });
 
@@ -1561,6 +1561,58 @@
                     document.getElementById('otp-1').focus();
                 }
             }
+        }
+
+        // دالة إضافة أيقونة العين لإظهار وإخفاء كلمة المرور الجديدة وتأكيدها
+        function addEyeIconsToResetPasswords() {
+            ['new-reset-pass', 'confirm-reset-pass'].forEach(id => {
+                const input = document.getElementById(id);
+                if (!input || input.parentElement.querySelector('.pass-eye-toggle')) return;
+
+                const wrapper = input.parentElement;
+                wrapper.style.position = 'relative';
+
+                const eye = document.createElement('i');
+                eye.className = 'fa-solid fa-eye pass-eye-toggle';
+                eye.style.cssText = 'position: absolute; left: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #8fa3bf; font-size: 15px; z-index: 10;';
+
+                eye.onclick = () => {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        eye.className = 'fa-solid fa-eye-slash pass-eye-toggle';
+                        eye.style.color = '#33E0E6';
+                    } else {
+                        input.type = 'password';
+                        eye.className = 'fa-solid fa-eye pass-eye-toggle';
+                        eye.style.color = '#8fa3bf';
+                    }
+                };
+
+                wrapper.appendChild(eye);
+            });
+        }
+
+        function finalizeNewPassword() {
+            const p1 = document.getElementById('new-reset-pass').value;
+            const p2 = document.getElementById('confirm-reset-pass').value;
+            if (!p1 || p1 !== p2) {
+                showCustomToast('كلمات المرور غير متطابقة');
+                return;
+            }
+
+            const ph = document.getElementById('reset-phone-input').value.trim();
+            let localPhone = ph;
+            let internationalPhone = ph;
+            if (ph.startsWith('+963')) localPhone = '0' + ph.substring(4);
+            else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
+            else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
+
+            // تحديث كلمة المرور في قاعدة البيانات للمستخدم صاحب الرقم حصراً
+            alasql('UPDATE platform_users SET password = ? WHERE phone = ? OR phone = ?', [p1, localPhone, internationalPhone]);
+
+            // إظهار الرسالة العلوية بعبارة "تم تعيين كلمة مرور جديدة"
+            showCustomToast('تم تعيين كلمة مرور جديدة');
+            toggleAuth('login');
         }
 
         // دالة إضافة أيقونة العين لإظهار وإخفاء كلمة المرور الجديدة وتأكيدها
