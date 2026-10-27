@@ -1439,17 +1439,6 @@
             const major = document.getElementById('reg-major').value.trim();
             const password = document.getElementById('reg-password').value.trim();
 
-            if (!fullname || !phone || !city || !university || !major || !password) {
-                showCustomToast('يرجى تعبئة جميع الحقول المطلوبة');
-                return;
-            }
-
-            // التحقق الصارم: منع المتابعة إذا لم يتم ربط الحساب بالتليجرام
-            if (!pendingUserData || !pendingUserData.tg_chat_id) {
-                showCustomToast('يرجى ربط حسابك بالبوت');
-                return;
-            }
-
             pendingUserData = {
                 fullname,
                 phone,
@@ -1457,10 +1446,44 @@
                 university,
                 major,
                 password,
-                tg_chat_id: pendingUserData.tg_chat_id
+                tg_chat_id: (pendingUserData && pendingUserData.tg_chat_id) ? pendingUserData.tg_chat_id : ''
             };
-
             switchActiveScreen('subs-screen');
+        }
+
+        function performLogin() {
+            const phoneInput = document.getElementById('login-phone').value.trim();
+            const passInput = document.getElementById('login-password').value.trim();
+
+            let localPhone = phoneInput;
+            let internationalPhone = phoneInput;
+            if (phoneInput.startsWith('+963')) localPhone = '0' + phoneInput.substring(4);
+            else if (phoneInput.startsWith('00963')) localPhone = '0' + phoneInput.substring(5);
+            else if (phoneInput.startsWith('09')) internationalPhone = '+963' + phoneInput.substring(1);
+
+            // البحث عن المستخدم في جدول قاعدة البيانات
+            const userRecord = alasql('SELECT * FROM platform_users WHERE (phone = ? OR phone = ?) AND password = ?', [localPhone, internationalPhone, passInput])[0];
+
+            if (userRecord) {
+                activeSession = userRecord;
+
+                // التحقق مما إذا كانت باقة المستخدم منتهية (حسب عمود الحالة لديك أو إذا تم تصفيرها)
+                const isSubscriptionExpired = userRecord.is_expired === 1 || userRecord.subscription_active === false;
+
+                if (isSubscriptionExpired) {
+                    // توجيه المستخدم فوراً لصفحة الاشتراك مع رسالة "يرجى تجديد باقة الاشتراك"
+                    switchActiveScreen('subs-screen');
+                    setTimeout(() => {
+                        showCustomToast('يرجى تجديد باقة الاشتراك');
+                    }, 150);
+                } else {
+                    // دخول مباشر وفعلي للمنصة
+                    loadMainProductsFeed();
+                    switchActiveScreen('home-screen');
+                }
+            } else {
+                showCustomToast('البيانات المدخلة غير صحيحة أو أن الحساب قيد المراجعة');
+            }
         }
 
         function openResetPasswordFlow() {
@@ -1488,6 +1511,7 @@
             const users = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
             const user = users && users[0];
 
+            // إذا الرقم غير مسجل أو لا يوجد حساب تليجرام مرتبط به
             if (!user || !user.tg_chat_id) {
                 showAccountNotFoundToast();
                 return;
@@ -1495,7 +1519,7 @@
 
             generatedOtpCode = Math.floor(10000 + Math.random() * 90000).toString();
 
-            // إرسال كود التحقق حصراً إلى تليجرام المستخدم بالصيغة المطلوبة
+            // إرسال الكود حصراً لتليجرام المستخدم بالصيغة المطلوبة تماماً
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1533,11 +1557,12 @@
 
             if (enteredCode.length === 5) {
                 if (enteredCode === generatedOtpCode) {
+                    // تلوين حواف المربعات الخمسة بالأخضر بالتدريج (بدون الداخل)
                     for (let i = 1; i <= 5; i++) {
                         setTimeout(() => {
                             const box = document.getElementById(`otp-${i}`);
                             box.style.transition = 'border-color 0.25s ease, box-shadow 0.25s ease';
-                            box.style.borderColor = '#10b981'; // حواف خضراء فقط بالتدريج
+                            box.style.borderColor = '#10b981';
                             box.style.backgroundColor = 'transparent';
                             box.style.boxShadow = '0 0 8px rgba(16, 185, 129, 0.25)';
                         }, i * 140);
@@ -1603,110 +1628,6 @@
 
             alasql('UPDATE platform_users SET password = ? WHERE phone = ? OR phone = ?', [p1, localPhone, internationalPhone]);
 
-            showCustomToast('تم تعيين كلمة مرور جديدة');
-            toggleAuth('login');
-        }
-
-        // دالة إضافة أيقونة العين لإظهار وإخفاء كلمة المرور الجديدة وتأكيدها
-        function addEyeIconsToResetPasswords() {
-            ['new-reset-pass', 'confirm-reset-pass'].forEach(id => {
-                const input = document.getElementById(id);
-                if (!input || input.parentElement.querySelector('.pass-eye-toggle')) return;
-
-                const wrapper = input.parentElement;
-                wrapper.style.position = 'relative';
-
-                const eye = document.createElement('i');
-                eye.className = 'fa-solid fa-eye pass-eye-toggle';
-                eye.style.cssText = 'position: absolute; left: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #8fa3bf; font-size: 15px; z-index: 10;';
-
-                eye.onclick = () => {
-                    if (input.type === 'password') {
-                        input.type = 'text';
-                        eye.className = 'fa-solid fa-eye-slash pass-eye-toggle';
-                        eye.style.color = '#33E0E6';
-                    } else {
-                        input.type = 'password';
-                        eye.className = 'fa-solid fa-eye pass-eye-toggle';
-                        eye.style.color = '#8fa3bf';
-                    }
-                };
-
-                wrapper.appendChild(eye);
-            });
-        }
-
-        function finalizeNewPassword() {
-            const p1 = document.getElementById('new-reset-pass').value;
-            const p2 = document.getElementById('confirm-reset-pass').value;
-            if (!p1 || p1 !== p2) {
-                showCustomToast('كلمات المرور غير متطابقة');
-                return;
-            }
-
-            const ph = document.getElementById('reset-phone-input').value.trim();
-            let localPhone = ph;
-            let internationalPhone = ph;
-            if (ph.startsWith('+963')) localPhone = '0' + ph.substring(4);
-            else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
-            else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
-
-            // تحديث كلمة المرور في قاعدة البيانات للمستخدم صاحب الرقم حصراً
-            alasql('UPDATE platform_users SET password = ? WHERE phone = ? OR phone = ?', [p1, localPhone, internationalPhone]);
-
-            // إظهار الرسالة العلوية بنفس التصميم والمقاسات والألوان وبجملة "تم تعيين كلمة مرور جديدة"
-            showCustomToast('تم تعيين كلمة مرور جديدة');
-            toggleAuth('login');
-        }
-
-        // دالة إضافة أيقونة العين لإظهار وإخفاء كلمة المرور الجديدة وتأكيدها
-        function addEyeIconsToResetPasswords() {
-            ['new-reset-pass', 'confirm-reset-pass'].forEach(id => {
-                const input = document.getElementById(id);
-                if (!input || input.parentElement.querySelector('.pass-eye-toggle')) return;
-
-                const wrapper = input.parentElement;
-                wrapper.style.position = 'relative';
-
-                const eye = document.createElement('i');
-                eye.className = 'fa-solid fa-eye pass-eye-toggle';
-                eye.style.cssText = 'position: absolute; left: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #8fa3bf; font-size: 15px; z-index: 10;';
-
-                eye.onclick = () => {
-                    if (input.type === 'password') {
-                        input.type = 'text';
-                        eye.className = 'fa-solid fa-eye-slash pass-eye-toggle';
-                        eye.style.color = '#33E0E6';
-                    } else {
-                        input.type = 'password';
-                        eye.className = 'fa-solid fa-eye pass-eye-toggle';
-                        eye.style.color = '#8fa3bf';
-                    }
-                };
-
-                wrapper.appendChild(eye);
-            });
-        }
-
-        function finalizeNewPassword() {
-            const p1 = document.getElementById('new-reset-pass').value;
-            const p2 = document.getElementById('confirm-reset-pass').value;
-            if (!p1 || p1 !== p2) {
-                showCustomToast('كلمات المرور غير متطابقة');
-                return;
-            }
-
-            const ph = document.getElementById('reset-phone-input').value.trim();
-            let localPhone = ph;
-            let internationalPhone = ph;
-            if (ph.startsWith('+963')) localPhone = '0' + ph.substring(4);
-            else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
-            else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
-
-            // تحديث كلمة المرور في قاعدة البيانات للمستخدم صاحب الرقم حصراً
-            alasql('UPDATE platform_users SET password = ? WHERE phone = ? OR phone = ?', [p1, localPhone, internationalPhone]);
-
-            // إظهار الرسالة العلوية بنفس التصميم والمقاسات والألوان ومكتوب فيها حصراً كما طلبت
             showCustomToast('تم تعيين كلمة مرور جديدة');
             toggleAuth('login');
         }
