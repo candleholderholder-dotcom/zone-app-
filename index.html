@@ -1617,54 +1617,6 @@
             showCustomToast('تم تعيين كلمة مرور جديدة');
             toggleAuth('login');
         }
-        // دالة إضافة أيقونة العين لإظهار وإخفاء كلمة المرور الجديدة وتأكيدها تلقائياً
-        function addEyeIconsToResetPasswords() {
-            ['new-reset-pass', 'confirm-reset-pass'].forEach(id => {
-                const input = document.getElementById(id);
-                if (!input || input.parentElement.querySelector('.pass-eye-toggle')) return;
-
-                const wrapper = input.parentElement;
-                wrapper.style.position = 'relative';
-
-                const eye = document.createElement('i');
-                eye.className = 'fa-solid fa-eye pass-eye-toggle';
-                eye.style.cssText = 'position: absolute; left: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #8fa3bf; font-size: 15px; z-index: 10;';
-
-                eye.onclick = () => {
-                    if (input.type === 'password') {
-                        input.type = 'text';
-                        eye.className = 'fa-solid fa-eye-slash pass-eye-toggle';
-                        eye.style.color = '#33E0E6';
-                    } else {
-                        input.type = 'password';
-                        eye.className = 'fa-solid fa-eye pass-eye-toggle';
-                        eye.style.color = '#8fa3bf';
-                    }
-                };
-
-                wrapper.appendChild(eye);
-            });
-        }
-
-        function finalizeNewPassword() {
-            const p1 = document.getElementById('new-reset-pass').value;
-            const p2 = document.getElementById('confirm-reset-pass').value;
-            if (!p1 || p1 !== p2) {
-                showCustomToast('كلمات المرور غير متطابقة!');
-                return;
-            }
-
-            const ph = document.getElementById('reset-phone-input').value.trim();
-            let localPhone = ph;
-            let internationalPhone = ph;
-            if (ph.startsWith('+963')) localPhone = '0' + ph.substring(4);
-            else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
-            else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
-
-            alasql('UPDATE platform_users SET password = ? WHERE phone = ? OR phone = ?', [p1, localPhone, internationalPhone]);
-            showCustomToast('تم تعيين كلمة المرور الجديدة بنجاح! يمكنك الآن تسجيل الدخول');
-            toggleAuth('login');
-        }
 
         /* =========================================================
            5. شاشة الباقات، معالجة الطلب، وأزرار التلغرام التفاعلية للمدير
