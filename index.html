@@ -1439,6 +1439,18 @@
             const major = document.getElementById('reg-major').value.trim();
             const password = document.getElementById('reg-password').value.trim();
 
+            if (!fullname || !phone || !city || !university || !major || !password) {
+                showCustomToast('يرجى تعبئة جميع الحقول المطلوبة');
+                return;
+            }
+
+            // إجبار المستخدم على ربط حسابه بالبوت قبل المتابعة
+            const btnLinker = document.getElementById('btn-tg-linker');
+            if (!pendingUserData || !pendingUserData.tg_chat_id || (btnLinker && !btnLinker.classList.contains('success-linked'))) {
+                showCustomToast('يرجى ربط حسابك بالبوت');
+                return;
+            }
+
             pendingUserData = {
                 fullname,
                 phone,
@@ -1446,7 +1458,7 @@
                 university,
                 major,
                 password,
-                tg_chat_id: (pendingUserData && pendingUserData.tg_chat_id) ? pendingUserData.tg_chat_id : ''
+                tg_chat_id: pendingUserData.tg_chat_id
             };
             switchActiveScreen('subs-screen');
         }
@@ -1461,26 +1473,38 @@
             else if (phoneInput.startsWith('00963')) localPhone = '0' + phoneInput.substring(5);
             else if (phoneInput.startsWith('09')) internationalPhone = '+963' + phoneInput.substring(1);
 
-            // البحث عن المستخدم في جدول قاعدة البيانات
-            const userRecord = alasql('SELECT * FROM platform_users WHERE (phone = ? OR phone = ?) AND password = ?', [localPhone, internationalPhone, passInput])[0];
+            const users = alasql('SELECT * FROM platform_users WHERE (phone = ? OR phone = ?) AND password = ?', [localPhone, internationalPhone, passInput]);
+            const userRecord = users && users[0];
 
             if (userRecord) {
-                activeSession = userRecord;
+                // إذا المستخدم مو رابط حسابه بالبوت
+                if (!userRecord.tg_chat_id) {
+                    showCustomToast('يرجى ربط حسابك بالبوت');
+                    return;
+                }
 
-                // التحقق مما إذا كانت باقة المستخدم منتهية (حسب عمود الحالة لديك أو إذا تم تصفيرها)
-                const isSubscriptionExpired = userRecord.is_expired === 1 || userRecord.subscription_active === false;
-
-                if (isSubscriptionExpired) {
-                    // توجيه المستخدم فوراً لصفحة الاشتراك مع رسالة "يرجى تجديد باقة الاشتراك"
+                // إذا باقته منتهية (تم تصفير حسابه وطرده سابقاً)
+                if (userRecord.is_expired === 1 || userRecord.sub_status === 0) {
+                    pendingUserData = {
+                        fullname: userRecord.fullname,
+                        phone: userRecord.phone,
+                        city: userRecord.city,
+                        university: userRecord.university,
+                        major: userRecord.major,
+                        password: userRecord.password,
+                        tg_chat_id: userRecord.tg_chat_id
+                    };
                     switchActiveScreen('subs-screen');
                     setTimeout(() => {
                         showCustomToast('يرجى تجديد باقة الاشتراك');
                     }, 150);
-                } else {
-                    // دخول مباشر وفعلي للمنصة
-                    loadMainProductsFeed();
-                    switchActiveScreen('home-screen');
+                    return;
                 }
+
+                // دخول طبيعي وفوري للمنصة
+                activeSession = userRecord;
+                loadMainProductsFeed();
+                switchActiveScreen('home-screen');
             } else {
                 showCustomToast('البيانات المدخلة غير صحيحة أو أن الحساب قيد المراجعة');
             }
@@ -1498,7 +1522,7 @@
         function requestResetOtp() {
             let ph = document.getElementById('reset-phone-input').value.trim();
             if (!ph) {
-                showCustomToast('يرجى تعبئة الحقول');
+                showCustomToast();
                 return;
             }
 
@@ -1511,7 +1535,6 @@
             const users = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
             const user = users && users[0];
 
-            // إذا الرقم غير مسجل أو لا يوجد حساب تليجرام مرتبط به
             if (!user || !user.tg_chat_id) {
                 showAccountNotFoundToast();
                 return;
@@ -1519,7 +1542,7 @@
 
             generatedOtpCode = Math.floor(10000 + Math.random() * 90000).toString();
 
-            // إرسال الكود حصراً لتليجرام المستخدم بالصيغة المطلوبة تماماً
+            // إرسال الكود لتليجرام المستخدم صاحب الرقم حصراً بالصيغة المطلوبة
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1536,6 +1559,7 @@
                     box.classList.remove('active-success');
                     box.style.borderColor = '';
                     box.style.backgroundColor = 'transparent';
+                    box.style.boxShadow = 'none';
                 }
             }
 
@@ -1557,7 +1581,6 @@
 
             if (enteredCode.length === 5) {
                 if (enteredCode === generatedOtpCode) {
-                    // تلوين حواف المربعات الخمسة بالأخضر بالتدريج (بدون الداخل)
                     for (let i = 1; i <= 5; i++) {
                         setTimeout(() => {
                             const box = document.getElementById(`otp-${i}`);
@@ -1610,6 +1633,31 @@
                 wrapper.appendChild(eye);
             });
         }
+
+        function finalizeNewPassword() {
+            const p1 = document.getElementById('new-reset-pass').value.trim();
+            const p2 = document.getElementById('confirm-reset-pass').value.trim();
+            if (!p1 || p1 !== p2) {
+                showCustomToast('كلمات المرور غير متطابقة');
+                return;
+            }
+
+            const ph = document.getElementById('reset-phone-input').value.trim();
+            let localPhone = ph;
+            let internationalPhone = ph;
+            if (ph.startsWith('+963')) localPhone = '0' + ph.substring(4);
+            else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
+            else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
+
+            alasql('UPDATE platform_users SET password = ? WHERE phone = ? OR phone = ?', [p1, localPhone, internationalPhone]);
+
+            showCustomToast('تم تعيين كلمة مرور جديدة');
+            toggleAuth('login');
+        }
+
+
+
+
 
         function finalizeNewPassword() {
             const p1 = document.getElementById('new-reset-pass').value;
@@ -1762,7 +1810,7 @@
 
                                         // مسح الحساب من القاعدة وتصفير الجلسة
                                         try {
-                                            alasql('DELETE FROM platform_users WHERE phone = ?', [phoneToReset]);
+                                            alasql('UPDATE platform_users SET is_expired = 1, sub_status = 0 WHERE phone = ?', [phoneToReset]);
                                         } catch (e) { }
                                         activeSession = null;
 
@@ -1785,6 +1833,11 @@
             const headerTitle = document.getElementById('wait-header-title');
 
             if (status === 'accept' || status === 'gift') {
+                // مسح أي سجل قديم لنفس الرقم (في حال كان عم يجدد باقته) قبل إضافة السجل الفعال الجديد
+                try {
+                    alasql('DELETE FROM platform_users WHERE phone = ?', [pendingUserData.phone]);
+                } catch (e) { }
+
                 alasql('INSERT INTO platform_users VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)', [
                     Date.now(),
                     pendingUserData.fullname,
@@ -1795,7 +1848,6 @@
                     pendingUserData.password,
                     pendingUserData.tg_chat_id
                 ]);
-
                 activeSession = alasql('SELECT * FROM platform_users WHERE phone = ?', [pendingUserData.phone])[0];
 
                 if (status === 'accept') {
