@@ -1449,6 +1449,34 @@
                 return;
             }
 
+            // فحص هل الرقم مسجل مسبقاً وانتهت باقته (محاولة التفاف بعد الطرد)
+            let localPhone = phone;
+            let internationalPhone = phone;
+            if (phone.startsWith('+963')) localPhone = '0' + phone.substring(4);
+            else if (phone.startsWith('00963')) localPhone = '0' + phone.substring(5);
+            else if (phone.startsWith('09')) internationalPhone = '+963' + phone.substring(1);
+
+            const existingUser = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
+            if (existingUser && existingUser.length > 0) {
+                const userRec = existingUser[0];
+                if (userRec.is_expired === 1 || userRec.sub_status === 0) {
+                    pendingUserData = {
+                        fullname: userRec.fullname,
+                        phone: userRec.phone,
+                        city: userRec.city,
+                        university: userRec.university,
+                        major: userRec.major,
+                        password: userRec.password,
+                        tg_chat_id: userRec.tg_chat_id
+                    };
+                    switchActiveScreen('subs-screen');
+                    setTimeout(() => {
+                        showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك.');
+                    }, 150);
+                    return;
+                }
+            }
+
             // إجبار المستخدم على ربط حسابه بالبوت قبل المتابعة
             const btnLinker = document.getElementById('btn-tg-linker');
             if (!pendingUserData || !pendingUserData.tg_chat_id || (btnLinker && !btnLinker.classList.contains('success-linked'))) {
@@ -1495,7 +1523,7 @@
                     };
                     switchActiveScreen('subs-screen');
                     setTimeout(() => {
-                        showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك');
+                        showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك.');
                     }, 150);
                     return;
                 }
@@ -2122,7 +2150,8 @@
                 })
             });
 
-            alert('تم حفظ البيانات وتحديثها بنجاح!');
+            // إظهار رسالة النجاح العلوية الجديدة مع إشارة الصح باللون التركوازي
+            showCustomToast('تم تعديل بياناتك بنجاح', 'check');
             toggleProfileEditMode();
         }
 
@@ -2132,28 +2161,31 @@
             toggleAuth('login');
         }
         // دالة إظهار التنبيه التركوازي الفخم الطويل والمستريح بظل خفيف جداً
-        function showCustomToast(msg = 'يرجى تكملة تعبئة المعلومات') {
+        function showCustomToast(msg = 'يرجى تكملة تعبئة المعلومات', iconType = 'exclamation') {
             const oldToast = document.querySelector('.custom-toast');
             if (oldToast) oldToast.remove();
 
             const toast = document.createElement('div');
             toast.className = 'custom-toast';
 
+            // اختيار الأيقونة: إذا طلبنا check تظهر إشارة الصح، وإلا يظهر علامة التعجب
+            const iconClass = (iconType === 'check') ? 'fas fa-circle-check' : 'fas fa-circle-exclamation';
+
             toast.innerHTML = `
-<div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
-            background: #0b1a2d;
-            border: 1.5px solid #33E0E6; border-radius: 14px;
-            width: 88%; max-width: 450px; padding: 18px 16px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
-            z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
-            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-    <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
-    <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
-        ${msg}
-    </span>
-</div>
-    `;
+                <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
+                    background: #0b1a2d;
+                    border: 1.5px solid #33E0E6; border-radius: 14px;
+                    width: 88%; max-width: 450px; padding: 18px 16px;
+                    display: flex; align-items: center; justify-content: center; gap: 12px;
+                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
+                    z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
+                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+                    <i class="${iconClass}" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+                    <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+                        ${msg}
+                    </span>
+                </div>
+            `;
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
