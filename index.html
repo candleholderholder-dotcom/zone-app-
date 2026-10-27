@@ -1463,6 +1463,7 @@
             switchActiveScreen('subs-screen');
         }
 
+        // 1. تسجيل الدخول مع الحظر الصارم للمنتهي اشتراكه وتوجيهه للباقات
         function performLogin() {
             const phoneInput = document.getElementById('login-phone').value.trim();
             const passInput = document.getElementById('login-password').value.trim();
@@ -1477,7 +1478,7 @@
             const userRecord = users && users[0];
 
             if (userRecord) {
-                // التحقق مما إذا كان الحساب منتهياً أو مطروداً
+                // فحص قاطع: هل الحساب منتهياً أو مطروداً؟
                 if (userRecord.is_expired === 1 || userRecord.sub_status === 0) {
                     pendingUserData = {
                         fullname: userRecord.fullname,
@@ -1488,7 +1489,7 @@
                         password: userRecord.password,
                         tg_chat_id: userRecord.tg_chat_id
                     };
-                    // توجيه إجباري لصفحة الباقات مع رسالة التنبيه حصراً
+                    // منع الدخول نهائياً وتحويله لصفحة الباقات مع الرسالة المطلوبة حصراً
                     switchActiveScreen('subs-screen');
                     setTimeout(() => {
                         showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك');
@@ -1496,7 +1497,7 @@
                     return;
                 }
 
-                // دخول طبيعي للمنصة إذا كان اشتراكه سارياً
+                // إذا اشتراكه فعال، يدخل المنصة طبيعي
                 activeSession = userRecord;
                 loadMainProductsFeed();
                 switchActiveScreen('home-screen');
@@ -1504,19 +1505,12 @@
                 showCustomToast('البيانات المدخلة غير صحيحة أو أن الحساب قيد المراجعة');
             }
         }
-        function openResetPasswordFlow() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('reg-form').style.display = 'none';
-            document.getElementById('reset-flow-container').style.display = 'block';
-            document.getElementById('reset-stage-1').style.display = 'block';
-            document.getElementById('reset-stage-2').style.display = 'none';
-            document.getElementById('reset-stage-3').style.display = 'none';
-        }
 
+        // 2. طلب كود التحقق وإرساله حصراً لتليجرام المستخدم المستهدف (user.tg_chat_id)
         function requestResetOtp() {
             let ph = document.getElementById('reset-phone-input').value.trim();
             if (!ph) {
-                showCustomToast();
+                showCustomToast('يرجى تعبئة الحقول');
                 return;
             }
 
@@ -1530,13 +1524,13 @@
             const user = users && users[0];
 
             if (!user || !user.tg_chat_id) {
-                showAccountNotFoundToast();
+                showCustomToast('رقم الهاتف غير مسجل أو لم يتم ربط حساب التليجرام');
                 return;
             }
 
             generatedOtpCode = Math.floor(10000 + Math.random() * 90000).toString();
 
-            // إرسال الكود لتليجرام المستخدم صاحب الرقم حصراً بالصيغة المطلوبة
+            // إرسال الكود حصراً لآيدي تليجرام المستخدم ولا يقترب من حساب المشرف نهائياً
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1562,13 +1556,13 @@
             document.getElementById('otp-1').focus();
         }
 
+        // 3. التحكم بحقول الـ OTP للأرقام فقط وبسلاسة تامة
         function stepOtp(index) {
             const currentInput = document.getElementById(`otp-${index}`);
 
-            // السماح للأرقام فقط وتنظيف أي حروف أخرى لمنع تخربط الكيبورد
+            // السماح للأرقام فقط وتنظيف أي حروف لمنع تخربط الكيبورد
             currentInput.value = currentInput.value.replace(/[^0-9]/g, '');
 
-            // الانتقال التلقائي للمربع التالي فور كتابة الرقم
             if (currentInput.value && index < 5) {
                 document.getElementById(`otp-${index + 1}`).focus();
             }
@@ -1578,10 +1572,8 @@
                 enteredCode += document.getElementById(`otp-${i}`).value;
             }
 
-            // التحقق عند اكتمال الأرقام الخمسة
             if (enteredCode.length === 5) {
                 if (enteredCode === generatedOtpCode) {
-                    // تلوين الحواف الخضراء تدريجياً
                     for (let i = 1; i <= 5; i++) {
                         setTimeout(() => {
                             const box = document.getElementById(`otp-${i}`);
@@ -1606,6 +1598,7 @@
                 }
             }
         }
+
         function addEyeIconsToResetPasswords() {
             ['new-reset-pass', 'confirm-reset-pass'].forEach(id => {
                 const input = document.getElementById(id);
