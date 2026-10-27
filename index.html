@@ -1463,7 +1463,6 @@
             switchActiveScreen('subs-screen');
         }
 
-        // 1. تسجيل الدخول مع الحظر الصارم للمنتهي اشتراكه وتوجيهه للباقات
         function performLogin() {
             const phoneInput = document.getElementById('login-phone').value.trim();
             const passInput = document.getElementById('login-password').value.trim();
@@ -1478,7 +1477,13 @@
             const userRecord = users && users[0];
 
             if (userRecord) {
-                // فحص قاطع: هل الحساب منتهياً أو مطروداً؟
+                // إذا المستخدم مو رابط حسابه بالبوت
+                if (!userRecord.tg_chat_id) {
+                    showCustomToast('يرجى ربط حسابك بالبوت');
+                    return;
+                }
+
+                // إذا باقته منتهية (تم تصفير حسابه وطرده سابقاً)
                 if (userRecord.is_expired === 1 || userRecord.sub_status === 0) {
                     pendingUserData = {
                         fullname: userRecord.fullname,
@@ -1489,15 +1494,14 @@
                         password: userRecord.password,
                         tg_chat_id: userRecord.tg_chat_id
                     };
-                    // منع الدخول نهائياً وتحويله لصفحة الباقات مع الرسالة المطلوبة حصراً
                     switchActiveScreen('subs-screen');
                     setTimeout(() => {
-                        showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك');
+                        showCustomToast('يرجى تجديد باقة الاشتراك');
                     }, 150);
                     return;
                 }
 
-                // إذا اشتراكه فعال، يدخل المنصة طبيعي
+                // دخول طبيعي وفوري للمنصة
                 activeSession = userRecord;
                 loadMainProductsFeed();
                 switchActiveScreen('home-screen');
@@ -1506,11 +1510,19 @@
             }
         }
 
-        // 2. طلب كود التحقق وإرساله حصراً لتليجرام المستخدم المستهدف (user.tg_chat_id)
+        function openResetPasswordFlow() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('reg-form').style.display = 'none';
+            document.getElementById('reset-flow-container').style.display = 'block';
+            document.getElementById('reset-stage-1').style.display = 'block';
+            document.getElementById('reset-stage-2').style.display = 'none';
+            document.getElementById('reset-stage-3').style.display = 'none';
+        }
+
         function requestResetOtp() {
             let ph = document.getElementById('reset-phone-input').value.trim();
             if (!ph) {
-                showCustomToast('يرجى تعبئة الحقول');
+                showCustomToast();
                 return;
             }
 
@@ -1524,13 +1536,13 @@
             const user = users && users[0];
 
             if (!user || !user.tg_chat_id) {
-                showCustomToast('رقم الهاتف غير مسجل أو لم يتم ربط حساب التليجرام');
+                showAccountNotFoundToast();
                 return;
             }
 
             generatedOtpCode = Math.floor(10000 + Math.random() * 90000).toString();
 
-            // إرسال الكود حصراً لآيدي تليجرام المستخدم ولا يقترب من حساب المشرف نهائياً
+            // إرسال الكود لتليجرام المستخدم صاحب الرقم حصراً بالصيغة المطلوبة
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1556,13 +1568,8 @@
             document.getElementById('otp-1').focus();
         }
 
-        // 3. التحكم بحقول الـ OTP للأرقام فقط وبسلاسة تامة
         function stepOtp(index) {
             const currentInput = document.getElementById(`otp-${index}`);
-
-            // السماح للأرقام فقط وتنظيف أي حروف لمنع تخربط الكيبورد
-            currentInput.value = currentInput.value.replace(/[^0-9]/g, '');
-
             if (currentInput.value && index < 5) {
                 document.getElementById(`otp-${index + 1}`).focus();
             }
