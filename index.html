@@ -1300,7 +1300,12 @@
            2. تهيئة قاعدة البيانات المحلية عبر AlaSQL
            ========================================================= */
         function initializeDatabase() {
-            alasql(`CREATE TABLE IF NOT EXISTS platform_users (
+            // التحقق مما إذا كانت الجداول مخزنة مسبقاً في متصفح الكروم لضمان عدم ضياعها عند التحديث (Refresh)
+            try {
+                alasql('SET LS ON');
+            } catch (e) { }
+
+            alasql(`CREATE TABLE IF NOT EXISTS localStorage.platform_users (
             id INT AUTO_INCREMENT PRIMARY KEY,
             fullname STRING,
             phone STRING UNIQUE,
@@ -1314,7 +1319,7 @@
             sub_status INT
         )`);
 
-            alasql(`CREATE TABLE IF NOT EXISTS items_feed (
+            alasql(`CREATE TABLE IF NOT EXISTS localStorage.items_feed (
             id INT AUTO_INCREMENT PRIMARY KEY,
             owner_phone STRING,
             owner_name STRING,
@@ -1451,19 +1456,19 @@
                 return;
             }
 
-            // فحص هل الرقم مسجل مسبقاً في القاعدة
             let localPhone = phone;
             let internationalPhone = phone;
             if (phone.startsWith('+963')) localPhone = '0' + phone.substring(4);
             else if (phone.startsWith('00963')) localPhone = '0' + phone.substring(5);
             else if (phone.startsWith('09')) internationalPhone = '+963' + phone.substring(1);
 
-            const existingUser = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
+            // البحث في الجدول الدائم (localStorage)
+            const existingUser = alasql('SELECT * FROM localStorage.platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
 
             if (existingUser && existingUser.length > 0) {
                 const userRec = existingUser[0];
 
-                // الحالة الأولى: إذا كان المستخدم مطروداً (انتهت باقته)، نوجهه لصفحة باقة الاشتراك لتجديدها
+                // إذا كان المستخدم مطروداً، نحوله لصفحة باقة الاشتراك لتجديدها مع الرسالة المطلوبة
                 if (userRec.is_expired === 1 || userRec.sub_status === 0) {
                     pendingUserData = {
                         fullname: userRec.fullname,
@@ -1481,7 +1486,7 @@
                     return;
                 }
 
-                // الحالة الثانية: إذا كان الحساب نشطاً وموجوداً مسبقاً، نمنعه ونظهر له رسالة الاقتراح الثالث
+                // إذا كان الرقم مسجلاً لحساب نشط، نمنعه ونظهر له رسالة الاقتراح الثالث
                 else {
                     showCustomToast('عذراً، هذا الرقم مسجل مسبقاً في المنصة');
                     return;
@@ -1544,7 +1549,7 @@
                 loadMainProductsFeed();
                 switchActiveScreen('home-screen');
             } else {
-                showCustomToast('البيانات المدخلة غير صحيحة أو أن الحساب قيد المراجعة');
+                showCustomToast('البيانات المدخلة غير صحيحة');
             }
         }
         function openResetPasswordFlow() {
