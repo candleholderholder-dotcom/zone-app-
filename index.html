@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ZONE</title>
+    <!-- استدعاء مكتبة سوبابيس للربط السحابي -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="preload" as="image" href="./logo/logo.jpg" fetchpriority="high">
 
     <!-- خط Cairo المعتمد لكامل المنصة -->
@@ -1279,6 +1281,89 @@
         </div>
     </div>
     <script>
+        // إعدادات الاتصال السحابي بـ Supabase لمشروع ZONE
+        const SUPABASE_URL = 'https://hvrxmpyzyxsoqrgfyyod.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_secret_97e9uEcSty94qOmQW_1fsw_hSlFEHRD';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // دالة تسجيل طالب جديد وحفظ بياناته في سحابة Supabase
+        async function proceedToSubscription() {
+            const fullname = document.getElementById('reg-fullname').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const city = document.getElementById('reg-city').value;
+            const university = document.getElementById('reg-university').value.trim();
+            const major = document.getElementById('reg-major').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+
+            if (!fullname || !phone || !city || !university || !major || !password) {
+                alert('يرجى تعبئة جميع الحقول المطلوبة');
+                return;
+            }
+
+            // فحص هل الرقم مسجل مسبقاً في قاعدة بيانات Supabase المركزية
+            const { data: existingUsers, error } = await _supabase
+                .from('platform_users')
+                .select('*')
+                .eq('phone', phone);
+
+            if (existingUsers && existingUsers.length > 0) {
+                alert('عذراً، هذا الرقم مسجل مسبقاً في المنصة');
+                return;
+            }
+
+            // إرسال البيانات وحفظها في جدول platform_users على السحابة
+            const { data, error: insertError } = await _supabase
+                .from('platform_users')
+                .insert([
+                    { fullname: fullname, phone: phone, city: city, university: university, major: major, password: password, sub_status: 1 }
+                ]);
+
+            if (insertError) {
+                alert('حدث خطأ أثناء التسجيل: ' + insertError.message);
+                return;
+            }
+
+            alert('تم تسجيل الحساب بنجاح على السيرفر!');
+            // هنا يمكنك الانتقال للشاشة التالية (مثل صفحة الباقات أو الرئيسية)
+        }
+        // دالة تسجيل الدخول والتحقق من اشتراكة وحالة حسابه من سحابة Supabase
+        async function performLogin() {
+            const phone = document.getElementById('login-phone').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!phone || !password) {
+                alert('يرجى إدخال رقم الهاتف وكلمة المرور');
+                return;
+            }
+
+            // البحث عن المستخدم برقم الهاتف في جدول platform_users
+            const { data: users, error } = await _supabase
+                .from('platform_users')
+                .select('*')
+                .eq('phone', phone);
+
+            if (error || !users || users.length === 0) {
+                alert('رقم الهاتف غير مسجل في المنصة');
+                return;
+            }
+
+            const user = users[0];
+
+            // التحقق من صحة كلمة المرور
+            if (user.password !== password) {
+                alert('كلمة المرور غير صحيحة');
+                return;
+            }
+
+            // فحص هل الحساب منتهي الاشتراك أو مطرود (is_expired أو sub_status)
+            if (user.is_expired === 1 || user.sub_status === 0) {
+                alert('عذراً، اشتراكك منتهي أو تم إيقاف الحساب. يرجى التجديد.');
+                // هنا يتم توجيهه لصفحة الباقات أو التجديد
+                return;
+            }
+
+            alert('أهلاً بك يا ' + user.fullname + ' في منصة ZONE!');
+            // هنا يتم نقله للشاشة الرئيسية للمنصة
+        }
         /* =========================================================
            1. الثوابت البرمجية وإعدادات الربط مع التلغرام
            ========================================================= */
@@ -1363,6 +1448,38 @@
                 }, 400);
             }, 2500);
         });
+        // دالة جلب وعرض المنشورات لحظياً من جدول items_feed السحابي
+        async function fetchFeedItems() {
+            const { data: items, error } = await _supabase
+                .from('items_feed')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('خطأ في جلب المنشورات:', error.message);
+                return;
+            }
+
+            // هنا يتم تحديث واجهة المنشورات في الموقع لعرض الـ Items الجديدة للطلاب
+            console.log('تم جلب المنشورات بنجاح:', items);
+        }
+
+        // دالة إضافة منشور جديد إلى السحابة
+        async function addNewItem(ownerPhone, ownerName, title, price, photo1) {
+            const { data, error } = await _supabase
+                .from('items_feed')
+                .insert([
+                    { owner_phone: ownerPhone, owner_name: ownerName, title: title, price: price, photo1: photo1 }
+                ]);
+
+            if (error) {
+                alert('حدث خطأ أثناء نشر العنصر: ' + error.message);
+                return;
+            }
+
+            alert('تم نشر المنشور بنجاح على السحابة!');
+            fetchFeedItems(); // تحديث القائمة فوراً
+        }
 
         /* =========================================================
            4. المصادقة والتحقق الفعلي عبر بوت التلغرام
