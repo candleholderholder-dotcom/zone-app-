@@ -1309,7 +1309,9 @@
             major STRING,
             password STRING,
             is_active INT,
-            tg_chat_id STRING
+            tg_chat_id STRING,
+            is_expired INT,
+            sub_status INT
         )`);
 
             alasql(`CREATE TABLE IF NOT EXISTS items_feed (
@@ -1449,7 +1451,7 @@
                 return;
             }
 
-            // فحص هل الرقم مسجل مسبقاً وانتهت باقته (محاولة التفاف بعد الطرد)
+            // فحص هل الرقم مسجل مسبقاً في القاعدة
             let localPhone = phone;
             let internationalPhone = phone;
             if (phone.startsWith('+963')) localPhone = '0' + phone.substring(4);
@@ -1457,8 +1459,11 @@
             else if (phone.startsWith('09')) internationalPhone = '+963' + phone.substring(1);
 
             const existingUser = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
+
             if (existingUser && existingUser.length > 0) {
                 const userRec = existingUser[0];
+
+                // الحالة الأولى: إذا كان المستخدم مطروداً (انتهت باقته)، نوجهه لصفحة باقة الاشتراك لتجديدها
                 if (userRec.is_expired === 1 || userRec.sub_status === 0) {
                     pendingUserData = {
                         fullname: userRec.fullname,
@@ -1471,13 +1476,19 @@
                     };
                     switchActiveScreen('subs-screen');
                     setTimeout(() => {
-                        showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك.');
+                        showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك');
                     }, 150);
+                    return;
+                }
+
+                // الحالة الثانية: إذا كان الحساب نشطاً وموجوداً مسبقاً، نمنعه ونظهر له رسالة الاقتراح الثالث
+                else {
+                    showCustomToast('عذراً، هذا الرقم مسجل مسبقاً في المنصة');
                     return;
                 }
             }
 
-            // إجبار المستخدم على ربط حسابه بالبوت قبل المتابعة
+            // إجبار المستخدم على ربط حسابه بالبوت قبل المتابعة (للمستخدمين الجدد تماماً)
             const btnLinker = document.getElementById('btn-tg-linker');
             if (!pendingUserData || !pendingUserData.tg_chat_id || (btnLinker && !btnLinker.classList.contains('success-linked'))) {
                 showCustomToast('يرجى ربط حسابك بالبوت');
@@ -1864,7 +1875,7 @@
                     alasql('DELETE FROM platform_users WHERE phone = ?', [pendingUserData.phone]);
                 } catch (e) { }
 
-                alasql('INSERT INTO platform_users VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)', [
+                alasql('INSERT INTO platform_users VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, 0, 1)', [
                     Date.now(),
                     pendingUserData.fullname,
                     pendingUserData.phone,
