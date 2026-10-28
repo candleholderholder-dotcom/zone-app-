@@ -1300,36 +1300,33 @@
            2. تهيئة قاعدة البيانات المحلية عبر AlaSQL
            ========================================================= */
         function initializeDatabase() {
-            // التحقق مما إذا كانت الجداول مخزنة مسبقاً في متصفح الكروم لضمان عدم ضياعها عند التحديث (Refresh)
-            try {
-                alasql('SET LS ON');
-            } catch (e) { }
+            // إنشاء جدول المستخدمين بالطريقة المستقرة والسريعة
+            alasql(`CREATE TABLE IF NOT EXISTS platform_users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                fullname STRING,
+                phone STRING UNIQUE,
+                city STRING,
+                university STRING,
+                major STRING,
+                password STRING,
+                is_active INT,
+                tg_chat_id STRING,
+                is_expired INT,
+                sub_status INT
+            )`);
 
-            alasql(`CREATE TABLE IF NOT EXISTS localStorage.platform_users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            fullname STRING,
-            phone STRING UNIQUE,
-            city STRING,
-            university STRING,
-            major STRING,
-            password STRING,
-            is_active INT,
-            tg_chat_id STRING,
-            is_expired INT,
-            sub_status INT
-        )`);
-
-            alasql(`CREATE TABLE IF NOT EXISTS localStorage.items_feed (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            owner_phone STRING,
-            owner_name STRING,
-            title STRING,
-            price STRING,
-            photo1 STRING,
-            photo2 STRING,
-            photo3 STRING,
-            created_at STRING
-        )`);
+            // إنشاء جدول المنتجات
+            alasql(`CREATE TABLE IF NOT EXISTS items_feed (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                owner_phone STRING,
+                owner_name STRING,
+                title STRING,
+                price STRING,
+                photo1 STRING,
+                photo2 STRING,
+                photo3 STRING,
+                created_at STRING
+            )`);
         }
 
         /* =========================================================
