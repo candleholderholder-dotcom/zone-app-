@@ -15,8 +15,8 @@
     <!-- مكتبة FontAwesome للأيقونات الرسمية -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- محرك قواعد البيانات AlaSQL عبر CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/alasql@4.1.3/dist/alasql.min.js"></script>
+    <!-- محرك قواعد البيانات السحابي الرسمي Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
@@ -102,7 +102,6 @@
             margin-bottom: 25px;
             box-shadow: 0 8px 25px rgba(0, 173, 181, 0.15);
         }
-
 
         .splash-logo-wrapper svg {
             width: 100%;
@@ -219,7 +218,6 @@
             font-size: 15px;
             padding: 12px;
         }
-
 
         .pass-input-box {
             position: relative;
@@ -343,19 +341,6 @@
             transform: translateY(-3px);
         }
 
-        .discount-pill {
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: linear-gradient(90deg, #10b981, #059669);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 800;
-            padding: 4px 14px;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-        }
-
         /* نوافذ المودال */
         .modal-overlay {
             position: fixed;
@@ -422,7 +407,7 @@
             color: #38bdf8;
         }
 
-        /* شاشة معالجة الطلب (Spinner أنيق فقط) */
+        /* شاشة معالجة الطلب */
         .wait-processing-box {
             display: flex;
             flex-direction: column;
@@ -828,15 +813,11 @@
     <div id="splash-screen">
         <div class="splash-logo-wrapper"
             style="position: relative; width: 150px; height: 150px; border-radius: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; background: transparent; border: none; box-shadow: 0 0 25px rgba(51, 224, 230, 0.25);">
-            <!-- الصورة مقصوصة الحواف الزائدة بنظافة -->
             <div
                 style="width: 144px; height: 144px; border-radius: 29px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
                 <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
                     style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
-
-
             </div>
-            <!-- الخط التركوازي الذي يمشي حول حواف المربع حتى يكتمل -->
             <svg
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 6px #33E0E6);">
                 <rect x="2" y="2" width="146" height="146" rx="30" ry="30" fill="none" stroke="#33E0E6"
@@ -853,17 +834,13 @@
         </div>
 
         <div class="splash-title-huge">ZONE</div>
-        <!-- عبارة الحقوق الفخمة بمستوى منخفض قليلاً ومثالي للجوالات -->
         <div style="position: fixed; bottom: 55px; left: 50%; transform: translateX(-50%); 
                         color: #8a9fc2; font-family: 'Cairo', sans-serif; font-size: 14px; 
                         font-weight: 700; letter-spacing: 0.8px; white-space: nowrap; 
                         pointer-events: none; z-index: 999999;">
             Owned by <span style="color: #33E0E6; font-weight: 800;">Novinium Soft</span>
         </div>
-
-
     </div>
-
 
     <!-- 2. شاشة تسجيل الدخول وإنشاء الحساب (الـ 14 محافظة سورية) -->
     <div id="auth-screen" class="screen-container">
@@ -1011,7 +988,6 @@
             <h2 style="font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 8px;">اختر باقة الاشتراك
             </h2>
 
-
             <div class="plans-grid">
                 <div class="plan-item-box" onclick="selectPlanAndPay('monthly', '1$')">
                     <div>
@@ -1066,7 +1042,7 @@
         </div>
     </div>
 
-    <!-- شاشة معالجة الطلب (فقط: جاري معالجة الطلب مع Spinner) -->
+    <!-- شاشة معالجة الطلب -->
     <div id="wait-approval-screen" class="screen-container">
         <div class="layout-wrapper" style="justify-content: center; align-items: center;">
             <div class="wait-processing-box">
@@ -1080,18 +1056,14 @@
     <!-- 4. الواجهة الرئيسية (Main Layout) -->
     <div id="home-screen" class="screen-container">
         <div class="layout-wrapper">
-            <!-- الهيدر العلوي: ZONE وبجانبها الشعار مباشرة -->
             <header class="app-top-header">
                 <div class="header-logo-icon"
                     style="position: relative; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; box-shadow: 0 0 12px rgba(51, 224, 230, 0.2);">
-                    <!-- الصورة مقصوصة الحواف الزائدة بنظافة -->
                     <div
                         style="width: 42px; height: 42px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
                         <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
                             style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
-
                     </div>
-                    <!-- الخط التركوازي الذي يمشي حول حواف شعار الهيدر حتى يكتمل -->
                     <svg
                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 4px #33E0E6);">
                         <rect x="1.5" y="1.5" width="43" height="43" rx="10.5" ry="10.5" fill="none" stroke="#33E0E6"
@@ -1251,7 +1223,7 @@
         </div>
     </div>
 
-    <!-- Modal خيارات التواصل (واتساب أو تليغرام) عند النقر على أيقونة الهاتف -->
+    <!-- Modal خيارات التواصل (واتساب أو تليغرام) -->
     <div class="modal-overlay" id="contact-choice-modal">
         <div class="modal-content-card" style="max-width: 380px;">
             <div
@@ -1273,10 +1245,15 @@
                 style="background: none; border: none; color: var(--text-muted); margin-top: 16px; cursor: pointer; font-size: 13px;">إلغاء</button>
         </div>
     </div>
+
     <script>
         /* =========================================================
-           1. الثوابت البرمجية وإعدادات الربط مع التلغرام
+           1. إعدادات الربط مع Supabase والتلغرام
            ========================================================= */
+        const SUPABASE_URL = 'https://hvrxmpyzyxsoqrgfyyod.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Swy3ysjQNNDHouoeo6LZjw_0hBo-t5c';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         const BOT_TOKEN = '8714980380:AAH5TzjGwMyKASdoBDMZNLV8tA0ME8p7ALE';
         const ADMIN_CHAT_ID = '8717720399';
         const BOT_USERNAME = '@Zonewebsite_bot';
@@ -1292,36 +1269,35 @@
         let undoTimersMap = {};
 
         /* =========================================================
-           2. تهيئة قاعدة البيانات المحلية عبر AlaSQL
+           2. التزامن اللحظي (Supabase Realtime) للإعلانات وحالة الحساب
            ========================================================= */
-        function initializeDatabase() {
-            alasql(`CREATE TABLE IF NOT EXISTS platform_users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            fullname STRING,
-            phone STRING UNIQUE,
-            city STRING,
-            university STRING,
-            major STRING,
-            password STRING,
-            is_active INT,
-            tg_chat_id STRING
-        )`);
-
-            alasql(`CREATE TABLE IF NOT EXISTS items_feed (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            owner_phone STRING,
-            owner_name STRING,
-            title STRING,
-            price STRING,
-            photo1 STRING,
-            photo2 STRING,
-            photo3 STRING,
-            created_at STRING
-        )`);
+        function setupRealtimeListeners() {
+            supabaseClient
+                .channel('zone-realtime-channel')
+                // الاستماع لأي إعلان جديد أو محذوف ليظهر عند الكل بنفس اللحظة
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'items_feed' }, () => {
+                    if (activeSession) {
+                        loadMainProductsFeed();
+                    }
+                })
+                // الاستماع لحالة حساب الطالب (في حال تم تصفيره وطرده من الأدمن)
+                .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'platform_users' }, (payload) => {
+                    if (activeSession && payload.new && payload.new.phone === activeSession.phone) {
+                        if (payload.new.is_expired === 1 || payload.new.sub_status === 0) {
+                            logoutSession();
+                            setTimeout(() => {
+                                showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك');
+                            }, 150);
+                        } else {
+                            activeSession = payload.new;
+                        }
+                    }
+                })
+                .subscribe();
         }
 
         /* =========================================================
-           3. إدارة التبديل الكامل بين الشاشات (SPA Navigator)
+           3. إدارة التبديل الكامل بين الشاشات واسترجاع الجلسة الدائم
            ========================================================= */
         function switchActiveScreen(targetId) {
             document.querySelectorAll('.screen-container').forEach(screen => {
@@ -1341,22 +1317,64 @@
             document.getElementById('floating-support-btn').style.display = (targetId === 'home-screen') ? 'flex' : 'none';
         }
 
-        // إخفاء الـ Splash Screen نهائياً بعد 2.5 ثانية مع display: none
+        // التحقق من وجود حساب مفتوح مسبقاً عند تشغيل الموقع أو عمل Refresh
         window.addEventListener('DOMContentLoaded', () => {
-            initializeDatabase();
-            setTimeout(() => {
+            setupRealtimeListeners();
+            listenForAdminVerification(); // يراقب أزرار الأدمن بالتلغرام دائماً
+
+            setTimeout(async () => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.transition = 'opacity 0.4s ease';
                 splash.style.opacity = '0';
-                setTimeout(() => {
+
+                const savedPhone = localStorage.getItem('zone_saved_phone');
+
+                setTimeout(async () => {
                     splash.style.display = 'none';
+
+                    if (savedPhone) {
+                        const { data: userRecord, error } = await supabaseClient
+                            .from('platform_users')
+                            .select('*')
+                            .eq('phone', savedPhone)
+                            .maybeSingle();
+
+                        if (userRecord && !error) {
+                            if (userRecord.is_expired === 1 || userRecord.sub_status === 0) {
+                                localStorage.removeItem('zone_saved_phone');
+                                pendingUserData = {
+                                    fullname: userRecord.fullname,
+                                    phone: userRecord.phone,
+                                    city: userRecord.city,
+                                    university: userRecord.university,
+                                    major: userRecord.major,
+                                    password: userRecord.password,
+                                    tg_chat_id: userRecord.tg_chat_id
+                                };
+                                switchActiveScreen('subs-screen');
+                                setTimeout(() => {
+                                    showCustomToast('يرجى تجديد باقة الاشتراك');
+                                }, 150);
+                                return;
+                            }
+
+                            // الدخول المباشر للرئيسية بدون المرور بشاشة تسجيل الدخول
+                            activeSession = userRecord;
+                            await loadMainProductsFeed();
+                            switchActiveScreen('home-screen');
+                            return;
+                        } else {
+                            localStorage.removeItem('zone_saved_phone');
+                        }
+                    }
+
                     switchActiveScreen('auth-screen');
                 }, 400);
             }, 2500);
         });
 
         /* =========================================================
-           4. المصادقة والتحقق الفعلي عبر بوت التلغرام
+           4. المصادقة والتحقق الفعلي عبر بوت التلغرام و Supabase
            ========================================================= */
         function toggleAuth(type) {
             document.getElementById('tab-login-btn').classList.toggle('active', type === 'login');
@@ -1377,7 +1395,6 @@
             }
         }
 
-        // ربط حساب التلغرام الفعلي عند إرسال /start وإرسال رسالة ترحيبية للمستخدم
         function startTelegramVerification() {
             const botRaw = BOT_USERNAME.replace('@', '');
             window.open(`https://t.me/${botRaw}?start=auth_zone`, '_blank');
@@ -1396,14 +1413,13 @@
                                 lastTelegramUpdateId = update.update_id;
                                 if (update.message && update.message.text && update.message.text.includes('/start')) {
                                     clearInterval(linkerInterval);
-                                    const userChatId = update.message.chat.id;
+                                    const userChatId = String(update.message.chat.id);
                                     if (pendingUserData) {
                                         pendingUserData.tg_chat_id = userChatId;
                                     } else {
                                         pendingUserData = { tg_chat_id: userChatId };
                                     }
 
-                                    // إرسال الرسالة الترحيبية للمستخدم نفسه
                                     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
@@ -1444,7 +1460,6 @@
                 return;
             }
 
-            // إجبار المستخدم على ربط حسابه بالبوت قبل المتابعة
             const btnLinker = document.getElementById('btn-tg-linker');
             if (!pendingUserData || !pendingUserData.tg_chat_id || (btnLinker && !btnLinker.classList.contains('success-linked'))) {
                 showCustomToast('يرجى ربط حسابك بالبوت');
@@ -1458,12 +1473,12 @@
                 university,
                 major,
                 password,
-                tg_chat_id: pendingUserData.tg_chat_id
+                tg_chat_id: String(pendingUserData.tg_chat_id)
             };
             switchActiveScreen('subs-screen');
         }
 
-        function performLogin() {
+        async function performLogin() {
             const phoneInput = document.getElementById('login-phone').value.trim();
             const passInput = document.getElementById('login-password').value.trim();
 
@@ -1473,17 +1488,20 @@
             else if (phoneInput.startsWith('00963')) localPhone = '0' + phoneInput.substring(5);
             else if (phoneInput.startsWith('09')) internationalPhone = '+963' + phoneInput.substring(1);
 
-            const users = alasql('SELECT * FROM platform_users WHERE (phone = ? OR phone = ?) AND password = ?', [localPhone, internationalPhone, passInput]);
+            const { data: users, error } = await supabaseClient
+                .from('platform_users')
+                .select('*')
+                .or(`phone.eq.${localPhone},phone.eq.${internationalPhone}`)
+                .eq('password', passInput);
+
             const userRecord = users && users[0];
 
-            if (userRecord) {
-                // إذا المستخدم مو رابط حسابه بالبوت
+            if (userRecord && !error) {
                 if (!userRecord.tg_chat_id) {
                     showCustomToast('يرجى ربط حسابك بالبوت');
                     return;
                 }
 
-                // إذا باقته منتهية (تم تصفير حسابه وطرده سابقاً)
                 if (userRecord.is_expired === 1 || userRecord.sub_status === 0) {
                     pendingUserData = {
                         fullname: userRecord.fullname,
@@ -1501,9 +1519,10 @@
                     return;
                 }
 
-                // دخول طبيعي وفوري للمنصة
+                // حفظ الجلسة بشكل دائم في الجوال/المتصفح
                 activeSession = userRecord;
-                loadMainProductsFeed();
+                localStorage.setItem('zone_saved_phone', userRecord.phone);
+                await loadMainProductsFeed();
                 switchActiveScreen('home-screen');
             } else {
                 showCustomToast('البيانات المدخلة غير صحيحة أو أن الحساب قيد المراجعة');
@@ -1519,7 +1538,7 @@
             document.getElementById('reset-stage-3').style.display = 'none';
         }
 
-        function requestResetOtp() {
+        async function requestResetOtp() {
             let ph = document.getElementById('reset-phone-input').value.trim();
             if (!ph) {
                 showCustomToast();
@@ -1532,7 +1551,11 @@
             else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
             else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
 
-            const users = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
+            const { data: users } = await supabaseClient
+                .from('platform_users')
+                .select('*')
+                .or(`phone.eq.${localPhone},phone.eq.${internationalPhone}`);
+
             const user = users && users[0];
 
             if (!user || !user.tg_chat_id) {
@@ -1542,7 +1565,6 @@
 
             generatedOtpCode = Math.floor(10000 + Math.random() * 90000).toString();
 
-            // إرسال الكود لتليجرام المستخدم صاحب الرقم حصراً بالصيغة المطلوبة
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1634,7 +1656,7 @@
             });
         }
 
-        function finalizeNewPassword() {
+        async function finalizeNewPassword() {
             const p1 = document.getElementById('new-reset-pass').value.trim();
             const p2 = document.getElementById('confirm-reset-pass').value.trim();
             if (!p1 || p1 !== p2) {
@@ -1649,32 +1671,10 @@
             else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
             else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
 
-            alasql('UPDATE platform_users SET password = ? WHERE phone = ? OR phone = ?', [p1, localPhone, internationalPhone]);
-
-            showCustomToast('تم تعيين كلمة مرور جديدة');
-            toggleAuth('login');
-        }
-
-
-
-
-
-        function finalizeNewPassword() {
-            const p1 = document.getElementById('new-reset-pass').value;
-            const p2 = document.getElementById('confirm-reset-pass').value;
-            if (!p1 || p1 !== p2) {
-                showCustomToast('كلمات المرور غير متطابقة');
-                return;
-            }
-
-            const ph = document.getElementById('reset-phone-input').value.trim();
-            let localPhone = ph;
-            let internationalPhone = ph;
-            if (ph.startsWith('+963')) localPhone = '0' + ph.substring(4);
-            else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
-            else if (ph.startsWith('09')) internationalPhone = '+963' + ph.substring(1);
-
-            alasql('UPDATE platform_users SET password = ? WHERE phone = ? OR phone = ?', [p1, localPhone, internationalPhone]);
+            await supabaseClient
+                .from('platform_users')
+                .update({ password: p1 })
+                .or(`phone.eq.${localPhone},phone.eq.${internationalPhone}`);
 
             showCustomToast('تم تعيين كلمة مرور جديدة');
             toggleAuth('login');
@@ -1740,7 +1740,7 @@
                     .then(r => r.json())
                     .then(data => {
                         if (data.ok && data.result.length > 0) {
-                            data.result.forEach(update => {
+                            data.result.forEach(async update => {
                                 lastTelegramUpdateId = update.update_id;
                                 if (update.callback_query) {
                                     const cb = update.callback_query;
@@ -1748,7 +1748,6 @@
                                     const msgId = cb.message.message_id;
                                     const chatId = cb.message.chat.id;
 
-                                    // 1. إنهاء علامة التحميل على الزر في التليجرام
                                     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
@@ -1759,7 +1758,6 @@
                                         const phone = action.split('_')[1];
                                         const type = action.startsWith('accept_') ? 'accept' : 'gift';
 
-                                        // 2. إخفاء الأزرار الثلاثة وإظهار زر تصفير الحساب
                                         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
@@ -1774,9 +1772,12 @@
                                             })
                                         });
 
-                                        applyDecision(type);
+                                        if (pendingUserData && pendingUserData.phone === phone) {
+                                            await applyDecision(type);
+                                        }
 
                                     } else if (action.startsWith('reject_')) {
+                                        const phone = action.split('_')[1];
                                         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
@@ -1786,13 +1787,12 @@
                                                 reply_markup: { inline_keyboard: [] }
                                             })
                                         });
-                                        applyDecision('reject', 'عدم وضوح إشعار تحويل شام كاش');
+                                        if (pendingUserData && pendingUserData.phone === phone) {
+                                            await applyDecision('reject', 'عدم وضوح إشعار تحويل شام كاش');
+                                        }
 
                                     } else if (action.startsWith('reset_')) {
                                         const phoneToReset = action.split('_')[1];
-
-                                        // إيقاف الاستماع وتحديث الزر في التليجرام
-                                        if (telegramPollingTimer) clearInterval(telegramPollingTimer);
 
                                         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
                                             method: 'POST',
@@ -1808,19 +1808,18 @@
                                             })
                                         });
 
-                                        // مسح الحساب من القاعدة وتصفير الجلسة
-                                        try {
-                                            alasql('UPDATE platform_users SET is_expired = 1, sub_status = 0 WHERE phone = ?', [phoneToReset]);
-                                        } catch (e) { }
-                                        activeSession = null;
+                                        // تحديث حالة انتهاء الباقة في Supabase (سيقوم الـ Realtime بطرد الطالب فوراً)
+                                        await supabaseClient
+                                            .from('platform_users')
+                                            .update({ is_expired: 1, sub_status: 0 })
+                                            .eq('phone', phoneToReset);
 
-                                        // طرد المستخدم لشاشة الدخول باستخدام دالتك الجاهزة
-                                        logoutSession();
-
-                                        // إظهار رسالة انتهاء الباقة من الأعلى
-                                        setTimeout(() => {
-                                            showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك');
-                                        }, 150);
+                                        if (activeSession && activeSession.phone === phoneToReset) {
+                                            logoutSession();
+                                            setTimeout(() => {
+                                                showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك');
+                                            }, 150);
+                                        }
                                     }
                                 }
                             });
@@ -1829,26 +1828,33 @@
             }, 2500);
         }
 
-        function applyDecision(status, reasonText = '') {
+        async function applyDecision(status, reasonText = '') {
             const headerTitle = document.getElementById('wait-header-title');
 
             if (status === 'accept' || status === 'gift') {
-                // مسح أي سجل قديم لنفس الرقم (في حال كان عم يجدد باقته) قبل إضافة السجل الفعال الجديد
-                try {
-                    alasql('DELETE FROM platform_users WHERE phone = ?', [pendingUserData.phone]);
-                } catch (e) { }
+                // حفظ أو تحديث بيانات الطالب مع الباقة المختارة في Supabase
+                const { data: savedUser, error } = await supabaseClient
+                    .from('platform_users')
+                    .upsert({
+                        fullname: pendingUserData.fullname,
+                        phone: pendingUserData.phone,
+                        city: pendingUserData.city,
+                        university: pendingUserData.university,
+                        major: pendingUserData.major,
+                        password: pendingUserData.password,
+                        is_active: 1,
+                        sub_status: 1,
+                        is_expired: 0,
+                        plan_type: chosenPlan.type,
+                        tg_chat_id: String(pendingUserData.tg_chat_id)
+                    }, { onConflict: 'phone' })
+                    .select()
+                    .single();
 
-                alasql('INSERT INTO platform_users VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)', [
-                    Date.now(),
-                    pendingUserData.fullname,
-                    pendingUserData.phone,
-                    pendingUserData.city,
-                    pendingUserData.university,
-                    pendingUserData.major,
-                    pendingUserData.password,
-                    pendingUserData.tg_chat_id
-                ]);
-                activeSession = alasql('SELECT * FROM platform_users WHERE phone = ?', [pendingUserData.phone])[0];
+                if (!error && savedUser) {
+                    activeSession = savedUser;
+                    localStorage.setItem('zone_saved_phone', savedUser.phone);
+                }
 
                 if (status === 'accept') {
                     headerTitle.innerHTML = `<span style="color: var(--success);"><i class="fa-solid fa-circle-check"></i> تم تفعيل حسابك بنجاح!</span>`;
@@ -1856,13 +1862,12 @@
                     headerTitle.innerHTML = `<span style="color: var(--turquoise-light);"><i class="fa-solid fa-gift"></i> تم تفعيل حسابك مجاناً!</span>`;
                 }
 
-                setTimeout(() => {
-                    loadMainProductsFeed();
+                setTimeout(async () => {
+                    await loadMainProductsFeed();
                     switchActiveScreen('home-screen');
                 }, 1800);
 
             } else if (status === 'reject') {
-                if (telegramPollingTimer) clearInterval(telegramPollingTimer);
                 headerTitle.innerHTML = `<span style="color: var(--danger);"><i class="fa-solid fa-circle-xmark"></i> تم رفض الحساب بسبب: ${reasonText}</span>`;
             }
         }
@@ -1870,12 +1875,16 @@
         /* =========================================================
            6. الواجهة الرئيسية، الإعلانات، وشريط التراجع الذكي (Undo Bar)
            ========================================================= */
-        function loadMainProductsFeed() {
-            const items = alasql('SELECT * FROM items_feed ORDER BY id DESC');
+        async function loadMainProductsFeed() {
+            const { data: items, error } = await supabaseClient
+                .from('items_feed')
+                .select('*')
+                .order('id', { ascending: false });
+
             const emptyState = document.getElementById('empty-state-box');
             const feedGrid = document.getElementById('posts-container-grid');
 
-            if (!items || items.length === 0) {
+            if (error || !items || items.length === 0) {
                 emptyState.style.display = 'flex';
                 feedGrid.style.display = 'none';
                 feedGrid.innerHTML = '';
@@ -1925,7 +1934,6 @@
             }
         }
 
-        // زر "تم البيع" مع ظهور شريط التراجع أسفل الكرت مع العداد التنازلي
         function triggerSoldUndoCountdown(postId) {
             const undoSlot = document.getElementById(`undo-slot-${postId}`);
             const soldBtn = document.getElementById(`btn-sold-${postId}`);
@@ -1946,7 +1954,7 @@
         `;
 
             undoTimersMap[postId] = {
-                interval: setInterval(() => {
+                interval: setInterval(async () => {
                     secondsLeft--;
                     const badge = document.getElementById(`countdown-val-${postId}`);
                     if (badge) badge.innerText = secondsLeft;
@@ -1954,15 +1962,16 @@
                     if (secondsLeft <= 0) {
                         clearInterval(undoTimersMap[postId].interval);
                         delete undoTimersMap[postId];
-                        alasql('DELETE FROM items_feed WHERE id = ?', [postId]);
+
+                        await supabaseClient
+                            .from('items_feed')
+                            .delete()
+                            .eq('id', postId);
+
                         const container = document.getElementById(`ad-container-${postId}`);
                         if (container) container.remove();
 
-                        // التحقق مما إذا فرغت الإعلانات لعرض الشبح اللطيف
-                        const remaining = alasql('SELECT COUNT(*) as cnt FROM items_feed')[0].cnt;
-                        if (remaining === 0) {
-                            loadMainProductsFeed();
-                        }
+                        await loadMainProductsFeed();
                     }
                 }, 1000)
             };
@@ -1979,7 +1988,6 @@
             }
         }
 
-        // نافذة اختيار التواصل (واتساب أو تليغرام)
         function openContactOptions(phone) {
             const cleanNumber = phone.startsWith('0') ? phone.substring(1) : phone;
             document.getElementById('btn-choice-wa').onclick = () => {
@@ -2003,7 +2011,7 @@
         }
 
         /* =========================================================
-           7. مربعات رفع ومعاينة الصور وإضافة الإعلان
+           7. مربعات رفع ومعاينة الصور وإضافة الإعلان في Supabase
            ========================================================= */
         function openCreateAdModal() {
             uploadedImages = ['', '', ''];
@@ -2040,12 +2048,12 @@
             }
         }
 
-        function submitNewAd() {
+        async function submitNewAd() {
             const title = document.getElementById('ad-title').value.trim();
             const price = document.getElementById('ad-price').value.trim();
 
             if (!title || !price) {
-                alert('يرجى كتابة اسم المادة والسعر بالليرة السورية');
+                showCustomToast('يرجى كتابة اسم المادة والسعر بالليرة السورية');
                 return;
             }
 
@@ -2059,24 +2067,25 @@
             const p2 = uploadedImages[1] || fallbackPhotos[1];
             const p3 = uploadedImages[2] || fallbackPhotos[2];
 
-            alasql('INSERT INTO items_feed VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-                Date.now(),
-                activeSession.phone,
-                activeSession.fullname,
-                title,
-                price,
-                p1,
-                p2,
-                p3,
-                new Date().toLocaleDateString('ar-SY')
-            ]);
+            await supabaseClient
+                .from('items_feed')
+                .insert([{
+                    owner_phone: activeSession.phone,
+                    owner_name: activeSession.fullname,
+                    title: title,
+                    price: price,
+                    photo1: p1,
+                    photo2: p2,
+                    photo3: p3,
+                    created_at: new Date().toLocaleDateString('ar-SY')
+                }]);
 
             closeCreateAdModal();
-            loadMainProductsFeed();
+            await loadMainProductsFeed();
         }
 
         /* =========================================================
-           8. شاشة الملف الشخصي (انا) والتعديل
+           8. شاشة الملف الشخصي (انا) والتعديل وتسجيل الخروج
            ========================================================= */
         function navTo(screenId) {
             document.getElementById('nav-btn-home').classList.toggle('active', screenId === 'home-screen');
@@ -2106,14 +2115,21 @@
             document.getElementById('save-prof-btn').style.display = isCurrentlyDisabled ? 'block' : 'none';
         }
 
-        function saveProfileUpdates() {
+        async function saveProfileUpdates() {
             activeSession.fullname = document.getElementById('prof-name').value.trim();
             activeSession.city = document.getElementById('prof-city').value.trim();
             activeSession.university = document.getElementById('prof-university').value.trim();
             activeSession.major = document.getElementById('prof-major').value.trim();
 
-            alasql('UPDATE platform_users SET fullname = ?, city = ?, university = ?, major = ? WHERE phone = ?',
-                [activeSession.fullname, activeSession.city, activeSession.university, activeSession.major, activeSession.phone]);
+            await supabaseClient
+                .from('platform_users')
+                .update({
+                    fullname: activeSession.fullname,
+                    city: activeSession.city,
+                    university: activeSession.university,
+                    major: activeSession.major
+                })
+                .eq('phone', activeSession.phone);
 
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
@@ -2124,16 +2140,17 @@
                 })
             });
 
-            alert('تم حفظ البيانات وتحديثها بنجاح!');
+            showCustomToast('تم حفظ البيانات وتحديثها بنجاح!');
             toggleProfileEditMode();
         }
 
         function logoutSession() {
             activeSession = null;
+            localStorage.removeItem('zone_saved_phone');
             switchActiveScreen('auth-screen');
             toggleAuth('login');
         }
-        // دالة إظهار التنبيه التركوازي الفخم الطويل والمستريح بظل خفيف جداً
+
         function showCustomToast(msg = 'يرجى تكملة تعبئة المعلومات') {
             const oldToast = document.querySelector('.custom-toast');
             if (oldToast) oldToast.remove();
@@ -2167,7 +2184,7 @@
                 setTimeout(() => { toast.remove(); }, 500);
             }, 3800);
         }
-        // تحويل قائمة المحافظات إلى نافذة فخمة مع قفل تحريك الخلفية تماماً
+
         document.addEventListener('DOMContentLoaded', () => {
             const citySelect = document.getElementById('reg-city');
             if (!citySelect) return;
@@ -2217,11 +2234,9 @@
     `;
             document.body.appendChild(modal);
 
-            // دوال قفل وإعادة تفعيل تحريك الصفحة الخلفية
             const lockScroll = () => { document.body.style.overflow = 'hidden'; };
             const unlockScroll = () => { document.body.style.overflow = ''; };
 
-            // فتح النافذة وقفل الخلفية
             customBtn.onclick = () => {
                 customBtn.style.borderColor = '#33E0E6';
                 customBtn.style.boxShadow = '0 0 12px rgba(51, 224, 230, 0.25)';
@@ -2229,7 +2244,6 @@
                 lockScroll();
             };
 
-            // إغلاق النافذة وإرجاع حركة الخلفية
             modal.querySelector('#close-city-modal').onclick = () => {
                 modal.style.display = 'none';
                 unlockScroll();
@@ -2241,7 +2255,6 @@
                 }
             };
 
-            // عند اختيار محافظة
             modal.querySelectorAll('.custom-city-opt').forEach(item => {
                 item.onmouseover = () => { item.style.borderColor = '#33E0E6'; item.style.background = '#132b47'; };
                 item.onmouseout = () => { item.style.borderColor = '#1b314e'; item.style.background = '#0f223a'; };
@@ -2254,7 +2267,7 @@
                 };
             });
         });
-        // دالة إظهار تنبيه عدم العثور على الحساب بنفس شكل ومقاس تنبيه تعبئة المعلومات تماماً
+
         function showAccountNotFoundToast() {
             const oldToast = document.querySelector('.account-not-found-toast');
             if (oldToast) oldToast.remove();
@@ -2262,7 +2275,6 @@
             const toast = document.createElement('div');
             toast.className = 'account-not-found-toast';
 
-            // مقاس مستطيل متطابق 100% بالملي: مرن (width: 88%) ومحمي بخط Cairo العريض والاحترافي
             toast.innerHTML = `
         <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
                     background: #0b1a2d; 
@@ -2282,7 +2294,6 @@
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
 
-            // النزول بنفس الارتفاع المتطابق لتبدو مستطيلة عائمة مستقلة
             setTimeout(() => { toastInner.style.top = '35px'; }, 50);
 
             setTimeout(() => {
@@ -2290,9 +2301,6 @@
                 setTimeout(() => { toast.remove(); }, 500);
             }, 4000);
         }
-
-
-
     </script>
 </body>
 
