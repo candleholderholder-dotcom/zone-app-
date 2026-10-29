@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ZONE</title>
-    <!-- استدعاء مكتبة سوبابيس للربط السحابي -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="preload" as="image" href="./logo/logo.jpg" fetchpriority="high">
 
     <!-- خط Cairo المعتمد لكامل المنصة -->
@@ -956,7 +954,7 @@
                             style="color: var(--accent-turquoise); font-size: 13.5px; text-decoration: none;">هل نسيت
                             كلمة المرور؟</a>
                     </div>
-                    <button type="button" onclick="performLogin()" class="btn-action-primary">دخول إلى المنصة</button>
+                    <button type="submit" class="btn-action-primary">دخول إلى المنصة</button>
                 </form>
 
                 <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
@@ -974,16 +972,11 @@
                         <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون من 5 أرقام المرسل
                             لحسابك:</p>
                         <div class="otp-inputs-flex">
-                            <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
-                                class="otp-box-digit" id="otp-1" oninput="stepOtp(1)">
-                            <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
-                                class="otp-box-digit" id="otp-2" oninput="stepOtp(2)">
-                            <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
-                                class="otp-box-digit" id="otp-3" oninput="stepOtp(3)">
-                            <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
-                                class="otp-box-digit" id="otp-4" oninput="stepOtp(4)">
-                            <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
-                                class="otp-box-digit" id="otp-5" oninput="stepOtp(5)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-1" oninput="stepOtp(1)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-2" oninput="stepOtp(2)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-3" oninput="stepOtp(3)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-4" oninput="stepOtp(4)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-5" oninput="stepOtp(5)">
                         </div>
                     </div>
 
@@ -1281,89 +1274,6 @@
         </div>
     </div>
     <script>
-        // إعدادات الاتصال السحابي بـ Supabase لمشروع ZONE
-        const SUPABASE_URL = 'https://hvrxmpyzyxsoqrgfyyod.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_secret_97e9uEcSty94qOmQW_1fsw_hSlFEHRD';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        // دالة تسجيل طالب جديد وحفظ بياناته في سحابة Supabase
-        async function proceedToSubscription() {
-            const fullname = document.getElementById('reg-fullname').value.trim();
-            const phone = document.getElementById('reg-phone').value.trim();
-            const city = document.getElementById('reg-city').value;
-            const university = document.getElementById('reg-university').value.trim();
-            const major = document.getElementById('reg-major').value.trim();
-            const password = document.getElementById('reg-password').value.trim();
-
-            if (!fullname || !phone || !city || !university || !major || !password) {
-                alert('يرجى تعبئة جميع الحقول المطلوبة');
-                return;
-            }
-
-            // فحص هل الرقم مسجل مسبقاً في قاعدة بيانات Supabase المركزية
-            const { data: existingUsers, error } = await _supabase
-                .from('platform_users')
-                .select('*')
-                .eq('phone', phone);
-
-            if (existingUsers && existingUsers.length > 0) {
-                alert('عذراً، هذا الرقم مسجل مسبقاً في المنصة');
-                return;
-            }
-
-            // إرسال البيانات وحفظها في جدول platform_users على السحابة
-            const { data, error: insertError } = await _supabase
-                .from('platform_users')
-                .insert([
-                    { fullname: fullname, phone: phone, city: city, university: university, major: major, password: password, sub_status: 1 }
-                ]);
-
-            if (insertError) {
-                alert('حدث خطأ أثناء التسجيل: ' + insertError.message);
-                return;
-            }
-
-            alert('تم تسجيل الحساب بنجاح على السيرفر!');
-            // هنا يمكنك الانتقال للشاشة التالية (مثل صفحة الباقات أو الرئيسية)
-        }
-        // دالة تسجيل الدخول والتحقق من اشتراكة وحالة حسابه من سحابة Supabase
-        async function performLogin() {
-            const phone = document.getElementById('login-phone').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-
-            if (!phone || !password) {
-                alert('يرجى إدخال رقم الهاتف وكلمة المرور');
-                return;
-            }
-
-            // البحث عن المستخدم برقم الهاتف في جدول platform_users
-            const { data: users, error } = await _supabase
-                .from('platform_users')
-                .select('*')
-                .eq('phone', phone);
-
-            if (error || !users || users.length === 0) {
-                alert('رقم الهاتف غير مسجل في المنصة');
-                return;
-            }
-
-            const user = users[0];
-
-            // التحقق من صحة كلمة المرور
-            if (user.password !== password) {
-                alert('كلمة المرور غير صحيحة');
-                return;
-            }
-
-            // فحص هل الحساب منتهي الاشتراك أو مطرود (is_expired أو sub_status)
-            if (user.is_expired === 1 || user.sub_status === 0) {
-                alert('عذراً، اشتراكك منتهي أو تم إيقاف الحساب. يرجى التجديد.');
-                // هنا يتم توجيهه لصفحة الباقات أو التجديد
-                return;
-            }
-
-            alert('أهلاً بك يا ' + user.fullname + ' في منصة ZONE!');
-            // هنا يتم نقله للشاشة الرئيسية للمنصة
-        }
         /* =========================================================
            1. الثوابت البرمجية وإعدادات الربط مع التلغرام
            ========================================================= */
@@ -1385,33 +1295,29 @@
            2. تهيئة قاعدة البيانات المحلية عبر AlaSQL
            ========================================================= */
         function initializeDatabase() {
-            // إنشاء جدول المستخدمين بالطريقة المستقرة والسريعة
             alasql(`CREATE TABLE IF NOT EXISTS platform_users (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                fullname STRING,
-                phone STRING UNIQUE,
-                city STRING,
-                university STRING,
-                major STRING,
-                password STRING,
-                is_active INT,
-                tg_chat_id STRING,
-                is_expired INT,
-                sub_status INT
-            )`);
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            fullname STRING,
+            phone STRING UNIQUE,
+            city STRING,
+            university STRING,
+            major STRING,
+            password STRING,
+            is_active INT,
+            tg_chat_id STRING
+        )`);
 
-            // إنشاء جدول المنتجات
             alasql(`CREATE TABLE IF NOT EXISTS items_feed (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                owner_phone STRING,
-                owner_name STRING,
-                title STRING,
-                price STRING,
-                photo1 STRING,
-                photo2 STRING,
-                photo3 STRING,
-                created_at STRING
-            )`);
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            owner_phone STRING,
+            owner_name STRING,
+            title STRING,
+            price STRING,
+            photo1 STRING,
+            photo2 STRING,
+            photo3 STRING,
+            created_at STRING
+        )`);
         }
 
         /* =========================================================
@@ -1448,38 +1354,6 @@
                 }, 400);
             }, 2500);
         });
-        // دالة جلب وعرض المنشورات لحظياً من جدول items_feed السحابي
-        async function fetchFeedItems() {
-            const { data: items, error } = await _supabase
-                .from('items_feed')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                console.error('خطأ في جلب المنشورات:', error.message);
-                return;
-            }
-
-            // هنا يتم تحديث واجهة المنشورات في الموقع لعرض الـ Items الجديدة للطلاب
-            console.log('تم جلب المنشورات بنجاح:', items);
-        }
-
-        // دالة إضافة منشور جديد إلى السحابة
-        async function addNewItem(ownerPhone, ownerName, title, price, photo1) {
-            const { data, error } = await _supabase
-                .from('items_feed')
-                .insert([
-                    { owner_phone: ownerPhone, owner_name: ownerName, title: title, price: price, photo1: photo1 }
-                ]);
-
-            if (error) {
-                alert('حدث خطأ أثناء نشر العنصر: ' + error.message);
-                return;
-            }
-
-            alert('تم نشر المنشور بنجاح على السحابة!');
-            fetchFeedItems(); // تحديث القائمة فوراً
-        }
 
         /* =========================================================
            4. المصادقة والتحقق الفعلي عبر بوت التلغرام
@@ -1570,53 +1444,13 @@
                 return;
             }
 
-            // فحص هل الرقم مسجل مسبقاً في القاعدة
-            let localPhone = phone;
-            let internationalPhone = phone;
-            if (phone.startsWith('+963')) localPhone = '0' + phone.substring(4);
-            else if (phone.startsWith('00963')) localPhone = '0' + phone.substring(5);
-            else if (phone.startsWith('09')) internationalPhone = '+963' + phone.substring(1);
-
-            const existingUser = alasql('SELECT * FROM platform_users WHERE phone = ? OR phone = ?', [localPhone, internationalPhone]);
-
-            if (existingUser && existingUser.length > 0) {
-                const userRec = existingUser[0];
-
-                // إذا كان المستخدم مطروداً، نحوله لصفحة باقة الاشتراك لتجديدها
-                if (userRec.is_expired === 1 || userRec.sub_status === 0) {
-                    pendingUserData = {
-                        fullname: userRec.fullname,
-                        phone: userRec.phone,
-                        city: userRec.city,
-                        university: userRec.university,
-                        major: userRec.major,
-                        password: userRec.password,
-                        tg_chat_id: userRec.tg_chat_id
-                    };
-                    switchActiveScreen('subs-screen');
-                    setTimeout(() => {
-                        showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك');
-                    }, 150);
-                    return;
-                }
-
-                // إذا كان الرقم مسجلاً لحساب نشط، نمنعه ونظهر له رسالة الاقتراح الثالث
-                else {
-                    showCustomToast('عذراً، هذا الرقم مسجل مسبقاً في المنصة');
-                    return;
-                }
-            }
-
-            // التحقق المرن من ربط التلغرام (لمنع تعليق الزر نهائياً)
+            // إجبار المستخدم على ربط حسابه بالبوت قبل المتابعة
             const btnLinker = document.getElementById('btn-tg-linker');
-            const isLinked = (pendingUserData && pendingUserData.tg_chat_id) || (btnLinker && btnLinker.classList.contains('success-linked'));
-
-            if (!isLinked) {
+            if (!pendingUserData || !pendingUserData.tg_chat_id || (btnLinker && !btnLinker.classList.contains('success-linked'))) {
                 showCustomToast('يرجى ربط حسابك بالبوت');
                 return;
             }
 
-            // إذا تم إدخال البيانات والربط بنجاح، نحفظ البيانات مؤقتاً وننتقل لصفحة الباقات
             pendingUserData = {
                 fullname,
                 phone,
@@ -1624,7 +1458,7 @@
                 university,
                 major,
                 password,
-                tg_chat_id: (pendingUserData && pendingUserData.tg_chat_id) ? pendingUserData.tg_chat_id : 'PENDING_TG_ID'
+                tg_chat_id: pendingUserData.tg_chat_id
             };
             switchActiveScreen('subs-screen');
         }
@@ -1643,7 +1477,13 @@
             const userRecord = users && users[0];
 
             if (userRecord) {
-                // التحقق مما إذا تم تصفير الحساب أو طرد المستخدم مسبقاً
+                // إذا المستخدم مو رابط حسابه بالبوت
+                if (!userRecord.tg_chat_id) {
+                    showCustomToast('يرجى ربط حسابك بالبوت');
+                    return;
+                }
+
+                // إذا باقته منتهية (تم تصفير حسابه وطرده سابقاً)
                 if (userRecord.is_expired === 1 || userRecord.sub_status === 0) {
                     pendingUserData = {
                         fullname: userRecord.fullname,
@@ -1656,19 +1496,20 @@
                     };
                     switchActiveScreen('subs-screen');
                     setTimeout(() => {
-                        showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك.');
+                        showCustomToast('يرجى تجديد باقة الاشتراك');
                     }, 150);
                     return;
                 }
 
-                // دخول طبيعي وفوري للمنصة في حال باقته صالحة
+                // دخول طبيعي وفوري للمنصة
                 activeSession = userRecord;
                 loadMainProductsFeed();
                 switchActiveScreen('home-screen');
             } else {
-                showCustomToast('البيانات المدخلة غير صحيحة');
+                showCustomToast('البيانات المدخلة غير صحيحة أو أن الحساب قيد المراجعة');
             }
         }
+
         function openResetPasswordFlow() {
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('reg-form').style.display = 'none';
@@ -1997,7 +1838,7 @@
                     alasql('DELETE FROM platform_users WHERE phone = ?', [pendingUserData.phone]);
                 } catch (e) { }
 
-                alasql('INSERT INTO platform_users VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, 0, 1)', [
+                alasql('INSERT INTO platform_users VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)', [
                     Date.now(),
                     pendingUserData.fullname,
                     pendingUserData.phone,
@@ -2283,8 +2124,7 @@
                 })
             });
 
-            // إظهار رسالة النجاح العلوية الجديدة مع إشارة الصح باللون التركوازي
-            showCustomToast('تم تعديل بياناتك بنجاح', 'check');
+            alert('تم حفظ البيانات وتحديثها بنجاح!');
             toggleProfileEditMode();
         }
 
@@ -2294,31 +2134,28 @@
             toggleAuth('login');
         }
         // دالة إظهار التنبيه التركوازي الفخم الطويل والمستريح بظل خفيف جداً
-        function showCustomToast(msg = 'يرجى تكملة تعبئة المعلومات', iconType = 'exclamation') {
+        function showCustomToast(msg = 'يرجى تكملة تعبئة المعلومات') {
             const oldToast = document.querySelector('.custom-toast');
             if (oldToast) oldToast.remove();
 
             const toast = document.createElement('div');
             toast.className = 'custom-toast';
 
-            // اختيار الأيقونة: إذا طلبنا check تظهر إشارة الصح، وإلا يظهر علامة التعجب
-            const iconClass = (iconType === 'check') ? 'fas fa-circle-check' : 'fas fa-circle-exclamation';
-
             toast.innerHTML = `
-                <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
-                    background: #0b1a2d;
-                    border: 1.5px solid #33E0E6; border-radius: 14px;
-                    width: 88%; max-width: 450px; padding: 18px 16px;
-                    display: flex; align-items: center; justify-content: center; gap: 12px;
-                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
-                    z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
-                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-                    <i class="${iconClass}" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
-                    <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
-                        ${msg}
-                    </span>
-                </div>
-            `;
+<div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
+            background: #0b1a2d;
+            border: 1.5px solid #33E0E6; border-radius: 14px;
+            width: 88%; max-width: 450px; padding: 18px 16px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
+            z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
+            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+    <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+    <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+        ${msg}
+    </span>
+</div>
+    `;
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
