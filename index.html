@@ -19,6 +19,38 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        /* تنسيق شريط الإعلانات الترويجي (Slider) */
+        .promo-slider-container {
+            width: 100%;
+            height: 190px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1.5px solid var(--border-navy);
+        }
+
+        .promo-slides-track {
+            display: flex;
+            width: 500%;
+            /* بما أن لدينا 5 صور */
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .promo-slide-item {
+            width: 20%;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .promo-slide-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         :root {
             --primary-navy: #07111e;
             --surface-navy: #0e1d30;
@@ -1081,6 +1113,16 @@
 
                 <div class="header-brand-title">ZONE</div>
             </header>
+            <!-- شريط الإعلانات المتحرك الترويجي -->
+            <div class="promo-slider-container" id="promoSlider">
+                <div class="promo-slides-track" id="slidesTrack">
+                    <div class="promo-slide-item"><img src="./ad1.jpg" alt="إعلان 1"></div>
+                    <div class="promo-slide-item"><img src="./ad2.jpg" alt="إعلان 2"></div>
+                    <div class="promo-slide-item"><img src="./ad3.jpg" alt="إعلان 3"></div>
+                    <div class="promo-slide-item"><img src="./ad4.jpg" alt="إعلان 4"></div>
+                    <div class="promo-slide-item"><img src="./ad5.jpg" alt="إعلان 5"></div>
+                </div>
+            </div>
 
             <!-- شاشة الفراغ (الشبح اللطيف) -->
             <div class="ghost-empty-state" id="empty-state-box">
@@ -1247,6 +1289,22 @@
     </div>
 
     <script>
+        // تشغيل شريط الإعلانات المتحرك (كل صورتين / ثانيتين انتقال)
+        let currentSlideIndex = 0;
+        function initPromoSlider() {
+            const track = document.getElementById('slidesTrack');
+            if (!track) return;
+
+            setInterval(() => {
+                currentSlideIndex = (currentSlideIndex + 1) % 5;
+                track.style.transform = `translateX(${currentSlideIndex * 20}%)`;
+            }, 2000); // 2000 تعني 2 ثانية بالتمام والكمال
+        }
+
+        // تشغيل السلايدر فور تحميل الصفحة الرئيسية
+        document.addEventListener('DOMContentLoaded', () => {
+            initPromoSlider();
+        });
         /* =========================================================
            1. إعدادات الربط مع Supabase والتلغرام
            ========================================================= */
