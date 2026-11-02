@@ -19,6 +19,49 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        /* تنسيق حاوية الأزرار لتكون متساوية تماماً */
+        .card-actions-container {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        /* تنسيق الأزرار لتاخذ مساحات متساوية flex: 1 */
+        .card-actions-container .action-btn {
+            flex: 1;
+            padding: 10px 8px;
+            border-radius: 10px;
+            border: none;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition-smooth, 0.2s ease);
+        }
+
+        /* ألوان الأزرار بتنسيق احترافي */
+        .btn-sold-action {
+            background: rgba(255, 82, 82, 0.1);
+            color: #ff5252;
+            border: 1px solid rgba(255, 82, 82, 0.3);
+        }
+
+        .btn-contact-action {
+            background: var(--accent-turquoise, #00ADB5);
+            color: #fff;
+        }
+
+        .btn-share-action {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main, #fff);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         /* تنسيق شريط الإعلانات الترويجي (Slider) */
         .promo-slider-container {
             width: 100%;
@@ -2002,6 +2045,7 @@
                                 <i class="fa-solid fa-user-graduate"></i> المعلن: ${item.owner_name}
                             </div>
                             <div class="product-card-actions">
+        <div class="product-card-actions">
         <div class="card-actions-container">
             <button class="action-btn btn-sold-action" id="btn-sold-${item.id}" onclick="handleSoldAction(${item.id})">
                 <i class="fa-solid fa-check"></i> تم البيع
