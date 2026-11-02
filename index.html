@@ -2,23 +2,31 @@
 <html lang="ar" dir="rtl">
 
 <head>
+       
     <meta charset="UTF-8">
+       
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONE</title>
+        <title>ZONE</title>
+       
     <link rel="preload" as="image" href="./logo/logo.jpg" fetchpriority="high">
 
-    <!-- خط Cairo المعتمد لكامل المنصة -->
+        <!-- خط Cairo المعتمد لكامل المنصة -->
+       
     <link rel="preconnect" href="https://fonts.googleapis.com">
+       
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+       
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- مكتبة FontAwesome للأيقونات الرسمية -->
+        <!-- مكتبة FontAwesome للأيقونات الرسمية -->
+       
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- محرك قواعد البيانات السحابي الرسمي Supabase CDN -->
+        <!-- محرك قواعد البيانات السحابي الرسمي Supabase CDN -->
+       
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <style>
+        <style>
         :root {
             --primary-navy: #07111e;
             --surface-navy: #0e1d30;
@@ -694,8 +702,8 @@
         }
 
         /* =========================================================
-           الأزرار الثلاثة الموحدة والمتناظرة (تواصل - مشاركة - تم البيع)
-           ========================================================= */
+           الأزرار الثلاثة الموحدة والمتناظرة (تواصل - مشاركة - تم البيع)
+           ========================================================= */
         .product-card-actions {
             display: flex;
             align-items: stretch;
@@ -767,8 +775,8 @@
         }
 
         /* =========================================================
-           شريط التراجع العائم بأسلوب تيليجرام (Telegram Undo Snackbar)
-           ========================================================= */
+           شريط التراجع العائم بأسلوب تيليجرام (Telegram Undo Snackbar)
+           ========================================================= */
         .tg-undo-snackbar {
             position: fixed;
             bottom: 84px;
@@ -1090,519 +1098,566 @@
 
 <body>
 
-    <!-- 1. الشاشة الترحيبية Splash Screen -->
-    <div id="splash-screen">
-        <div class="splash-logo-wrapper"
+        <!-- 1. الشاشة الترحيبية Splash Screen -->
+        <div id="splash-screen">
+                <div class="splash-logo-wrapper"            
             style="position: relative; width: 150px; height: 150px; border-radius: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; background: transparent; border: none; box-shadow: 0 0 25px rgba(51, 224, 230, 0.25);">
-            <div
+                        <div                
                 style="width: 144px; height: 144px; border-radius: 29px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
-                <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
-                    style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
-            </div>
-            <svg
+                                <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"              
+                          style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
+                            </div>
+                        <svg                
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 6px #33E0E6);">
-                <rect x="2" y="2" width="146" height="146" rx="30" ry="30" fill="none" stroke="#33E0E6"
-                    stroke-width="3.5" stroke-dasharray="600" stroke-dashoffset="600"
+                               
+                <rect x="2" y="2" width="146" height="146" rx="30" ry="30" fill="none" stroke="#33E0E6"                
+                        stroke-width="3.5" stroke-dasharray="600" stroke-dashoffset="600"                    
                     style="animation: drawTurquoiseBorder 2s ease-out forwards;" />
+                           
             </svg>
-            <style>
+                        <style>
                 @keyframes drawTurquoiseBorder {
                     to {
                         stroke-dashoffset: 0;
                     }
                 }
             </style>
-        </div>
+                    </div>
 
-        <div class="splash-title-huge">ZONE</div>
-        <div style="position: fixed; bottom: 55px; left: 50%; transform: translateX(-50%); 
-                        color: #8a9fc2; font-family: 'Cairo', sans-serif; font-size: 14px; 
-                        font-weight: 700; letter-spacing: 0.8px; white-space: nowrap; 
-                        pointer-events: none; z-index: 999999;">
-            Owned by <span style="color: #33E0E6; font-weight: 800;">Novinium Soft</span>
-        </div>
-    </div>
+                <div class="splash-title-huge">ZONE</div>
+                <div style="position: fixed; bottom: 55px; left: 50%; transform: translateX(-50%); 
+                        color: #8a9fc2; font-family: 'Cairo', sans-serif; font-size: 14px; 
+                        font-weight: 700; letter-spacing: 0.8px; white-space: nowrap; 
+                        pointer-events: none; z-index: 999999;">
+                        Owned by <span style="color: #33E0E6; font-weight: 800;">Novinium Soft</span>
+                    </div>
+            </div>
 
-    <!-- 2. شاشة تسجيل الدخول وإنشاء الحساب (الـ 14 محافظة سورية) -->
-    <div id="auth-screen" class="screen-container">
-        <div class="layout-wrapper" style="justify-content: center;">
-            <div class="auth-card-box">
-                <div class="auth-toggle-group">
-                    <button class="auth-toggle-btn active" id="tab-login-btn" onclick="toggleAuth('login')">تسجيل
-                        الدخول</button>
-                    <button class="auth-toggle-btn" id="tab-reg-btn" onclick="toggleAuth('reg')">حساب جديد</button>
-                </div>
+        <!-- 2. شاشة تسجيل الدخول وإنشاء الحساب (الـ 14 محافظة سورية) -->
+        <div id="auth-screen" class="screen-container">
+                <div class="layout-wrapper" style="justify-content: center;">
+                        <div class="auth-card-box">
+                                <div class="auth-toggle-group">
+                                        <button class="auth-toggle-btn active" id="tab-login-btn"
+                        onclick="toggleAuth('login')">تسجيل
+                                                الدخول</button>
+                                        <button class="auth-toggle-btn" id="tab-reg-btn"
+                        onclick="toggleAuth('reg')">حساب جديد</button>
+                                    </div>
 
-                <!-- نموذج إنشاء حساب جديد -->
-                <form id="reg-form" novalidate style="display: none;"
+                                <!-- نموذج إنشاء حساب جديد -->
+                                <form id="reg-form" novalidate style="display: none;"                    
                     onsubmit="event.preventDefault(); if(this.checkValidity()){ proceedToSubscription(); }else{ showCustomToast(); }">
 
-                    <div class="form-row">
-                        <label>الاسم الكامل</label>
-                        <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي" required>
-                    </div>
-                    <div class="form-row">
-                        <label>رقم الهاتف</label>
-                        <input type="tel" id="reg-phone" placeholder="09xxxxxxxx" required>
-                    </div>
-                    <div class="form-row">
-                        <label>المحافظة</label>
-                        <select id="reg-city" required>
-                            <option value="دمشق">دمشق</option>
-                            <option value="ريف دمشق">ريف دمشق</option>
-                            <option value="حلب">حلب</option>
-                            <option value="حمص">حمص</option>
-                            <option value="حماة">حماة</option>
-                            <option value="اللاذقية">اللاذقية</option>
-                            <option value="طرطوس">طرطوس</option>
-                            <option value="إدلب">إدلب</option>
-                            <option value="دير الزور">دير الزور</option>
-                            <option value="الرقة">الرقة</option>
-                            <option value="الحسكة">الحسكة</option>
-                            <option value="درعا">درعا</option>
-                            <option value="السويداء">السويداء</option>
-                            <option value="القنيطرة">القنيطرة</option>
-                        </select>
-                    </div>
-                    <div class="form-row">
-                        <label>الجامعة</label>
-                        <input type="text" id="reg-university" placeholder="اسم الجامعة أو المعهد" required>
-                    </div>
-                    <div class="form-row">
-                        <label>الفرع الدراسي</label>
-                        <input type="text" id="reg-major" placeholder="التخصص الجامعي" required>
-                    </div>
-                    <div class="form-row">
-                        <label>كلمة المرور</label>
-                        <div class="pass-input-box">
-                            <input type="password" id="reg-password" placeholder="••••••••" required>
-                            <i class="fa-solid fa-eye pass-eye-icon" onclick="togglePassEye('reg-password', this)"></i>
-                        </div>
-                    </div>
+                                        <div class="form-row">
+                                                <label>الاسم الكامل</label>
+                                                <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي"
+                            required>
+                                            </div>
+                                        <div class="form-row">
+                                                <label>رقم الهاتف</label>
+                                                <input type="tel" id="reg-phone" placeholder="09xxxxxxxx" required>
+                                            </div>
+                                        <div class="form-row">
+                                                <label>المحافظة</label>
+                                                <select id="reg-city" required>
+                                                        <option value="دمشق">دمشق</option>
+                                                        <option value="ريف دمشق">ريف دمشق</option>
+                                                        <option value="حلب">حلب</option>
+                                                        <option value="حمص">حمص</option>
+                                                        <option value="حماة">حماة</option>
+                                                        <option value="اللاذقية">اللاذقية</option>
+                                                        <option value="طرطوس">طرطوس</option>
+                                                        <option value="إدلب">إدلب</option>
+                                                        <option value="دير الزور">دير الزور</option>
+                                                        <option value="الرقة">الرقة</option>
+                                                        <option value="الحسكة">الحسكة</option>
+                                                        <option value="درعا">درعا</option>
+                                                        <option value="السويداء">السويداء</option>
+                                                        <option value="القنيطرة">القنيطرة</option>
+                                                    </select>
+                                            </div>
+                                        <div class="form-row">
+                                                <label>الجامعة</label>
+                                                <input type="text" id="reg-university"
+                            placeholder="اسم الجامعة أو المعهد" required>
+                                            </div>
+                                        <div class="form-row">
+                                                <label>الفرع الدراسي</label>
+                                                <input type="text" id="reg-major" placeholder="التخصص الجامعي" required>
+                                            </div>
+                                        <div class="form-row">
+                                                <label>كلمة المرور</label>
+                                                <div class="pass-input-box">
+                                                        <input type="password" id="reg-password" placeholder="••••••••"
+                                required>
+                                                        <i class="fa-solid fa-eye pass-eye-icon"
+                                onclick="togglePassEye('reg-password', this)"></i>
+                                                    </div>
+                                            </div>
 
-                    <button type="button" class="btn-tg-connect" id="btn-tg-linker"
-                        onclick="startTelegramVerification()">
-                        <i class="fa-brands fa-telegram"></i>
-                        <span id="tg-btn-label">ربط حساب التلغرام</span>
-                    </button>
+                                        <button type="button" class="btn-tg-connect" id="btn-tg-linker"                
+                                onclick="startTelegramVerification()">
+                                                <i class="fa-brands fa-telegram"></i>
+                                                <span id="tg-btn-label">ربط حساب التلغرام</span>
+                                            </button>
 
-                    <button type="submit" class="btn-action-primary">
-                        التالي <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                </form>
+                                        <button type="submit" class="btn-action-primary">
+                                                التالي <i class="fa-solid fa-arrow-left"></i>
+                                            </button>
+                                    </form>
 
-                <!-- نموذج تسجيل الدخول -->
-                <form id="login-form" novalidate
+                                <!-- نموذج تسجيل الدخول -->
+                                <form id="login-form" novalidate                    
                     onsubmit="event.preventDefault(); if(this.checkValidity()){ performLogin(); }else{ showCustomToast(); }">
 
-                    <div class="form-row">
-                        <label>رقم الهاتف</label>
-                        <input type="tel" id="login-phone" placeholder="09xxxxxxxx" required>
-                    </div>
-                    <div class="form-row">
-                        <label>كلمة المرور</label>
-                        <div class="pass-input-box">
-                            <input type="password" id="login-password" placeholder="••••••••" required>
-                            <i class="fa-solid fa-eye pass-eye-icon"
-                                onclick="togglePassEye('login-password', this)"></i>
-                        </div>
-                    </div>
-                    <div style="text-align: left; margin: 10px 0 16px 0;">
-                        <a href="javascript:void(0)" onclick="openResetPasswordFlow()"
+                                        <div class="form-row">
+                                                <label>رقم الهاتف</label>
+                                                <input type="tel" id="login-phone" placeholder="09xxxxxxxx" required>
+                                            </div>
+                                        <div class="form-row">
+                                                <label>كلمة المرور</label>
+                                                <div class="pass-input-box">
+                                                        <input type="password" id="login-password"
+                                placeholder="••••••••" required>
+                                                        <i class="fa-solid fa-eye pass-eye-icon"                        
+                                        onclick="togglePassEye('login-password', this)"></i>
+                                                    </div>
+                                            </div>
+                                        <div style="text-align: left; margin: 10px 0 16px 0;">
+                                                <a href="javascript:void(0)" onclick="openResetPasswordFlow()"          
+                                             
                             style="color: var(--accent-turquoise); font-size: 13.5px; text-decoration: none;">هل نسيت
-                            كلمة المرور؟</a>
-                    </div>
-                    <button type="submit" class="btn-action-primary">دخول إلى المنصة</button>
-                </form>
+                                                        كلمة المرور؟</a>
+                                            </div>
+                                        <button type="submit" class="btn-action-primary">دخول إلى المنصة</button>
+                                    </form>
 
-                <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
-                <div id="reset-flow-container" style="display: none;">
-                    <div id="reset-stage-1">
-                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">أدخل رقم هاتفك المسجل
-                            لإرسال رمز التأكيد لحساب التلغرام الخاص بك مباشرة:</p>
-                        <div class="form-row">
-                            <input type="tel" id="reset-phone-input" placeholder="09xxxxxxxx">
-                        </div>
-                        <button class="btn-action-primary" onclick="requestResetOtp()">إرسال كود التحقق</button>
-                    </div>
+                                <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
+                                <div id="reset-flow-container" style="display: none;">
+                                        <div id="reset-stage-1">
+                                                <p
+                            style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">أدخل رقم هاتفك
+                            المسجل
+                                                        لإرسال رمز التأكيد لحساب التلغرام الخاص بك مباشرة:</p>
+                                                <div class="form-row">
+                                                        <input type="tel" id="reset-phone-input"
+                                placeholder="09xxxxxxxx">
+                                                    </div>
+                                                <button class="btn-action-primary" onclick="requestResetOtp()">إرسال كود
+                            التحقق</button>
+                                            </div>
 
-                    <div id="reset-stage-2" style="display: none; text-align: center;">
-                        <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون من 5 أرقام المرسل
-                            لحسابك:</p>
-                        <div class="otp-inputs-flex">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-1" oninput="stepOtp(1)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-2" oninput="stepOtp(2)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-3" oninput="stepOtp(3)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-4" oninput="stepOtp(4)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-5" oninput="stepOtp(5)">
-                        </div>
-                    </div>
+                                        <div id="reset-stage-2" style="display: none; text-align: center;">
+                                                <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون
+                            من 5 أرقام المرسل
+                                                        لحسابك:</p>
+                                                <div class="otp-inputs-flex">
+                                                        <input type="text" maxlength="1" class="otp-box-digit"
+                                id="otp-1" oninput="stepOtp(1)">
+                                                        <input type="text" maxlength="1" class="otp-box-digit"
+                                id="otp-2" oninput="stepOtp(2)">
+                                                        <input type="text" maxlength="1" class="otp-box-digit"
+                                id="otp-3" oninput="stepOtp(3)">
+                                                        <input type="text" maxlength="1" class="otp-box-digit"
+                                id="otp-4" oninput="stepOtp(4)">
+                                                        <input type="text" maxlength="1" class="otp-box-digit"
+                                id="otp-5" oninput="stepOtp(5)">
+                                                    </div>
+                                            </div>
 
-                    <div id="reset-stage-3" style="display: none;">
-                        <div class="form-row">
-                            <label>كلمة المرور الجديدة</label>
-                            <div class="pass-input-box">
-                                <input type="password" id="new-reset-pass" placeholder="••••••••">
-                                <i class="fa-solid fa-eye pass-eye-icon"
-                                    onclick="togglePassEye('new-reset-pass', this)"></i>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <label>تأكيد كلمة المرور</label>
-                            <div class="pass-input-box">
-                                <input type="password" id="confirm-reset-pass" placeholder="••••••••">
-                                <i class="fa-solid fa-eye pass-eye-icon"
-                                    onclick="togglePassEye('confirm-reset-pass', this)"></i>
-                            </div>
-                        </div>
-                        <button class="btn-action-primary" onclick="finalizeNewPassword()">تغيير كلمة المرور</button>
-                    </div>
-                </div>
+                                        <div id="reset-stage-3" style="display: none;">
+                                                <div class="form-row">
+                                                        <label>كلمة المرور الجديدة</label>
+                                                        <div class="pass-input-box">
+                                                                <input type="password" id="new-reset-pass"
+                                    placeholder="••••••••">
+                                                                <i class="fa-solid fa-eye pass-eye-icon"                
+                                                        onclick="togglePassEye('new-reset-pass', this)"></i>
+                                                            </div>
+                                                    </div>
+                                                <div class="form-row">
+                                                        <label>تأكيد كلمة المرور</label>
+                                                        <div class="pass-input-box">
+                                                                <input type="password" id="confirm-reset-pass"
+                                    placeholder="••••••••">
+                                                                <i class="fa-solid fa-eye pass-eye-icon"                
+                                                        onclick="togglePassEye('confirm-reset-pass', this)"></i>
+                                                            </div>
+                                                    </div>
+                                                <button class="btn-action-primary" onclick="finalizeNewPassword()">تغيير
+                            كلمة المرور</button>
+                                            </div>
+                                    </div>
 
-            </div>
-        </div>
-    </div>
+                            </div>
+                    </div>
+            </div>
 
-    <!-- 3. شاشة باقات الاشتراك -->
-    <div id="subs-screen" class="screen-container">
-        <div class="layout-wrapper">
-            <h2 style="font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 8px;">اختر باقة الاشتراك
-            </h2>
+        <!-- 3. شاشة باقات الاشتراك -->
+        <div id="subs-screen" class="screen-container">
+                <div class="layout-wrapper">
+                        <h2 style="font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 8px;">اختر باقة
+                الاشتراك
+                            </h2>
 
-            <div class="plans-grid">
-                <div class="plan-item-box" onclick="selectPlanAndPay('monthly', '1$')">
-                    <div>
-                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة الاشتراك الشهري</h3>
-                        <p style="color: var(--text-muted); font-size: 14px;">تفعيل فوري ومرن لكافة الميزات</p>
-                    </div>
-                    <div style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">1
-                        دولار <span style="font-size: 14px; color: var(--text-muted);">/ شهرياً</span></div>
-                </div>
+                        <div class="plans-grid">
+                                <div class="plan-item-box" onclick="selectPlanAndPay('monthly', '1$')">
+                                        <div>
+                                                <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة
+                            الاشتراك الشهري</h3>
+                                                <p style="color: var(--text-muted); font-size: 14px;">تفعيل فوري ومرن
+                            لكافة الميزات</p>
+                                            </div>
+                                        <div
+                        style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">1
+                                                دولار <span style="font-size: 14px; color: var(--text-muted);">/
+                            شهرياً</span></div>
+                                    </div>
 
-                <div class="plan-item-box" onclick="selectPlanAndPay('yearly', '10$')"
-                    style="position: relative; overflow: hidden;">
-                    <div
+                                <div class="plan-item-box" onclick="selectPlanAndPay('yearly', '10$')"                  
+                      style="position: relative; overflow: hidden;">
+                                        <div                        
                         style="position: absolute; top: 16px; left: -36px; background: #33E0E6; color: #050d1a; font-size: 11px; font-weight: 800; padding: 4px 35px; transform: rotate(-45deg); text-align: center; box-shadow: 0 2px 8px rgba(51, 224, 230, 0.3); letter-spacing: 0.3px; white-space: nowrap;">
-                        وُفّر 16%</div>
-                    <div>
-                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة الاشتراك السنوي</h3>
-                        <p style="color: var(--text-muted); font-size: 14px;">تفعيل لمدة سنة كاملة مع أولوية الظهور</p>
-                    </div>
-                    <div style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">10
-                        دولار <span style="font-size: 14px; color: var(--text-muted);">/ سنوياً</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                                وُفّر 16%</div>
+                                        <div>
+                                                <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة
+                            الاشتراك السنوي</h3>
+                                                <p style="color: var(--text-muted); font-size: 14px;">تفعيل لمدة سنة
+                            كاملة مع أولوية الظهور</p>
+                                            </div>
+                                        <div
+                        style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">10
+                                                دولار <span style="font-size: 14px; color: var(--text-muted);">/
+                            سنوياً</span></div>
+                                    </div>
+                            </div>
+                    </div>
+            </div>
 
-    <!-- نافذة منبثقة Modal للدفع عبر شام كاش -->
-    <div class="modal-overlay" id="payment-modal">
-        <div class="modal-content-card">
-            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">دفع الاشتراك - شام كاش</h3>
-            <p style="font-size: 13.5px; color: var(--text-muted);">امسح رمز الاستجابة السريع للتحويل المالي</p>
+        <!-- نافذة منبثقة Modal للدفع عبر شام كاش -->
+        <div class="modal-overlay" id="payment-modal">
+                <div class="modal-content-card">
+                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">دفع الاشتراك - شام كاش</h3>
+                        <p style="font-size: 13.5px; color: var(--text-muted);">امسح رمز الاستجابة السريع للتحويل المالي
+            </p>
 
-            <div class="qr-wrapper">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=26ee871407869d05ad94223e7b4f1402&color=07111e"
-                    alt="شام كاش QR" id="cham-cash-qr">
-            </div>
+                        <div class="qr-wrapper">
+                                <img
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=26ee871407869d05ad94223e7b4f1402&color=07111e"
+                                        alt="شام كاش QR" id="cham-cash-qr">
+                            </div>
 
-            <div class="verified-holder-info">
-                <span>المستلم المالي الرسمي: محمد يحيى جمال</span>
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <p
+                        <div class="verified-holder-info">
+                                <span>المستلم المالي الرسمي: محمد يحيى جمال</span>
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                        <p                
                 style="font-size: 11px; color: var(--text-muted); margin-top: 4px; direction: ltr; font-family: monospace;">
-                26ee871407869d05ad94223e7b4f1402</p>
+                                26ee871407869d05ad94223e7b4f1402</p>
 
-            <button class="btn-action-primary" style="margin-top: 20px;" onclick="triggerPaymentVerification()">التحقق
-                من الدفع</button>
-            <button onclick="closePaymentModal()"
+                        <button class="btn-action-primary" style="margin-top: 20px;"
+                onclick="triggerPaymentVerification()">التحقق
+                                من الدفع</button>
+                        <button onclick="closePaymentModal()"                
                 style="background: none; border: none; color: var(--text-muted); margin-top: 10px; cursor: pointer; font-size: 13px;">إلغاء</button>
-        </div>
-    </div>
+                    </div>
+            </div>
 
-    <!-- شاشة معالجة الطلب -->
-    <div id="wait-approval-screen" class="screen-container">
-        <div class="layout-wrapper" style="justify-content: center; align-items: center;">
-            <div class="wait-processing-box">
-                <div class="custom-loader"></div>
-                <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main);" id="wait-header-title">جاري
-                    معالجة الطلب</h2>
-            </div>
-        </div>
-    </div>
+        <!-- شاشة معالجة الطلب -->
+        <div id="wait-approval-screen" class="screen-container">
+                <div class="layout-wrapper" style="justify-content: center; align-items: center;">
+                        <div class="wait-processing-box">
+                                <div class="custom-loader"></div>
+                                <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main);"
+                    id="wait-header-title">جاري
+                                        معالجة الطلب</h2>
+                            </div>
+                    </div>
+            </div>
 
-    <!-- 4. الواجهة الرئيسية (Main Layout) -->
-    <div id="home-screen" class="screen-container">
-        <div class="layout-wrapper">
-            <header class="app-top-header">
-                <div class="header-logo-icon"
+        <!-- 4. الواجهة الرئيسية (Main Layout) -->
+        <div id="home-screen" class="screen-container">
+                <div class="layout-wrapper">
+                        <header class="app-top-header">
+                                <div class="header-logo-icon"                    
                     style="position: relative; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; box-shadow: 0 0 12px rgba(51, 224, 230, 0.2);">
-                    <div
+                                        <div                        
                         style="width: 42px; height: 42px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
-                        <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
+                                                <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync"
+                            alt="ZONE"                            
                             style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
-                    </div>
-                    <svg
+                                            </div>
+                                        <svg                        
                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 4px #33E0E6);">
-                        <rect x="1.5" y="1.5" width="43" height="43" rx="10.5" ry="10.5" fill="none" stroke="#33E0E6"
-                            stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200"
-                            style="animation: drawHeaderBorder 2s ease-out forwards;" />
+                                               
+                        <rect x="1.5" y="1.5" width="43" height="43" rx="10.5" ry="10.5" fill="none" stroke="#33E0E6"  
+                                                      stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200"  
+                                                      style="animation: drawHeaderBorder 2s ease-out forwards;" />
+                                           
                     </svg>
-                    <style>
+                                        <style>
                         @keyframes drawHeaderBorder {
                             to {
                                 stroke-dashoffset: 0;
                             }
                         }
                     </style>
-                </div>
+                                    </div>
 
-                <div class="header-brand-title">ZONE</div>
-            </header>
+                                <div class="header-brand-title">ZONE</div>
+                            </header>
 
-            <!-- السلايدر الترويجي بعد إصلاح الاتجاه وإضافة النقاط -->
-            <div class="promo-slider-container" id="promoSlider">
-                <div class="promo-slides-track" id="slidesTrack">
-                    <div class="promo-slide-item"><img src="./adv1/adv1.jpg" alt="adv1"></div>
-                    <div class="promo-slide-item"><img src="./adv2/adv2.jpg" alt="adv2"></div>
-                    <div class="promo-slide-item"><img src="./adv3/adv3.jpg" alt="adv3"></div>
-                    <div class="promo-slide-item"><img src="./adv4/adv4.jpg" alt="adv4"></div>
-                    <div class="promo-slide-item"><img src="./adv5/adv5.jpg" alt="adv5"></div>
-                </div>
-                <div class="slider-dots-box" id="sliderDots">
-                    <span class="slider-dot active" onclick="goToPromoSlide(0)"></span>
-                    <span class="slider-dot" onclick="goToPromoSlide(1)"></span>
-                    <span class="slider-dot" onclick="goToPromoSlide(2)"></span>
-                    <span class="slider-dot" onclick="goToPromoSlide(3)"></span>
-                    <span class="slider-dot" onclick="goToPromoSlide(4)"></span>
-                </div>
-            </div>
+                        <!-- السلايدر الترويجي بعد إصلاح الاتجاه وإضافة النقاط -->
+                        <div class="promo-slider-container" id="promoSlider">
+                                <div class="promo-slides-track" id="slidesTrack">
+                                        <div class="promo-slide-item"><img src="./adv1/adv1.jpg" alt="adv1"></div>
+                                        <div class="promo-slide-item"><img src="./adv2/adv2.jpg" alt="adv2"></div>
+                                        <div class="promo-slide-item"><img src="./adv3/adv3.jpg" alt="adv3"></div>
+                                        <div class="promo-slide-item"><img src="./adv4/adv4.jpg" alt="adv4"></div>
+                                        <div class="promo-slide-item"><img src="./adv5/adv5.jpg" alt="adv5"></div>
+                                    </div>
+                                <div class="slider-dots-box" id="sliderDots">
+                                        <span class="slider-dot active" onclick="goToPromoSlide(0)"></span>
+                                        <span class="slider-dot" onclick="goToPromoSlide(1)"></span>
+                                        <span class="slider-dot" onclick="goToPromoSlide(2)"></span>
+                                        <span class="slider-dot" onclick="goToPromoSlide(3)"></span>
+                                        <span class="slider-dot" onclick="goToPromoSlide(4)"></span>
+                                    </div>
+                            </div>
 
-            <!-- شريط البحث والفلترة اللحظي -->
-            <div class="feed-filter-bar">
-                <div class="search-input-wrap">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="feed-search-input" placeholder="ابحث عن كتاب، أداة، جامعة أو محافظة..."
+                        <!-- شريط البحث والفلترة اللحظي -->
+                        <div class="feed-filter-bar">
+                                <div class="search-input-wrap">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <input type="text" id="feed-search-input"
+                        placeholder="ابحث عن كتاب، أداة، جامعة أو محافظة..."                        
                         oninput="renderFilteredFeed()">
-                </div>
-                <button class="filter-chip-btn" id="btn-filter-my-ads" onclick="toggleMyAdsFilter()">
-                    <i class="fa-solid fa-layer-group"></i> إعلاناتي
-                </button>
-            </div>
+                                    </div>
+                                <button class="filter-chip-btn" id="btn-filter-my-ads" onclick="toggleMyAdsFilter()">
+                                        <i class="fa-solid fa-layer-group"></i> إعلاناتي
+                                    </button>
+                            </div>
 
-            <!-- شاشة الفراغ (الشبح اللطيف) -->
-            <div class="ghost-empty-state" id="empty-state-box">
-                <div class="ghost-svg-holder">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- شاشة الفراغ (الشبح اللطيف) -->
+                        <div class="ghost-empty-state" id="empty-state-box">
+                                <div class="ghost-svg-holder">
+                                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                               
                         <path d="M50 15C32 15 24 30 24 48V82L33 76L42 82L50 76L58 82L67 76L76 82V48C76 30 68 15 50 15Z"
-                            fill="url(#ghostGrad)" />
+                                                        fill="url(#ghostGrad)" />
+                                               
                         <circle cx="40" cy="45" r="4.5" fill="#07111e" />
+                                               
                         <circle cx="60" cy="45" r="4.5" fill="#07111e" />
+                                               
                         <ellipse cx="50" cy="54" rx="4" ry="2.5" fill="#07111e" />
+                                               
                         <ellipse cx="32" cy="51" rx="3.5" ry="2" fill="#39e5ee" opacity="0.6" />
+                                               
                         <ellipse cx="68" cy="51" rx="3.5" ry="2" fill="#39e5ee" opacity="0.6" />
-                        <defs>
-                            <linearGradient id="ghostGrad" x1="50" y1="15" x2="50" y2="82"
-                                gradientUnits="userSpaceOnUse">
+                                                <defs>
+                                                        <linearGradient id="ghostGrad" x1="50" y1="15" x2="50" y2="82"  
+                                                              gradientUnits="userSpaceOnUse">
+                                                               
                                 <stop stop-color="#39e5ee" />
+                                                               
                                 <stop offset="1" stop-color="#0f2b45" />
+                                                           
                             </linearGradient>
-                        </defs>
+                                                    </defs>
+                                           
                     </svg>
-                </div>
-                <h3 class="ghost-lead-text">المكان مهجور تماماً..</h3>
-                <p class="ghost-sub-text">انشر إعلانك هلق واكسر الصمت!</p>
-            </div>
+                                    </div>
+                                <h3 class="ghost-lead-text">المكان مهجور تماماً..</h3>
+                                <p class="ghost-sub-text">انشر إعلانك هلق واكسر الصمت!</p>
+                            </div>
 
-            <!-- شبكة كروت الإعلانات -->
-            <div class="posts-responsive-grid" id="posts-container-grid" style="display: none;"></div>
-        </div>
-    </div>
+                        <!-- شبكة كروت الإعلانات -->
+                        <div class="posts-responsive-grid" id="posts-container-grid" style="display: none;"></div>
+                    </div>
+            </div>
 
-    <!-- شاشة الملف الشخصي (أنا) -->
-    <div id="me-screen" class="screen-container">
-        <div class="layout-wrapper" style="max-width: 600px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2 style="font-size: 22px; font-weight: 800;">الملف الشخصي</h2>
-                <button onclick="toggleProfileEditMode()" id="edit-profile-btn"
+        <!-- شاشة الملف الشخصي (أنا) -->
+        <div id="me-screen" class="screen-container">
+                <div class="layout-wrapper" style="max-width: 600px;">
+                        <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                                <h2 style="font-size: 22px; font-weight: 800;">الملف الشخصي</h2>
+                                <button onclick="toggleProfileEditMode()" id="edit-profile-btn"                    
                     style="background: var(--surface-navy); border: 1px solid var(--accent-turquoise); color: var(--accent-turquoise); width: 42px; height: 42px; border-radius: 50%; cursor: pointer;">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
-            </div>
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                            </div>
 
-            <div class="form-row">
-                <label>الاسم الكامل</label>
-                <input type="text" id="prof-name" disabled>
-            </div>
-            <div class="form-row">
-                <label>رقم الهاتف</label>
-                <input type="tel" id="prof-phone" disabled>
-            </div>
-            <div class="form-row">
-                <label>المحافظة</label>
-                <input type="text" id="prof-city" disabled onclick="if(!this.disabled) openCitySelectorModal('prof')">
-            </div>
-            <div class="form-row">
-                <label>الجامعة</label>
-                <input type="text" id="prof-university" disabled>
-            </div>
-            <div class="form-row">
-                <label>الفرع الدراسي</label>
-                <input type="text" id="prof-major" disabled>
-            </div>
+                        <div class="form-row">
+                                <label>الاسم الكامل</label>
+                                <input type="text" id="prof-name" disabled>
+                            </div>
+                        <div class="form-row">
+                                <label>رقم الهاتف</label>
+                                <input type="tel" id="prof-phone" disabled>
+                            </div>
+                        <div class="form-row">
+                                <label>المحافظة</label>
+                                <input type="text" id="prof-city" disabled
+                    onclick="if(!this.disabled) openCitySelectorModal('prof')">
+                            </div>
+                        <div class="form-row">
+                                <label>الجامعة</label>
+                                <input type="text" id="prof-university" disabled>
+                            </div>
+                        <div class="form-row">
+                                <label>الفرع الدراسي</label>
+                                <input type="text" id="prof-major" disabled>
+                            </div>
 
-            <button class="btn-action-primary" id="save-prof-btn" style="display: none; margin-top: 15px;"
-                onclick="saveProfileUpdates()">حفظ التعديلات</button>
-            <button onclick="logoutSession()"
+                        <button class="btn-action-primary" id="save-prof-btn" style="display: none; margin-top: 15px;"  
+                              onclick="saveProfileUpdates()">حفظ التعديلات</button>
+                        <button onclick="logoutSession()"                
                 style="width: 100%; padding: 14px; background: transparent; border: 1px solid var(--danger); color: var(--danger); border-radius: 12px; font-weight: 700; margin-top: 20px; cursor: pointer;">تسجيل
-                الخروج</button>
-        </div>
-    </div>
+                                الخروج</button>
+                    </div>
+            </div>
 
-    <!-- شريط التراجع العائم بأسلوب تيليجرام (Telegram Undo Snackbar) -->
-    <div class="tg-undo-snackbar" id="tg-undo-snackbar">
-        <div class="tg-undo-info">
-            <div class="tg-trash-badge">
-                <i class="fa-solid fa-trash-can"></i>
-            </div>
-            <div class="tg-undo-text-wrap">
-                <span class="tg-undo-title">تم نقل الإعلان لسلة المهملات</span>
-                <span class="tg-undo-sub">سيتم الحذف النهائي خلال <b id="tg-undo-timer"
-                        style="color: var(--turquoise-light);">5</b> ثوانٍ</span>
-            </div>
-        </div>
-        <button class="tg-undo-btn" onclick="revertLastSoldDeletion()">
-            <i class="fa-solid fa-rotate-left"></i> تراجع
-        </button>
-    </div>
+        <!-- شريط التراجع العائم بأسلوب تيليجرام (Telegram Undo Snackbar) -->
+        <div class="tg-undo-snackbar" id="tg-undo-snackbar">
+                <div class="tg-undo-info">
+                        <div class="tg-trash-badge">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </div>
+                        <div class="tg-undo-text-wrap">
+                                <span class="tg-undo-title">تم نقل الإعلان لسلة المهملات</span>
+                                <span class="tg-undo-sub">سيتم الحذف النهائي خلال <b id="tg-undo-timer"                
+                                style="color: var(--turquoise-light);">5</b> ثوانٍ</span>
+                            </div>
+                    </div>
+                <button class="tg-undo-btn" onclick="revertLastSoldDeletion()">
+                        <i class="fa-solid fa-rotate-left"></i> تراجع
+                    </button>
+            </div>
 
-    <!-- زر الدعم الفني العائم بشعار التلغرام -->
-    <a href="https://t.me/Zoneapplication" target="_blank" class="support-bubble-btn" id="floating-support-btn"
-        style="display: none;">
-        <i class="fa-brands fa-telegram"></i>
-    </a>
+        <!-- زر الدعم الفني العائم بشعار التلغرام -->
+        <a href="https://t.me/Zoneapplication" target="_blank" class="support-bubble-btn" id="floating-support-btn"    
+            style="display: none;">
+                <i class="fa-brands fa-telegram"></i>
+            </a>
 
-    <!-- الشريط السفلي: الرئيسية و انا فقط + زر (+) في المنتصف -->
-    <nav class="bottom-app-bar" id="app-nav-bar" style="display: none;">
-        <button class="nav-link-btn active" id="nav-btn-home" onclick="navTo('home-screen')">
-            <i class="fa-solid fa-store"></i>
-            <span>الرئيسية</span>
-        </button>
-        <div class="nav-center-add" onclick="openCreateAdModal()">
-            <i class="fa-solid fa-plus"></i>
-        </div>
-        <button class="nav-link-btn" id="nav-btn-me" onclick="navTo('me-screen')">
-            <i class="fa-solid fa-user"></i>
-            <span>انا</span>
-        </button>
-    </nav>
+        <!-- الشريط السفلي: الرئيسية و انا فقط + زر (+) في المنتصف -->
+        <nav class="bottom-app-bar" id="app-nav-bar" style="display: none;">
+                <button class="nav-link-btn active" id="nav-btn-home" onclick="navTo('home-screen')">
+                        <i class="fa-solid fa-store"></i>
+                        <span>الرئيسية</span>
+                    </button>
+                <div class="nav-center-add" onclick="openCreateAdModal()">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                <button class="nav-link-btn" id="nav-btn-me" onclick="navTo('me-screen')">
+                        <i class="fa-solid fa-user"></i>
+                        <span>انا</span>
+                    </button>
+            </nav>
 
-    <!-- Modal إضافة إعلان جديد مع 3 مربعات مخصصة لرفع الصور -->
-    <div class="modal-overlay" id="add-ad-modal">
-        <div class="modal-content-card" style="text-align: right; max-width: 480px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-                <h3 style="font-size: 18px; font-weight: 800;">إضافة إعلان جديد</h3>
-                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;"
-                    onclick="closeCreateAdModal()"></i>
-            </div>
+        <!-- Modal إضافة إعلان جديد مع 3 مربعات مخصصة لرفع الصور -->
+        <div class="modal-overlay" id="add-ad-modal">
+                <div class="modal-content-card" style="text-align: right; max-width: 480px;">
+                        <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                                <h3 style="font-size: 18px; font-weight: 800;">إضافة إعلان جديد</h3>
+                                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;"                  
+                      onclick="closeCreateAdModal()"></i>
+                            </div>
 
-            <div class="form-row">
-                <label>اسم المادة / الشيء المعلن عنه</label>
-                <input type="text" id="ad-title" placeholder="كتاب، مسطرة، آلة حاسبة...">
-            </div>
+                        <div class="form-row">
+                                <label>اسم المادة / الشيء المعلن عنه</label>
+                                <input type="text" id="ad-title" placeholder="كتاب، مسطرة، آلة حاسبة...">
+                            </div>
 
-            <div class="form-row">
-                <label>السعر بالليرة السورية</label>
-                <input type="number" id="ad-price" placeholder="مثال: 50000">
-            </div>
+                        <div class="form-row">
+                                <label>السعر بالليرة السورية</label>
+                                <input type="number" id="ad-price" placeholder="مثال: 50000">
+                            </div>
 
-            <!-- 3 مربعات مخصصة لرفع ومعاينة الصور -->
-            <label
+                        <!-- 3 مربعات مخصصة لرفع ومعاينة الصور -->
+                        <label                
                 style="font-size: 13.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 8px;">صور
-                المنتج (3 صور - يتم ضغطها تلقائياً)</label>
-            <div class="photo-uploader-triplet">
-                <div class="photo-upload-slot" onclick="triggerFileInput(1)">
-                    <i class="fa-solid fa-camera"></i>
-                    <span>الصورة 1</span>
-                    <img id="preview-img-1" alt="Preview 1">
-                    <input type="file" id="file-slot-1" accept="image/*" style="display: none;"
-                        onchange="handleImageSelection(event, 1)">
-                </div>
-                <div class="photo-upload-slot" onclick="triggerFileInput(2)">
-                    <i class="fa-solid fa-camera"></i>
-                    <span>الصورة 2</span>
-                    <img id="preview-img-2" alt="Preview 2">
-                    <input type="file" id="file-slot-2" accept="image/*" style="display: none;"
-                        onchange="handleImageSelection(event, 2)">
-                </div>
-                <div class="photo-upload-slot" onclick="triggerFileInput(3)">
-                    <i class="fa-solid fa-camera"></i>
-                    <span>الصورة 3</span>
-                    <img id="preview-img-3" alt="Preview 3">
-                    <input type="file" id="file-slot-3" accept="image/*" style="display: none;"
-                        onchange="handleImageSelection(event, 3)">
-                </div>
-            </div>
+                                المنتج (3 صور - يتم ضغطها تلقائياً)</label>
+                        <div class="photo-uploader-triplet">
+                                <div class="photo-upload-slot" onclick="triggerFileInput(1)">
+                                        <i class="fa-solid fa-camera"></i>
+                                        <span>الصورة 1</span>
+                                        <img id="preview-img-1" alt="Preview 1">
+                                        <input type="file" id="file-slot-1" accept="image/*" style="display: none;"    
+                                            onchange="handleImageSelection(event, 1)">
+                                    </div>
+                                <div class="photo-upload-slot" onclick="triggerFileInput(2)">
+                                        <i class="fa-solid fa-camera"></i>
+                                        <span>الصورة 2</span>
+                                        <img id="preview-img-2" alt="Preview 2">
+                                        <input type="file" id="file-slot-2" accept="image/*" style="display: none;"    
+                                            onchange="handleImageSelection(event, 2)">
+                                    </div>
+                                <div class="photo-upload-slot" onclick="triggerFileInput(3)">
+                                        <i class="fa-solid fa-camera"></i>
+                                        <span>الصورة 3</span>
+                                        <img id="preview-img-3" alt="Preview 3">
+                                        <input type="file" id="file-slot-3" accept="image/*" style="display: none;"    
+                                            onchange="handleImageSelection(event, 3)">
+                                    </div>
+                            </div>
 
-            <button class="btn-action-primary" id="btn-submit-ad" onclick="submitNewAd()">نشر الإعلان الآن</button>
-        </div>
-    </div>
+                        <button class="btn-action-primary" id="btn-submit-ad" onclick="submitNewAd()">نشر الإعلان
+                الآن</button>
+                    </div>
+            </div>
 
-    <!-- Modal خيارات التواصل (واتساب أو تليغرام) -->
-    <div class="modal-overlay" id="contact-choice-modal">
-        <div class="modal-content-card" style="max-width: 380px;">
-            <div
+        <!-- Modal خيارات التواصل (واتساب أو تليغرام) -->
+        <div class="modal-overlay" id="contact-choice-modal">
+                <div class="modal-content-card" style="max-width: 380px;">
+                        <div                
                 style="width: 50px; height: 50px; background: rgba(0, 173, 181, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; color: var(--accent-turquoise); font-size: 22px;">
-                <i class="fa-solid fa-phone"></i>
-            </div>
-            <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">طريقة التواصل</h3>
-            <p style="font-size: 13.5px; color: var(--text-muted);">اختر التطبيق المفضل لديك للتواصل مع المعلن:</p>
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">طريقة التواصل</h3>
+                        <p style="font-size: 13.5px; color: var(--text-muted);">اختر التطبيق المفضل لديك للتواصل مع
+                المعلن:</p>
 
-            <div class="contact-modal-choices">
-                <button class="contact-choice-btn wa" id="btn-choice-wa">
-                    <i class="fa-brands fa-whatsapp"></i> واتساب
-                </button>
-                <button class="contact-choice-btn tg" id="btn-choice-tg">
-                    <i class="fa-brands fa-telegram"></i> تليغرام
-                </button>
-            </div>
-            <button onclick="closeContactModal()"
+                        <div class="contact-modal-choices">
+                                <button class="contact-choice-btn wa" id="btn-choice-wa">
+                                        <i class="fa-brands fa-whatsapp"></i> واتساب
+                                    </button>
+                                <button class="contact-choice-btn tg" id="btn-choice-tg">
+                                        <i class="fa-brands fa-telegram"></i> تليغرام
+                                    </button>
+                            </div>
+                        <button onclick="closeContactModal()"                
                 style="background: none; border: none; color: var(--text-muted); margin-top: 16px; cursor: pointer; font-size: 13px;">إلغاء</button>
-        </div>
-    </div>
+                    </div>
+            </div>
 
-    <!-- Modal مكبر الصور الاحترافي (Image Lightbox) -->
-    <div class="modal-overlay" id="image-lightbox-modal" onclick="if(event.target === this) closeLightbox()">
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <div class="lightbox-img-box">
-                <img id="lightbox-main-img" src="" alt="معاينة الصورة">
-            </div>
-            <div class="lightbox-controls">
-                <button class="lightbox-nav-btn" onclick="stepLightbox(-1)"><i
+        <!-- Modal مكبر الصور الاحترافي (Image Lightbox) -->
+        <div class="modal-overlay" id="image-lightbox-modal" onclick="if(event.target === this) closeLightbox()">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div class="lightbox-img-box">
+                                <img id="lightbox-main-img" src="" alt="معاينة الصورة">
+                            </div>
+                        <div class="lightbox-controls">
+                                <button class="lightbox-nav-btn" onclick="stepLightbox(-1)"><i                        
                         class="fa-solid fa-chevron-right"></i></button>
-                <span id="lightbox-counter" style="font-weight: 800; font-size: 14px; color: var(--text-main);">1 /
-                    3</span>
-                <button class="lightbox-nav-btn" onclick="stepLightbox(1)"><i
+                                <span id="lightbox-counter"
+                    style="font-weight: 800; font-size: 14px; color: var(--text-main);">1 /
+                                        3</span>
+                                <button class="lightbox-nav-btn" onclick="stepLightbox(1)"><i                        
                         class="fa-solid fa-chevron-left"></i></button>
-                <button class="lightbox-nav-btn" style="border-color: var(--danger); color: var(--danger);"
+                                <button class="lightbox-nav-btn"
+                    style="border-color: var(--danger); color: var(--danger);"                    
                     onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-        </div>
-    </div>
+                            </div>
+                    </div>
+            </div>
 
+       
     <script>
-        // دالة الاتصال الآمن بالسيرفر
-        async function callSecureTelegram(actionType, payloadData) {
-            const { data, error } = await supabaseClient.functions.invoke('send-telegram', {
-                body: { action: actionType, payload: payloadData }
-            });
-            if (error) {
-                console.error("فشل الاتصال الآمن:", error);
-                return false;
-            }
-            return true;
-        }
         /* =========================================================
            0. تشغيل شريط الإعلانات المتحرك (تم إصلاح مشكلة RTL)
            ========================================================= */
@@ -1642,17 +1697,8 @@
         const SUPABASE_KEY = 'sb_publishable_Swy3ysjQNNDHouoeo6LZjw_0hBo-t5c';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // دالة الاتصال الآمن بالسيرفر بدلاً من التوكن المكشوف
-        async function callSecureTelegram(actionType, payloadData) {
-            const { data, error } = await supabaseClient.functions.invoke('send-telegram', {
-                body: { action: actionType, payload: payloadData }
-            });
-            if (error) {
-                console.error("فشل الاتصال الآمن:", error);
-                return false;
-            }
-            return true;
-        }
+        const BOT_TOKEN = '8714980380:AAH5TzjGwMyKASdoBDMZNLV8tA0ME8p7ALE';
+        const ADMIN_CHAT_ID = '8717720399';
         const BOT_USERNAME = '@Zonewebsite_bot';
         const SUPPORT_USERNAME = '@Zoneapplication';
 
@@ -2106,7 +2152,19 @@
                 ]
             };
 
-            await callSecureTelegram('notify_admin', pendingUserData);
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: ADMIN_CHAT_ID,
+                    text: notifyMessage,
+                    reply_markup: actionButtons
+                })
+            }).then(() => {
+                listenForAdminVerification();
+            }).catch(() => {
+                setTimeout(() => applyDecision('accept'), 4000);
+            });
         }
 
         function listenForAdminVerification() {
@@ -2318,43 +2376,43 @@
                     const safeTitle = String(item.title).replace(/'/g, "\\'");
 
                     cardContainer.innerHTML = `
-                    <div class="product-card" id="card-inner-${item.id}">
-                        <div class="product-images-trio">
-                            <img src="${item.photo1}" alt="صورة 1" onclick="openLightbox(${item.id}, 0)">
-                            <img src="${item.photo2}" alt="صورة 2" onclick="openLightbox(${item.id}, 1)">
-                            <img src="${item.photo3}" alt="صورة 3" onclick="openLightbox(${item.id}, 2)">
-                        </div>
-                        <div class="product-details">
-                            <div class="product-header-row">
-                                <div class="product-title">${item.title}</div>
-                                <div class="product-price">${Number(item.price).toLocaleString()} ل.س</div>
-                            </div>
+                    <div class="product-card" id="card-inner-${item.id}">
+                        <div class="product-images-trio">
+                            <img src="${item.photo1}" alt="صورة 1" onclick="openLightbox(${item.id}, 0)">
+                            <img src="${item.photo2}" alt="صورة 2" onclick="openLightbox(${item.id}, 1)">
+                            <img src="${item.photo3}" alt="صورة 3" onclick="openLightbox(${item.id}, 2)">
+                        </div>
+                        <div class="product-details">
+                            <div class="product-header-row">
+                                <div class="product-title">${item.title}</div>
+                                <div class="product-price">${Number(item.price).toLocaleString()} ل.س</div>
+                            </div>
 
-                            <div class="product-meta-badges">
-                                <span class="meta-badge"><i class="fa-solid fa-user-graduate"></i> ${cleanOwnerName}</span>
-                                ${ownerCity ? `<span class="meta-badge"><i class="fa-solid fa-location-dot"></i> ${ownerCity}</span>` : ''}
-                                ${ownerUni ? `<span class="meta-badge"><i class="fa-solid fa-building-columns"></i> ${ownerUni}</span>` : ''}
-                            </div>
+                            <div class="product-meta-badges">
+                                <span class="meta-badge"><i class="fa-solid fa-user-graduate"></i> ${cleanOwnerName}</span>
+                                ${ownerCity ? `<span class="meta-badge"><i class="fa-solid fa-location-dot"></i> ${ownerCity}</span>` : ''}
+                                ${ownerUni ? `<span class="meta-badge"><i class="fa-solid fa-building-columns"></i> ${ownerUni}</span>` : ''}
+                            </div>
 
-                            <div class="product-card-actions">
-                                <button class="card-action-btn btn-contact" onclick="openContactOptions('${item.owner_phone}')">
-                                    <i class="fa-solid fa-phone"></i>
-                                    <span>تواصل</span>
-                                </button>
-                                <button class="card-action-btn btn-share" onclick="shareAdItem('${safeTitle}', '${item.price}', '${item.owner_phone}')">
-                                    <i class="fa-solid fa-share-nodes"></i>
-                                    <span>مشاركة</span>
-                                </button>
-                                ${isOwner ? `
-                                    <button class="card-action-btn btn-sold" id="btn-sold-${item.id}" onclick="triggerSoldUndoCountdown(${item.id})">
-                                        <i class="fa-solid fa-check-double"></i>
-                                        <span>تم البيع</span>
-                                    </button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    `;
+                            <div class="product-card-actions">
+                                <button class="card-action-btn btn-contact" onclick="openContactOptions('${item.owner_phone}')">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <span>تواصل</span>
+                                </button>
+                                <button class="card-action-btn btn-share" onclick="shareAdItem('${safeTitle}', '${item.price}', '${item.owner_phone}')">
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                    <span>مشاركة</span>
+                                </button>
+                                ${isOwner ? `
+                                    <button class="card-action-btn btn-sold" id="btn-sold-${item.id}" onclick="triggerSoldUndoCountdown(${item.id})">
+                                        <i class="fa-solid fa-check-double"></i>
+                                        <span>تم البيع</span>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    `;
                     feedGrid.appendChild(cardContainer);
                 });
             }
@@ -2659,19 +2717,19 @@
 
             toast.innerHTML = `
 <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
-            background: #0b1a2d;
-            border: 1.5px solid #33E0E6; border-radius: 14px;
-            width: 88%; max-width: 450px; padding: 18px 16px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
-            z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
-            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-    <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
-    <span style="font-size: 14.5px; color: #f0f5ff; letter-spacing: 0.3px;">
-        ${msg}
-    </span>
+            background: #0b1a2d;
+            border: 1.5px solid #33E0E6; border-radius: 14px;
+            width: 88%; max-width: 450px; padding: 18px 16px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
+            z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
+            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+    <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+    <span style="font-size: 14.5px; color: #f0f5ff; letter-spacing: 0.3px;">
+        ${msg}
+    </span>
 </div>
-    `;
+    `;
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
@@ -2701,47 +2759,47 @@
             citySelect.style.display = 'none';
             const customBtn = document.createElement('div');
             customBtn.style.cssText = `
-        width: 100%; padding: 13px 16px; background-color: var(--card-navy, #0b1a2d);
-        border: 1.5px solid var(--border-navy, #1b314e); border-radius: 12px; color: #fff;
-        font-size: 14.5px; cursor: pointer; display: flex; justify-content: space-between;
-        align-items: center; font-family: 'Cairo', sans-serif; transition: 0.3s;
-    `;
+        width: 100%; padding: 13px 16px; background-color: var(--card-navy, #0b1a2d);
+        border: 1.5px solid var(--border-navy, #1b314e); border-radius: 12px; color: #fff;
+        font-size: 14.5px; cursor: pointer; display: flex; justify-content: space-between;
+        align-items: center; font-family: 'Cairo', sans-serif; transition: 0.3s;
+    `;
             customBtn.innerHTML = `<span id="selected-city-text">${citySelect.value || 'اختر المحافظة'}</span> <i class="fas fa-chevron-down" style="color: #33E0E6; font-size: 14px;"></i>`;
             citySelect.parentNode.insertBefore(customBtn, citySelect.nextSibling);
 
             const modal = document.createElement('div');
             globalCityModal = modal;
             modal.style.cssText = `
-        position: fixed; inset: 0; background: rgba(5, 13, 26, 0.85); backdrop-filter: blur(6px);
-        display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px;
-        direction: rtl; overscroll-behavior: contain; touch-action: none;
-    `;
+        position: fixed; inset: 0; background: rgba(5, 13, 26, 0.85); backdrop-filter: blur(6px);
+        display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px;
+        direction: rtl; overscroll-behavior: contain; touch-action: none;
+    `;
 
             let optionsHtml = '';
             Array.from(citySelect.options).forEach(opt => {
                 optionsHtml += `
-            <div class="custom-city-opt" data-val="${opt.value}" style="
-                padding: 14px 18px; margin-bottom: 8px; background: #0f223a; border: 1px solid #1b314e;
-                border-radius: 10px; color: #f0f5ff; font-family: 'Cairo', sans-serif; font-size: 15px;
-                font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
-            ">
-                <span>${opt.text}</span>
-                <i class="fas fa-location-dot" style="color: #33E0E6; opacity: 0.7;"></i>
-            </div>
-        `;
+            <div class="custom-city-opt" data-val="${opt.value}" style="
+                padding: 14px 18px; margin-bottom: 8px; background: #0f223a; border: 1px solid #1b314e;
+                border-radius: 10px; color: #f0f5ff; font-family: 'Cairo', sans-serif; font-size: 15px;
+                font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
+            ">
+                <span>${opt.text}</span>
+                <i class="fas fa-location-dot" style="color: #33E0E6; opacity: 0.7;"></i>
+            </div>
+        `;
             });
 
             modal.innerHTML = `
-        <div style="background: #071220; border: 1.5px solid #33E0E6; border-radius: 18px; width: 100%; max-width: 400px; max-height: 75vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(51, 224, 230, 0.15); overflow: hidden; touch-action: auto;">
-            <div style="padding: 18px 20px; border-bottom: 1px solid #1b314e; display: flex; justify-content: space-between; align-items: center; background: #0b1a2d;">
-                <h3 style="color: #33E0E6; font-family: 'Cairo', sans-serif; font-size: 17px; margin: 0;">اختر المحافظة</h3>
-                <i class="fas fa-xmark" id="close-city-modal" style="color: #8a9fc2; font-size: 20px; cursor: pointer;"></i>
-            </div>
-            <div style="padding: 16px; overflow-y: auto; overscroll-behavior: contain;">
-                ${optionsHtml}
-            </div>
-        </div>
-    `;
+        <div style="background: #071220; border: 1.5px solid #33E0E6; border-radius: 18px; width: 100%; max-width: 400px; max-height: 75vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(51, 224, 230, 0.15); overflow: hidden; touch-action: auto;">
+            <div style="padding: 18px 20px; border-bottom: 1px solid #1b314e; display: flex; justify-content: space-between; align-items: center; background: #0b1a2d;">
+                <h3 style="color: #33E0E6; font-family: 'Cairo', sans-serif; font-size: 17px; margin: 0;">اختر المحافظة</h3>
+                <i class="fas fa-xmark" id="close-city-modal" style="color: #8a9fc2; font-size: 20px; cursor: pointer;"></i>
+            </div>
+            <div style="padding: 16px; overflow-y: auto; overscroll-behavior: contain;">
+                ${optionsHtml}
+            </div>
+        </div>
+    `;
             document.body.appendChild(modal);
 
             const unlockScroll = () => { document.body.style.overflow = ''; };
@@ -2788,20 +2846,20 @@
             toast.className = 'account-not-found-toast';
 
             toast.innerHTML = `
-        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
-                    background: #0b1a2d; 
-                    border: 1.5px solid #33E0E6; border-radius: 14px; 
-                    width: 88%; max-width: 450px; padding: 18px 16px; 
-                    display: flex; align-items: center; justify-content: center; gap: 12px; 
-                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15); 
-                    z-index: 999999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
-                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
-            <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
-                لم يتم العثور على الحساب المرتبط بهذا الرقم
-            </span>
-        </div>
-    `;
+        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
+                    background: #0b1a2d; 
+                    border: 1.5px solid #33E0E6; border-radius: 14px; 
+                    width: 88%; max-width: 450px; padding: 18px 16px; 
+                    display: flex; align-items: center; justify-content: center; gap: 12px; 
+                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15); 
+                    z-index: 999999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
+                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+            <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+                لم يتم العثور على الحساب المرتبط بهذا الرقم
+            </span>
+        </div>
+    `;
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
