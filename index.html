@@ -2,31 +2,55 @@
 <html lang="ar" dir="rtl">
 
 <head>
-       
     <meta charset="UTF-8">
-       
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>ZONE</title>
-       
+    <title>ZONE</title>
     <link rel="preload" as="image" href="./logo/logo.jpg" fetchpriority="high">
 
-        <!-- خط Cairo المعتمد لكامل المنصة -->
-       
+    <!-- خط Cairo المعتمد لكامل المنصة -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-       
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-       
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-        <!-- مكتبة FontAwesome للأيقونات الرسمية -->
-       
+    <!-- مكتبة FontAwesome للأيقونات الرسمية -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        <!-- محرك قواعد البيانات السحابي الرسمي Supabase CDN -->
-       
+    <!-- محرك قواعد البيانات السحابي الرسمي Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        <style>
+    <style>
+        /* تنسيق شريط الإعلانات الترويجي (Slider) */
+        .promo-slider-container {
+            width: 100%;
+            height: 190px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1.5px solid var(--border-navy);
+        }
+
+        .promo-slides-track {
+            display: flex;
+            width: 500%;
+            /* بما أن لدينا 5 صور */
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .promo-slide-item {
+            width: 20%;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .promo-slide-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         :root {
             --primary-navy: #07111e;
             --surface-navy: #0e1d30;
@@ -59,67 +83,7 @@
             flex-direction: column;
         }
 
-        /* تنسيق شريط الإعلانات الترويجي (Slider) - تم إصلاح مشكلة RTL */
-        .promo-slider-container {
-            width: 100%;
-            height: 190px;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 18px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1.5px solid var(--border-navy);
-            direction: ltr;
-        }
-
-        .promo-slides-track {
-            display: flex;
-            width: 500%;
-            height: 100%;
-            transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .promo-slide-item {
-            width: 20%;
-            height: 100%;
-            flex-shrink: 0;
-        }
-
-        .promo-slide-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .slider-dots-box {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 6px;
-            background: rgba(7, 17, 30, 0.65);
-            padding: 5px 10px;
-            border-radius: 20px;
-            backdrop-filter: blur(4px);
-        }
-
-        .slider-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.35);
-            transition: var(--transition-smooth);
-            cursor: pointer;
-        }
-
-        .slider-dot.active {
-            width: 20px;
-            border-radius: 10px;
-            background: var(--turquoise-light);
-        }
-
-        /* نظام الشاشات */
+        /* نظام الشاشات وإخفاء السابقة كلياً لمنع ظهورها عند التمرير */
         .screen-container {
             display: none;
             width: 100%;
@@ -159,6 +123,24 @@
             flex-direction: column;
         }
 
+        .splash-logo-wrapper {
+            width: 150px;
+            height: 150px;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 173, 181, 0.15);
+        }
+
+        .splash-logo-wrapper svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
         .splash-title-huge {
             font-size: 64px;
             font-weight: 900;
@@ -173,7 +155,7 @@
             width: 100%;
             max-width: 1100px;
             margin: 0 auto;
-            padding: 24px 20px 105px 20px;
+            padding: 24px 20px 95px 20px;
             display: flex;
             flex-direction: column;
             flex: 1;
@@ -250,6 +232,25 @@
             box-shadow: 0 0 12px var(--turquoise-glow);
         }
 
+        .form-row select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='%2333E0E6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 14px center;
+            background-size: 18px;
+            cursor: pointer;
+            color-scheme: dark;
+        }
+
+        .form-row select option {
+            background-color: #0b1a2d;
+            color: #f0f5ff;
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            padding: 12px;
+        }
+
         .pass-input-box {
             position: relative;
         }
@@ -286,14 +287,9 @@
             transition: var(--transition-smooth);
         }
 
-        .btn-action-primary:hover:not(:disabled) {
+        .btn-action-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 173, 181, 0.5);
-        }
-
-        .btn-action-primary:disabled {
-            opacity: 0.65;
-            cursor: not-allowed;
         }
 
         .btn-tg-connect {
@@ -342,6 +338,12 @@
             color: #fff;
             outline: none;
             transition: all 0.3s ease;
+        }
+
+        .otp-box-digit.active-success {
+            border-color: var(--success) !important;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.6) !important;
+            color: var(--success);
         }
 
         /* 3. شاشة باقات الاشتراك */
@@ -472,10 +474,25 @@
         .app-top-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 24px;
             padding-bottom: 12px;
             border-bottom: 1px solid var(--border-navy);
+        }
+
+        .header-logo-icon {
+            width: 36px;
+            height: 36px;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-logo-icon svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .header-brand-title {
@@ -486,67 +503,6 @@
             line-height: 1;
         }
 
-        /* شريط البحث والفلترة الجديد */
-        .feed-filter-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 22px;
-        }
-
-        .search-input-wrap {
-            flex: 1;
-            min-width: 200px;
-            position: relative;
-        }
-
-        .search-input-wrap input {
-            width: 100%;
-            padding: 11px 40px 11px 14px;
-            background-color: var(--surface-navy);
-            border: 1.5px solid var(--border-navy);
-            border-radius: 14px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: var(--transition-smooth);
-        }
-
-        .search-input-wrap input:focus {
-            border-color: var(--accent-turquoise);
-            box-shadow: 0 0 12px var(--turquoise-glow);
-        }
-
-        .search-input-wrap i {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .filter-chip-btn {
-            padding: 10px 16px;
-            background-color: var(--surface-navy);
-            border: 1.5px solid var(--border-navy);
-            border-radius: 14px;
-            color: var(--text-main);
-            font-size: 13.5px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            transition: var(--transition-smooth);
-        }
-
-        .filter-chip-btn.active {
-            background-color: rgba(0, 173, 181, 0.16);
-            border-color: var(--accent-turquoise);
-            color: var(--turquoise-light);
-        }
-
         /* شاشة الفراغ (الشبح اللطيف) */
         .ghost-empty-state {
             display: flex;
@@ -554,14 +510,14 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 50px 20px;
-            min-height: 45vh;
+            padding: 60px 20px;
+            min-height: 55vh;
         }
 
         .ghost-svg-holder {
-            width: 140px;
-            height: 140px;
-            margin-bottom: 18px;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
             animation: floatGhost 3.5s ease-in-out infinite;
         }
 
@@ -578,14 +534,14 @@
         }
 
         .ghost-lead-text {
-            font-size: 20px;
+            font-size: 21px;
             font-weight: 800;
             color: var(--text-main);
             margin-bottom: 6px;
         }
 
         .ghost-sub-text {
-            font-size: 14.5px;
+            font-size: 15px;
             color: var(--text-muted);
             max-width: 380px;
         }
@@ -601,7 +557,7 @@
         .product-card-container {
             display: flex;
             flex-direction: column;
-            transition: all 0.25s ease;
+            gap: 8px;
         }
 
         .product-card {
@@ -613,22 +569,19 @@
             flex-direction: column;
             transition: var(--transition-smooth);
             position: relative;
-            height: 100%;
         }
 
         .product-card:hover {
             border-color: var(--accent-turquoise);
-            box-shadow: 0 10px 25px rgba(0, 173, 181, 0.22);
-            transform: translateY(-2px);
+            box-shadow: 0 10px 25px var(--turquoise-glow);
         }
 
         .product-images-trio {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 3px;
-            height: 140px;
+            gap: 4px;
+            height: 130px;
             background-color: var(--primary-navy);
-            position: relative;
         }
 
         .product-images-trio img {
@@ -636,11 +589,6 @@
             height: 100%;
             object-fit: cover;
             cursor: pointer;
-            transition: transform 0.25s ease, filter 0.25s ease;
-        }
-
-        .product-images-trio img:hover {
-            filter: brightness(1.12);
         }
 
         .product-details {
@@ -650,283 +598,78 @@
             flex: 1;
         }
 
-        .product-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
         .product-title {
-            font-size: 16.5px;
+            font-size: 16px;
             font-weight: 800;
-            color: var(--text-main);
-            line-height: 1.35;
+            margin-bottom: 4px;
         }
 
         .product-price {
             font-size: 17px;
             font-weight: 900;
-            color: var(--turquoise-light);
-            white-space: nowrap;
-            background: rgba(0, 173, 181, 0.12);
-            padding: 3px 10px;
-            border-radius: 10px;
-            border: 1px solid rgba(57, 229, 238, 0.25);
-        }
-
-        .product-meta-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
-        }
-
-        .meta-badge {
-            font-size: 11.5px;
-            font-weight: 700;
-            color: var(--text-muted);
-            background-color: var(--card-navy);
-            border: 1px solid var(--border-navy);
-            padding: 4px 10px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .meta-badge i {
             color: var(--accent-turquoise);
-            font-size: 11px;
+            margin-bottom: 12px;
         }
 
-        /* =========================================================
-           الأزرار الثلاثة الموحدة والمتناظرة (تواصل - مشاركة - تم البيع)
-           ========================================================= */
         .product-card-actions {
             display: flex;
-            align-items: stretch;
             gap: 8px;
             margin-top: auto;
-            padding-top: 6px;
         }
 
-        .card-action-btn {
-            flex: 1;
-            height: 42px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: var(--transition-smooth);
-            border: 1.5px solid transparent;
-            white-space: nowrap;
-            padding: 0 8px;
-        }
-
-        .card-action-btn i {
-            font-size: 14px;
-        }
-
-        /* زر تواصل */
-        .card-action-btn.btn-contact {
-            background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
-            color: var(--primary-navy);
-            box-shadow: 0 4px 14px rgba(0, 173, 181, 0.28);
-        }
-
-        .card-action-btn.btn-contact:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(57, 229, 238, 0.45);
-        }
-
-        /* زر مشاركة */
-        .card-action-btn.btn-share {
-            background-color: var(--card-navy);
-            border-color: var(--border-navy);
-            color: var(--text-main);
-        }
-
-        .card-action-btn.btn-share:hover {
-            border-color: var(--accent-turquoise);
-            color: var(--turquoise-light);
-            background-color: rgba(0, 173, 181, 0.1);
-            transform: translateY(-2px);
-        }
-
-        /* زر تم البيع */
-        .card-action-btn.btn-sold {
+        /* شريط التراجع السفلي المستقل عند ضغط "تم البيع" */
+        .undo-countdown-bottom-bar {
             background-color: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.45);
-            color: #f87171;
-        }
-
-        .card-action-btn.btn-sold:hover {
-            background-color: var(--danger);
-            border-color: var(--danger);
-            color: #ffffff;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
-            transform: translateY(-2px);
-        }
-
-        /* =========================================================
-           شريط التراجع العائم بأسلوب تيليجرام (Telegram Undo Snackbar)
-           ========================================================= */
-        .tg-undo-snackbar {
-            position: fixed;
-            bottom: 84px;
-            left: 50%;
-            transform: translateX(-50%) translateY(150%);
-            width: 92%;
-            max-width: 430px;
-            background: rgba(14, 29, 48, 0.96);
-            backdrop-filter: blur(14px);
-            border: 1.5px solid rgba(57, 229, 238, 0.35);
-            border-radius: 16px;
+            border: 1.5px solid var(--danger);
+            border-radius: 14px;
             padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
-            z-index: 9500;
-            opacity: 0;
-            pointer-events: none;
-            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.25s ease;
+            animation: fadeInPage 0.25s ease;
         }
 
-        .tg-undo-snackbar.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .tg-undo-info {
+        .undo-left-info {
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        .tg-trash-badge {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #f87171;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            position: relative;
-        }
-
-        .tg-trash-badge i {
-            animation: trashShake 0.5s ease;
-        }
-
-        @keyframes trashShake {
-
-            0%,
-            100% {
-                transform: rotate(0deg);
-            }
-
-            25% {
-                transform: rotate(-12deg) scale(1.1);
-            }
-
-            75% {
-                transform: rotate(12deg) scale(1.1);
-            }
-        }
-
-        .tg-undo-text-wrap {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .tg-undo-title {
-            font-size: 13.5px;
-            font-weight: 800;
+            gap: 10px;
             color: #fff;
-        }
-
-        .tg-undo-sub {
-            font-size: 11.5px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .tg-undo-btn {
-            background: rgba(0, 173, 181, 0.15);
-            border: 1px solid var(--accent-turquoise);
-            color: var(--turquoise-light);
             font-size: 13.5px;
-            font-weight: 800;
-            padding: 7px 16px;
-            border-radius: 10px;
-            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .undo-left-info i {
+            color: var(--danger);
+            font-size: 16px;
+        }
+
+        .undo-timer-badge {
+            background-color: var(--danger);
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: var(--transition-smooth);
-        }
-
-        .tg-undo-btn:hover {
-            background: var(--accent-turquoise);
-            color: var(--primary-navy);
-        }
-
-        /* عارض الصور المكبر (Lightbox) */
-        .lightbox-img-box {
-            max-width: 92vw;
-            max-height: 75vh;
-            border-radius: 18px;
-            overflow: hidden;
-            border: 2px solid var(--border-navy);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-            background: #000;
-            position: relative;
-        }
-
-        .lightbox-img-box img {
-            max-width: 100%;
-            max-height: 75vh;
-            object-fit: contain;
-            display: block;
-        }
-
-        .lightbox-controls {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 18px;
-            margin-top: 16px;
+            font-size: 13px;
+            font-weight: 900;
         }
 
-        .lightbox-nav-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--surface-navy);
-            border: 1.5px solid var(--accent-turquoise);
-            color: var(--turquoise-light);
-            font-size: 16px;
+        .undo-revert-btn {
+            background-color: var(--card-navy);
+            border: 1px solid var(--danger);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: var(--transition-smooth);
         }
 
-        .lightbox-nav-btn:hover {
-            background: var(--accent-turquoise);
-            color: var(--primary-navy);
+        .undo-revert-btn:hover {
+            background-color: var(--danger);
         }
 
         /* 3 مربعات رفع الصور */
@@ -1098,24 +841,22 @@
 
 <body>
 
-        <!-- 1. الشاشة الترحيبية Splash Screen -->
-        <div id="splash-screen">
-                <div class="splash-logo-wrapper"            
+    <!-- 1. الشاشة الترحيبية Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-logo-wrapper"
             style="position: relative; width: 150px; height: 150px; border-radius: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; background: transparent; border: none; box-shadow: 0 0 25px rgba(51, 224, 230, 0.25);">
-                        <div                
+            <div
                 style="width: 144px; height: 144px; border-radius: 29px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
-                                <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"              
-                          style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
-                            </div>
-                        <svg                
+                <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
+                    style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
+            </div>
+            <svg
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 6px #33E0E6);">
-                               
-                <rect x="2" y="2" width="146" height="146" rx="30" ry="30" fill="none" stroke="#33E0E6"                
-                        stroke-width="3.5" stroke-dasharray="600" stroke-dashoffset="600"                    
+                <rect x="2" y="2" width="146" height="146" rx="30" ry="30" fill="none" stroke="#33E0E6"
+                    stroke-width="3.5" stroke-dasharray="600" stroke-dashoffset="600"
                     style="animation: drawTurquoiseBorder 2s ease-out forwards;" />
-                           
             </svg>
-                      <style>
+            <style>
                 @keyframes drawTurquoiseBorder {
                     to {
                         stroke-dashoffset: 0;
@@ -1125,569 +866,444 @@
         </div>
 
         <div class="splash-title-huge">ZONE</div>
-        <div
-            style="position: fixed; bottom: 55px; left: 50%; transform: translateX(-50%); color: #8a9fc2; font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.8px; white-space: nowrap; pointer-events: none; z-index: 999999;">
+        <div style="position: fixed; bottom: 55px; left: 50%; transform: translateX(-50%); 
+                        color: #8a9fc2; font-family: 'Cairo', sans-serif; font-size: 14px; 
+                        font-weight: 700; letter-spacing: 0.8px; white-space: nowrap; 
+                        pointer-events: none; z-index: 999999;">
             Owned by <span style="color: #33E0E6; font-weight: 800;">Novinium Soft</span>
         </div>
-    </div> 
+    </div>
 
-        <!-- 2. شاشة تسجيل الدخول وإنشاء الحساب (الـ 14 محافظة سورية) -->
-        <div id="auth-screen" class="screen-container">
-                <div class="layout-wrapper" style="justify-content: center;">
-                        <div class="auth-card-box">
-                                <div class="auth-toggle-group">
-                                        <button class="auth-toggle-btn active" id="tab-login-btn"
-                        onclick="toggleAuth('login')">تسجيل
-                                                الدخول</button>
-                                        <button class="auth-toggle-btn" id="tab-reg-btn"
-                        onclick="toggleAuth('reg')">حساب جديد</button>
-                                    </div>
+    <!-- 2. شاشة تسجيل الدخول وإنشاء الحساب (الـ 14 محافظة سورية) -->
+    <div id="auth-screen" class="screen-container">
+        <div class="layout-wrapper" style="justify-content: center;">
+            <div class="auth-card-box">
+                <div class="auth-toggle-group">
+                    <button class="auth-toggle-btn active" id="tab-login-btn" onclick="toggleAuth('login')">تسجيل
+                        الدخول</button>
+                    <button class="auth-toggle-btn" id="tab-reg-btn" onclick="toggleAuth('reg')">حساب جديد</button>
+                </div>
 
-                                <!-- نموذج إنشاء حساب جديد -->
-                                <form id="reg-form" novalidate style="display: none;"                    
+                <!-- نموذج إنشاء حساب جديد -->
+                <form id="reg-form" novalidate style="display: none;"
                     onsubmit="event.preventDefault(); if(this.checkValidity()){ proceedToSubscription(); }else{ showCustomToast(); }">
 
-                                        <div class="form-row">
-                                                <label>الاسم الكامل</label>
-                                                <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي"
-                            required>
-                                            </div>
-                                        <div class="form-row">
-                                                <label>رقم الهاتف</label>
-                                                <input type="tel" id="reg-phone" placeholder="09xxxxxxxx" required>
-                                            </div>
-                                        <div class="form-row">
-                                                <label>المحافظة</label>
-                                                <select id="reg-city" required>
-                                                        <option value="دمشق">دمشق</option>
-                                                        <option value="ريف دمشق">ريف دمشق</option>
-                                                        <option value="حلب">حلب</option>
-                                                        <option value="حمص">حمص</option>
-                                                        <option value="حماة">حماة</option>
-                                                        <option value="اللاذقية">اللاذقية</option>
-                                                        <option value="طرطوس">طرطوس</option>
-                                                        <option value="إدلب">إدلب</option>
-                                                        <option value="دير الزور">دير الزور</option>
-                                                        <option value="الرقة">الرقة</option>
-                                                        <option value="الحسكة">الحسكة</option>
-                                                        <option value="درعا">درعا</option>
-                                                        <option value="السويداء">السويداء</option>
-                                                        <option value="القنيطرة">القنيطرة</option>
-                                                    </select>
-                                            </div>
-                                        <div class="form-row">
-                                                <label>الجامعة</label>
-                                                <input type="text" id="reg-university"
-                            placeholder="اسم الجامعة أو المعهد" required>
-                                            </div>
-                                        <div class="form-row">
-                                                <label>الفرع الدراسي</label>
-                                                <input type="text" id="reg-major" placeholder="التخصص الجامعي" required>
-                                            </div>
-                                        <div class="form-row">
-                                                <label>كلمة المرور</label>
-                                                <div class="pass-input-box">
-                                                        <input type="password" id="reg-password" placeholder="••••••••"
-                                required>
-                                                        <i class="fa-solid fa-eye pass-eye-icon"
-                                onclick="togglePassEye('reg-password', this)"></i>
-                                                    </div>
-                                            </div>
+                    <div class="form-row">
+                        <label>الاسم الكامل</label>
+                        <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي" required>
+                    </div>
+                    <div class="form-row">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" id="reg-phone" placeholder="09xxxxxxxx" required>
+                    </div>
+                    <div class="form-row">
+                        <label>المحافظة</label>
+                        <select id="reg-city" required>
+                            <option value="دمشق">دمشق</option>
+                            <option value="ريف دمشق">ريف دمشق</option>
+                            <option value="حلب">حلب</option>
+                            <option value="حمص">حمص</option>
+                            <option value="حماة">حماة</option>
+                            <option value="اللاذقية">اللاذقية</option>
+                            <option value="طرطوس">طرطوس</option>
+                            <option value="إدلب">إدلب</option>
+                            <option value="دير الزور">دير الزور</option>
+                            <option value="الرقة">الرقة</option>
+                            <option value="الحسكة">الحسكة</option>
+                            <option value="درعا">درعا</option>
+                            <option value="السويداء">السويداء</option>
+                            <option value="القنيطرة">القنيطرة</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>الجامعة</label>
+                        <input type="text" id="reg-university" placeholder="اسم الجامعة أو المعهد" required>
+                    </div>
+                    <div class="form-row">
+                        <label>الفرع الدراسي</label>
+                        <input type="text" id="reg-major" placeholder="التخصص الجامعي" required>
+                    </div>
+                    <div class="form-row">
+                        <label>كلمة المرور</label>
+                        <div class="pass-input-box">
+                            <input type="password" id="reg-password" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye pass-eye-icon" onclick="togglePassEye('reg-password', this)"></i>
+                        </div>
+                    </div>
 
-                                        <button type="button" class="btn-tg-connect" id="btn-tg-linker"                
-                                onclick="startTelegramVerification()">
-                                                <i class="fa-brands fa-telegram"></i>
-                                                <span id="tg-btn-label">ربط حساب التلغرام</span>
-                                            </button>
+                    <button type="button" class="btn-tg-connect" id="btn-tg-linker"
+                        onclick="startTelegramVerification()">
+                        <i class="fa-brands fa-telegram"></i>
+                        <span id="tg-btn-label">ربط حساب التلغرام</span>
+                    </button>
 
-                                        <button type="submit" class="btn-action-primary">
-                                                التالي <i class="fa-solid fa-arrow-left"></i>
-                                            </button>
-                                    </form>
+                    <button type="submit" class="btn-action-primary">
+                        التالي <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </form>
 
-                                <!-- نموذج تسجيل الدخول -->
-                                <form id="login-form" novalidate                    
+                <!-- نموذج تسجيل الدخول -->
+                <form id="login-form" novalidate
                     onsubmit="event.preventDefault(); if(this.checkValidity()){ performLogin(); }else{ showCustomToast(); }">
 
-                                        <div class="form-row">
-                                                <label>رقم الهاتف</label>
-                                                <input type="tel" id="login-phone" placeholder="09xxxxxxxx" required>
-                                            </div>
-                                        <div class="form-row">
-                                                <label>كلمة المرور</label>
-                                                <div class="pass-input-box">
-                                                        <input type="password" id="login-password"
-                                placeholder="••••••••" required>
-                                                        <i class="fa-solid fa-eye pass-eye-icon"                        
-                                        onclick="togglePassEye('login-password', this)"></i>
-                                                    </div>
-                                            </div>
-                                        <div style="text-align: left; margin: 10px 0 16px 0;">
-                                                <a href="javascript:void(0)" onclick="openResetPasswordFlow()"          
-                                             
+                    <div class="form-row">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" id="login-phone" placeholder="09xxxxxxxx" required>
+                    </div>
+                    <div class="form-row">
+                        <label>كلمة المرور</label>
+                        <div class="pass-input-box">
+                            <input type="password" id="login-password" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye pass-eye-icon"
+                                onclick="togglePassEye('login-password', this)"></i>
+                        </div>
+                    </div>
+                    <div style="text-align: left; margin: 10px 0 16px 0;">
+                        <a href="javascript:void(0)" onclick="openResetPasswordFlow()"
                             style="color: var(--accent-turquoise); font-size: 13.5px; text-decoration: none;">هل نسيت
-                                                        كلمة المرور؟</a>
-                                            </div>
-                                        <button type="submit" class="btn-action-primary">دخول إلى المنصة</button>
-                                    </form>
+                            كلمة المرور؟</a>
+                    </div>
+                    <button type="submit" class="btn-action-primary">دخول إلى المنصة</button>
+                </form>
 
-                                <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
-                                <div id="reset-flow-container" style="display: none;">
-                                        <div id="reset-stage-1">
-                                                <p
-                            style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">أدخل رقم هاتفك
-                            المسجل
-                                                        لإرسال رمز التأكيد لحساب التلغرام الخاص بك مباشرة:</p>
-                                                <div class="form-row">
-                                                        <input type="tel" id="reset-phone-input"
-                                placeholder="09xxxxxxxx">
-                                                    </div>
-                                                <button class="btn-action-primary" onclick="requestResetOtp()">إرسال كود
-                            التحقق</button>
-                                            </div>
+                <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
+                <div id="reset-flow-container" style="display: none;">
+                    <div id="reset-stage-1">
+                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">أدخل رقم هاتفك المسجل
+                            لإرسال رمز التأكيد لحساب التلغرام الخاص بك مباشرة:</p>
+                        <div class="form-row">
+                            <input type="tel" id="reset-phone-input" placeholder="09xxxxxxxx">
+                        </div>
+                        <button class="btn-action-primary" onclick="requestResetOtp()">إرسال كود التحقق</button>
+                    </div>
 
-                                        <div id="reset-stage-2" style="display: none; text-align: center;">
-                                                <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون
-                            من 5 أرقام المرسل
-                                                        لحسابك:</p>
-                                                <div class="otp-inputs-flex">
-                                                        <input type="text" maxlength="1" class="otp-box-digit"
-                                id="otp-1" oninput="stepOtp(1)">
-                                                        <input type="text" maxlength="1" class="otp-box-digit"
-                                id="otp-2" oninput="stepOtp(2)">
-                                                        <input type="text" maxlength="1" class="otp-box-digit"
-                                id="otp-3" oninput="stepOtp(3)">
-                                                        <input type="text" maxlength="1" class="otp-box-digit"
-                                id="otp-4" oninput="stepOtp(4)">
-                                                        <input type="text" maxlength="1" class="otp-box-digit"
-                                id="otp-5" oninput="stepOtp(5)">
-                                                    </div>
-                                            </div>
+                    <div id="reset-stage-2" style="display: none; text-align: center;">
+                        <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون من 5 أرقام المرسل
+                            لحسابك:</p>
+                        <div class="otp-inputs-flex">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-1" oninput="stepOtp(1)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-2" oninput="stepOtp(2)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-3" oninput="stepOtp(3)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-4" oninput="stepOtp(4)">
+                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-5" oninput="stepOtp(5)">
+                        </div>
+                    </div>
 
-                                        <div id="reset-stage-3" style="display: none;">
-                                                <div class="form-row">
-                                                        <label>كلمة المرور الجديدة</label>
-                                                        <div class="pass-input-box">
-                                                                <input type="password" id="new-reset-pass"
-                                    placeholder="••••••••">
-                                                                <i class="fa-solid fa-eye pass-eye-icon"                
-                                                        onclick="togglePassEye('new-reset-pass', this)"></i>
-                                                            </div>
-                                                    </div>
-                                                <div class="form-row">
-                                                        <label>تأكيد كلمة المرور</label>
-                                                        <div class="pass-input-box">
-                                                                <input type="password" id="confirm-reset-pass"
-                                    placeholder="••••••••">
-                                                                <i class="fa-solid fa-eye pass-eye-icon"                
-                                                        onclick="togglePassEye('confirm-reset-pass', this)"></i>
-                                                            </div>
-                                                    </div>
-                                                <button class="btn-action-primary" onclick="finalizeNewPassword()">تغيير
-                            كلمة المرور</button>
-                                            </div>
-                                    </div>
+                    <div id="reset-stage-3" style="display: none;">
+                        <div class="form-row">
+                            <label>كلمة المرور الجديدة</label>
+                            <div class="pass-input-box">
+                                <input type="password" id="new-reset-pass" placeholder="••••••••">
+                                <i class="fa-solid fa-eye pass-eye-icon"
+                                    onclick="togglePassEye('new-reset-pass', this)"></i>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label>تأكيد كلمة المرور</label>
+                            <div class="pass-input-box">
+                                <input type="password" id="confirm-reset-pass" placeholder="••••••••">
+                                <i class="fa-solid fa-eye pass-eye-icon"
+                                    onclick="togglePassEye('confirm-reset-pass', this)"></i>
+                            </div>
+                        </div>
+                        <button class="btn-action-primary" onclick="finalizeNewPassword()">تغيير كلمة المرور</button>
+                    </div>
+                </div>
 
-                            </div>
-                    </div>
-            </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- 3. شاشة باقات الاشتراك -->
-        <div id="subs-screen" class="screen-container">
-                <div class="layout-wrapper">
-                        <h2 style="font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 8px;">اختر باقة
-                الاشتراك
-                            </h2>
+    <!-- 3. شاشة باقات الاشتراك -->
+    <div id="subs-screen" class="screen-container">
+        <div class="layout-wrapper">
+            <h2 style="font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 8px;">اختر باقة الاشتراك
+            </h2>
 
-                        <div class="plans-grid">
-                                <div class="plan-item-box" onclick="selectPlanAndPay('monthly', '1$')">
-                                        <div>
-                                                <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة
-                            الاشتراك الشهري</h3>
-                                                <p style="color: var(--text-muted); font-size: 14px;">تفعيل فوري ومرن
-                            لكافة الميزات</p>
-                                            </div>
-                                        <div
-                        style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">1
-                                                دولار <span style="font-size: 14px; color: var(--text-muted);">/
-                            شهرياً</span></div>
-                                    </div>
+            <div class="plans-grid">
+                <div class="plan-item-box" onclick="selectPlanAndPay('monthly', '1$')">
+                    <div>
+                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة الاشتراك الشهري</h3>
+                        <p style="color: var(--text-muted); font-size: 14px;">تفعيل فوري ومرن لكافة الميزات</p>
+                    </div>
+                    <div style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">1
+                        دولار <span style="font-size: 14px; color: var(--text-muted);">/ شهرياً</span></div>
+                </div>
 
-                                <div class="plan-item-box" onclick="selectPlanAndPay('yearly', '10$')"                  
-                      style="position: relative; overflow: hidden;">
-                                        <div                        
-                        style="position: absolute; top: 16px; left: -36px; background: #33E0E6; color: #050d1a; font-size: 11px; font-weight: 800; padding: 4px 35px; transform: rotate(-45deg); text-align: center; box-shadow: 0 2px 8px rgba(51, 224, 230, 0.3); letter-spacing: 0.3px; white-space: nowrap;">
-                                                وُفّر 16%</div>
-                                        <div>
-                                                <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة
-                            الاشتراك السنوي</h3>
-                                                <p style="color: var(--text-muted); font-size: 14px;">تفعيل لمدة سنة
-                            كاملة مع أولوية الظهور</p>
-                                            </div>
-                                        <div
-                        style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">10
-                                                دولار <span style="font-size: 14px; color: var(--text-muted);">/
-                            سنوياً</span></div>
-                                    </div>
-                            </div>
-                    </div>
-            </div>
+                <div class="plan-item-box" onclick="selectPlanAndPay('yearly', '10$')"
+                    style="position: relative; overflow: hidden;">
 
-        <!-- نافذة منبثقة Modal للدفع عبر شام كاش -->
-        <div class="modal-overlay" id="payment-modal">
-                <div class="modal-content-card">
-                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">دفع الاشتراك - شام كاش</h3>
-                        <p style="font-size: 13.5px; color: var(--text-muted);">امسح رمز الاستجابة السريع للتحويل المالي
-            </p>
+                    <div
+                        style="position: absolute; top: 16px; left: -36px; background: #33E0E6; color: #050d1a; font-size: 11px; font-weight: 800; padding: 4px 35px; transform: rotate(-45deg); text-align: center; box-shadow: 0 2px 8px rgba(51, 224, 230, 0.3); letter-spacing: 0.3px; white-space: nowrap; font-family: 'Cairo', sans-serif;">
+                        وُفّر 16%</div>
 
-                        <div class="qr-wrapper">
-                                <img
-                    src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=26ee871407869d05ad94223e7b4f1402&color=07111e"
-                                        alt="شام كاش QR" id="cham-cash-qr">
-                            </div>
+                    <div>
+                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة الاشتراك السنوي</h3>
+                        <p style="color: var(--text-muted); font-size: 14px;">تفعيل لمدة سنة كاملة مع أولوية الظهور</p>
+                    </div>
+                    <div style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">10
+                        دولار <span style="font-size: 14px; color: var(--text-muted);">/ سنوياً</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                        <div class="verified-holder-info">
-                                <span>المستلم المالي الرسمي: محمد يحيى جمال</span>
-                                <i class="fa-solid fa-circle-check"></i>
-                            </div>
-                        <p                
+    <!-- نافذة منبثقة Modal للدفع عبر شام كاش -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="modal-content-card">
+            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">دفع الاشتراك - شام كاش</h3>
+            <p style="font-size: 13.5px; color: var(--text-muted);">امسح رمز الاستجابة السريع للتحويل المالي</p>
+
+            <div class="qr-wrapper">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=26ee871407869d05ad94223e7b4f1402&color=07111e"
+                    alt="شام كاش QR" id="cham-cash-qr">
+            </div>
+
+            <div class="verified-holder-info">
+                <span>المستلم المالي الرسمي: محمد يحيى جمال</span>
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <p
                 style="font-size: 11px; color: var(--text-muted); margin-top: 4px; direction: ltr; font-family: monospace;">
-                                26ee871407869d05ad94223e7b4f1402</p>
+                26ee871407869d05ad94223e7b4f1402</p>
 
-                        <button class="btn-action-primary" style="margin-top: 20px;"
-                onclick="triggerPaymentVerification()">التحقق
-                                من الدفع</button>
-                        <button onclick="closePaymentModal()"                
+            <button class="btn-action-primary" style="margin-top: 20px;" onclick="triggerPaymentVerification()">التحقق
+                من الدفع</button>
+            <button onclick="closePaymentModal()"
                 style="background: none; border: none; color: var(--text-muted); margin-top: 10px; cursor: pointer; font-size: 13px;">إلغاء</button>
-                    </div>
-            </div>
+        </div>
+    </div>
 
-        <!-- شاشة معالجة الطلب -->
-        <div id="wait-approval-screen" class="screen-container">
-                <div class="layout-wrapper" style="justify-content: center; align-items: center;">
-                        <div class="wait-processing-box">
-                                <div class="custom-loader"></div>
-                                <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main);"
-                    id="wait-header-title">جاري
-                                        معالجة الطلب</h2>
-                            </div>
-                    </div>
-            </div>
+    <!-- شاشة معالجة الطلب -->
+    <div id="wait-approval-screen" class="screen-container">
+        <div class="layout-wrapper" style="justify-content: center; align-items: center;">
+            <div class="wait-processing-box">
+                <div class="custom-loader"></div>
+                <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main);" id="wait-header-title">جاري
+                    معالجة الطلب</h2>
+            </div>
+        </div>
+    </div>
 
-        <!-- 4. الواجهة الرئيسية (Main Layout) -->
-        <div id="home-screen" class="screen-container">
-                <div class="layout-wrapper">
-                        <header class="app-top-header">
-                                <div class="header-logo-icon"                    
+    <!-- 4. الواجهة الرئيسية (Main Layout) -->
+    <div id="home-screen" class="screen-container">
+        <div class="layout-wrapper">
+            <header class="app-top-header">
+                <div class="header-logo-icon"
                     style="position: relative; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; box-shadow: 0 0 12px rgba(51, 224, 230, 0.2);">
-                                        <div                        
+                    <div
                         style="width: 42px; height: 42px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
-                                                <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync"
-                            alt="ZONE"                            
+                        <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
                             style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
-                                            </div>
-                                        <svg                        
+                    </div>
+                    <svg
                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 4px #33E0E6);">
-                                               
-                        <rect x="1.5" y="1.5" width="43" height="43" rx="10.5" ry="10.5" fill="none" stroke="#33E0E6"  
-                                                      stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200"  
-                                                      style="animation: drawHeaderBorder 2s ease-out forwards;" />
-                                           
+                        <rect x="1.5" y="1.5" width="43" height="43" rx="10.5" ry="10.5" fill="none" stroke="#33E0E6"
+                            stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200"
+                            style="animation: drawHeaderBorder 2s ease-out forwards;" />
                     </svg>
-                                        <style>
+                    <style>
                         @keyframes drawHeaderBorder {
                             to {
                                 stroke-dashoffset: 0;
                             }
                         }
                     </style>
-                                    </div>
+                </div>
 
-                                <div class="header-brand-title">ZONE</div>
-                            </header>
+                <div class="header-brand-title">ZONE</div>
+            </header>
+            <div class="promo-slider-container" id="promoSlider">
+                <div class="promo-slides-track" id="slidesTrack">
+                    <div class="promo-slide-item"><img src="./adv1/adv1.jpg" alt="adv1"></div>
+                    <div class="promo-slide-item"><img src="./adv2/adv2.jpg" alt="adv2"></div>
+                    <div class="promo-slide-item"><img src="./adv3/adv3.jpg" alt="adv3"></div>
+                    <div class="promo-slide-item"><img src="./adv4/adv4.jpg" alt="adv4"></div>
+                    <div class="promo-slide-item"><img src="./adv5/adv5.jpg" alt="adv5"></div>
+                </div>
+            </div>
 
-                        <!-- السلايدر الترويجي بعد إصلاح الاتجاه وإضافة النقاط -->
-                        <div class="promo-slider-container" id="promoSlider">
-                                <div class="promo-slides-track" id="slidesTrack">
-                                        <div class="promo-slide-item"><img src="./adv1/adv1.jpg" alt="adv1"></div>
-                                        <div class="promo-slide-item"><img src="./adv2/adv2.jpg" alt="adv2"></div>
-                                        <div class="promo-slide-item"><img src="./adv3/adv3.jpg" alt="adv3"></div>
-                                        <div class="promo-slide-item"><img src="./adv4/adv4.jpg" alt="adv4"></div>
-                                        <div class="promo-slide-item"><img src="./adv5/adv5.jpg" alt="adv5"></div>
-                                    </div>
-                                <div class="slider-dots-box" id="sliderDots">
-                                        <span class="slider-dot active" onclick="goToPromoSlide(0)"></span>
-                                        <span class="slider-dot" onclick="goToPromoSlide(1)"></span>
-                                        <span class="slider-dot" onclick="goToPromoSlide(2)"></span>
-                                        <span class="slider-dot" onclick="goToPromoSlide(3)"></span>
-                                        <span class="slider-dot" onclick="goToPromoSlide(4)"></span>
-                                    </div>
-                            </div>
-
-                        <!-- شريط البحث والفلترة اللحظي -->
-                        <div class="feed-filter-bar">
-                                <div class="search-input-wrap">
-                                        <i class="fa-solid fa-magnifying-glass"></i>
-                                        <input type="text" id="feed-search-input"
-                        placeholder="ابحث عن كتاب، أداة، جامعة أو محافظة..."                        
-                        oninput="renderFilteredFeed()">
-                                    </div>
-                                <button class="filter-chip-btn" id="btn-filter-my-ads" onclick="toggleMyAdsFilter()">
-                                        <i class="fa-solid fa-layer-group"></i> إعلاناتي
-                                    </button>
-                            </div>
-
-                        <!-- شاشة الفراغ (الشبح اللطيف) -->
-                        <div class="ghost-empty-state" id="empty-state-box">
-                                <div class="ghost-svg-holder">
-                                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                               
+            <!-- شاشة الفراغ (الشبح اللطيف) -->
+            <div class="ghost-empty-state" id="empty-state-box">
+                <div class="ghost-svg-holder">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M50 15C32 15 24 30 24 48V82L33 76L42 82L50 76L58 82L67 76L76 82V48C76 30 68 15 50 15Z"
-                                                        fill="url(#ghostGrad)" />
-                                               
+                            fill="url(#ghostGrad)" />
                         <circle cx="40" cy="45" r="4.5" fill="#07111e" />
-                                               
                         <circle cx="60" cy="45" r="4.5" fill="#07111e" />
-                                               
                         <ellipse cx="50" cy="54" rx="4" ry="2.5" fill="#07111e" />
-                                               
                         <ellipse cx="32" cy="51" rx="3.5" ry="2" fill="#39e5ee" opacity="0.6" />
-                                               
                         <ellipse cx="68" cy="51" rx="3.5" ry="2" fill="#39e5ee" opacity="0.6" />
-                                                <defs>
-                                                        <linearGradient id="ghostGrad" x1="50" y1="15" x2="50" y2="82"  
-                                                              gradientUnits="userSpaceOnUse">
-                                                               
+                        <defs>
+                            <linearGradient id="ghostGrad" x1="50" y1="15" x2="50" y2="82"
+                                gradientUnits="userSpaceOnUse">
                                 <stop stop-color="#39e5ee" />
-                                                               
                                 <stop offset="1" stop-color="#0f2b45" />
-                                                           
                             </linearGradient>
-                                                    </defs>
-                                           
+                        </defs>
                     </svg>
-                                    </div>
-                                <h3 class="ghost-lead-text">المكان مهجور تماماً..</h3>
-                                <p class="ghost-sub-text">انشر إعلانك هلق واكسر الصمت!</p>
-                            </div>
+                </div>
+                <h3 class="ghost-lead-text">المكان مهجور تماماً..</h3>
+                <p class="ghost-sub-text">انشر إعلانك هلق واكسر الصمت!</p>
+            </div>
 
-                        <!-- شبكة كروت الإعلانات -->
-                        <div class="posts-responsive-grid" id="posts-container-grid" style="display: none;"></div>
-                    </div>
-            </div>
+            <!-- شبكة كروت الإعلانات -->
+            <div class="posts-responsive-grid" id="posts-container-grid" style="display: none;"></div>
+        </div>
+    </div>
 
-        <!-- شاشة الملف الشخصي (أنا) -->
-        <div id="me-screen" class="screen-container">
-                <div class="layout-wrapper" style="max-width: 600px;">
-                        <div
-                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                                <h2 style="font-size: 22px; font-weight: 800;">الملف الشخصي</h2>
-                                <button onclick="toggleProfileEditMode()" id="edit-profile-btn"                    
+    <!-- شاشة الملف الشخصي (أنا) -->
+    <div id="me-screen" class="screen-container">
+        <div class="layout-wrapper" style="max-width: 600px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="font-size: 22px; font-weight: 800;">الملف الشخصي</h2>
+                <button onclick="toggleProfileEditMode()" id="edit-profile-btn"
                     style="background: var(--surface-navy); border: 1px solid var(--accent-turquoise); color: var(--accent-turquoise); width: 42px; height: 42px; border-radius: 50%; cursor: pointer;">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
-                            </div>
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+            </div>
 
-                        <div class="form-row">
-                                <label>الاسم الكامل</label>
-                                <input type="text" id="prof-name" disabled>
-                            </div>
-                        <div class="form-row">
-                                <label>رقم الهاتف</label>
-                                <input type="tel" id="prof-phone" disabled>
-                            </div>
-                        <div class="form-row">
-                                <label>المحافظة</label>
-                                <input type="text" id="prof-city" disabled
-                    onclick="if(!this.disabled) openCitySelectorModal('prof')">
-                            </div>
-                        <div class="form-row">
-                                <label>الجامعة</label>
-                                <input type="text" id="prof-university" disabled>
-                            </div>
-                        <div class="form-row">
-                                <label>الفرع الدراسي</label>
-                                <input type="text" id="prof-major" disabled>
-                            </div>
+            <div class="form-row">
+                <label>الاسم الكامل</label>
+                <input type="text" id="prof-name" disabled>
+            </div>
+            <div class="form-row">
+                <label>رقم الهاتف</label>
+                <input type="tel" id="prof-phone" disabled>
+            </div>
+            <div class="form-row">
+                <label>المحافظة</label>
+                <input type="text" id="prof-city" disabled>
+            </div>
+            <div class="form-row">
+                <label>الجامعة</label>
+                <input type="text" id="prof-university" disabled>
+            </div>
+            <div class="form-row">
+                <label>الفرع الدراسي</label>
+                <input type="text" id="prof-major" disabled>
+            </div>
 
-                        <button class="btn-action-primary" id="save-prof-btn" style="display: none; margin-top: 15px;"  
-                              onclick="saveProfileUpdates()">حفظ التعديلات</button>
-                        <button onclick="logoutSession()"                
+            <button class="btn-action-primary" id="save-prof-btn" style="display: none; margin-top: 15px;"
+                onclick="saveProfileUpdates()">حفظ التعديلات</button>
+            <button onclick="logoutSession()"
                 style="width: 100%; padding: 14px; background: transparent; border: 1px solid var(--danger); color: var(--danger); border-radius: 12px; font-weight: 700; margin-top: 20px; cursor: pointer;">تسجيل
-                                الخروج</button>
-                    </div>
-            </div>
+                الخروج</button>
+        </div>
+    </div>
 
-        <!-- شريط التراجع العائم بأسلوب تيليجرام (Telegram Undo Snackbar) -->
-        <div class="tg-undo-snackbar" id="tg-undo-snackbar">
-                <div class="tg-undo-info">
-                        <div class="tg-trash-badge">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </div>
-                        <div class="tg-undo-text-wrap">
-                                <span class="tg-undo-title">تم نقل الإعلان لسلة المهملات</span>
-                                <span class="tg-undo-sub">سيتم الحذف النهائي خلال <b id="tg-undo-timer"                
-                                style="color: var(--turquoise-light);">5</b> ثوانٍ</span>
-                            </div>
-                    </div>
-                <button class="tg-undo-btn" onclick="revertLastSoldDeletion()">
-                        <i class="fa-solid fa-rotate-left"></i> تراجع
-                    </button>
-            </div>
+    <!-- زر الدعم الفني العائم بشعار التلغرام (في الرئيسية فقط) -->
+    <a href="https://t.me/Zoneapplication" target="_blank" class="support-bubble-btn" id="floating-support-btn"
+        style="display: none;">
+        <i class="fa-brands fa-telegram"></i>
+    </a>
 
-        <!-- زر الدعم الفني العائم بشعار التلغرام -->
-        <a href="https://t.me/Zoneapplication" target="_blank" class="support-bubble-btn" id="floating-support-btn"    
-            style="display: none;">
-                <i class="fa-brands fa-telegram"></i>
-            </a>
+    <!-- الشريط السفلي: الرئيسية و انا فقط + زر (+) في المنتصف -->
+    <nav class="bottom-app-bar" id="app-nav-bar" style="display: none;">
+        <button class="nav-link-btn active" id="nav-btn-home" onclick="navTo('home-screen')">
+            <i class="fa-solid fa-store"></i>
+            <span>الرئيسية</span>
+        </button>
+        <div class="nav-center-add" onclick="openCreateAdModal()">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <button class="nav-link-btn" id="nav-btn-me" onclick="navTo('me-screen')">
+            <i class="fa-solid fa-user"></i>
+            <span>انا</span>
+        </button>
+    </nav>
 
-        <!-- الشريط السفلي: الرئيسية و انا فقط + زر (+) في المنتصف -->
-        <nav class="bottom-app-bar" id="app-nav-bar" style="display: none;">
-                <button class="nav-link-btn active" id="nav-btn-home" onclick="navTo('home-screen')">
-                        <i class="fa-solid fa-store"></i>
-                        <span>الرئيسية</span>
-                    </button>
-                <div class="nav-center-add" onclick="openCreateAdModal()">
-                        <i class="fa-solid fa-plus"></i>
-                    </div>
-                <button class="nav-link-btn" id="nav-btn-me" onclick="navTo('me-screen')">
-                        <i class="fa-solid fa-user"></i>
-                        <span>انا</span>
-                    </button>
-            </nav>
+    <!-- Modal إضافة إعلان جديد مع 3 مربعات مخصصة لرفع الصور -->
+    <div class="modal-overlay" id="add-ad-modal">
+        <div class="modal-content-card" style="text-align: right; max-width: 480px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <h3 style="font-size: 18px; font-weight: 800;">إضافة إعلان جديد</h3>
+                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;"
+                    onclick="closeCreateAdModal()"></i>
+            </div>
 
-        <!-- Modal إضافة إعلان جديد مع 3 مربعات مخصصة لرفع الصور -->
-        <div class="modal-overlay" id="add-ad-modal">
-                <div class="modal-content-card" style="text-align: right; max-width: 480px;">
-                        <div
-                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-                                <h3 style="font-size: 18px; font-weight: 800;">إضافة إعلان جديد</h3>
-                                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;"                  
-                      onclick="closeCreateAdModal()"></i>
-                            </div>
+            <div class="form-row">
+                <label>اسم المادة / الشيء المعلن عنه</label>
+                <input type="text" id="ad-title" placeholder="كتاب، مسطرة، آلة حاسبة...">
+            </div>
 
-                        <div class="form-row">
-                                <label>اسم المادة / الشيء المعلن عنه</label>
-                                <input type="text" id="ad-title" placeholder="كتاب، مسطرة، آلة حاسبة...">
-                            </div>
+            <div class="form-row">
+                <label>السعر بالليرة السورية</label>
+                <input type="number" id="ad-price" placeholder="مثال: 50000">
+            </div>
 
-                        <div class="form-row">
-                                <label>السعر بالليرة السورية</label>
-                                <input type="number" id="ad-price" placeholder="مثال: 50000">
-                            </div>
-
-                        <!-- 3 مربعات مخصصة لرفع ومعاينة الصور -->
-                        <label                
+            <!-- 3 مربعات مخصصة لرفع ومعاينة الصور -->
+            <label
                 style="font-size: 13.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 8px;">صور
-                                المنتج (3 صور - يتم ضغطها تلقائياً)</label>
-                        <div class="photo-uploader-triplet">
-                                <div class="photo-upload-slot" onclick="triggerFileInput(1)">
-                                        <i class="fa-solid fa-camera"></i>
-                                        <span>الصورة 1</span>
-                                        <img id="preview-img-1" alt="Preview 1">
-                                        <input type="file" id="file-slot-1" accept="image/*" style="display: none;"    
-                                            onchange="handleImageSelection(event, 1)">
-                                    </div>
-                                <div class="photo-upload-slot" onclick="triggerFileInput(2)">
-                                        <i class="fa-solid fa-camera"></i>
-                                        <span>الصورة 2</span>
-                                        <img id="preview-img-2" alt="Preview 2">
-                                        <input type="file" id="file-slot-2" accept="image/*" style="display: none;"    
-                                            onchange="handleImageSelection(event, 2)">
-                                    </div>
-                                <div class="photo-upload-slot" onclick="triggerFileInput(3)">
-                                        <i class="fa-solid fa-camera"></i>
-                                        <span>الصورة 3</span>
-                                        <img id="preview-img-3" alt="Preview 3">
-                                        <input type="file" id="file-slot-3" accept="image/*" style="display: none;"    
-                                            onchange="handleImageSelection(event, 3)">
-                                    </div>
-                            </div>
+                المنتج (3 صور)</label>
+            <div class="photo-uploader-triplet">
+                <div class="photo-upload-slot" onclick="triggerFileInput(1)">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>الصورة 1</span>
+                    <img id="preview-img-1" alt="Preview 1">
+                    <input type="file" id="file-slot-1" accept="image/*" style="display: none;"
+                        onchange="handleImageSelection(event, 1)">
+                </div>
+                <div class="photo-upload-slot" onclick="triggerFileInput(2)">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>الصورة 2</span>
+                    <img id="preview-img-2" alt="Preview 2">
+                    <input type="file" id="file-slot-2" accept="image/*" style="display: none;"
+                        onchange="handleImageSelection(event, 2)">
+                </div>
+                <div class="photo-upload-slot" onclick="triggerFileInput(3)">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>الصورة 3</span>
+                    <img id="preview-img-3" alt="Preview 3">
+                    <input type="file" id="file-slot-3" accept="image/*" style="display: none;"
+                        onchange="handleImageSelection(event, 3)">
+                </div>
+            </div>
 
-                        <button class="btn-action-primary" id="btn-submit-ad" onclick="submitNewAd()">نشر الإعلان
-                الآن</button>
-                    </div>
-            </div>
+            <button class="btn-action-primary" onclick="submitNewAd()">نشر الإعلان الآن</button>
+        </div>
+    </div>
 
-        <!-- Modal خيارات التواصل (واتساب أو تليغرام) -->
-        <div class="modal-overlay" id="contact-choice-modal">
-                <div class="modal-content-card" style="max-width: 380px;">
-                        <div                
+    <!-- Modal خيارات التواصل (واتساب أو تليغرام) -->
+    <div class="modal-overlay" id="contact-choice-modal">
+        <div class="modal-content-card" style="max-width: 380px;">
+            <div
                 style="width: 50px; height: 50px; background: rgba(0, 173, 181, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; color: var(--accent-turquoise); font-size: 22px;">
-                                <i class="fa-solid fa-phone"></i>
-                            </div>
-                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">طريقة التواصل</h3>
-                        <p style="font-size: 13.5px; color: var(--text-muted);">اختر التطبيق المفضل لديك للتواصل مع
-                المعلن:</p>
+                <i class="fa-solid fa-phone"></i>
+            </div>
+            <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">طريقة التواصل</h3>
+            <p style="font-size: 13.5px; color: var(--text-muted);">اختر التطبيق المفضل لديك للتواصل مع المعلن:</p>
 
-                        <div class="contact-modal-choices">
-                                <button class="contact-choice-btn wa" id="btn-choice-wa">
-                                        <i class="fa-brands fa-whatsapp"></i> واتساب
-                                    </button>
-                                <button class="contact-choice-btn tg" id="btn-choice-tg">
-                                        <i class="fa-brands fa-telegram"></i> تليغرام
-                                    </button>
-                            </div>
-                        <button onclick="closeContactModal()"                
+            <div class="contact-modal-choices">
+                <button class="contact-choice-btn wa" id="btn-choice-wa">
+                    <i class="fa-brands fa-whatsapp"></i> واتساب
+                </button>
+                <button class="contact-choice-btn tg" id="btn-choice-tg">
+                    <i class="fa-brands fa-telegram"></i> تليغرام
+                </button>
+            </div>
+            <button onclick="closeContactModal()"
                 style="background: none; border: none; color: var(--text-muted); margin-top: 16px; cursor: pointer; font-size: 13px;">إلغاء</button>
-                    </div>
-            </div>
+        </div>
+    </div>
 
-        <!-- Modal مكبر الصور الاحترافي (Image Lightbox) -->
-        <div class="modal-overlay" id="image-lightbox-modal" onclick="if(event.target === this) closeLightbox()">
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                        <div class="lightbox-img-box">
-                                <img id="lightbox-main-img" src="" alt="معاينة الصورة">
-                            </div>
-                        <div class="lightbox-controls">
-                                <button class="lightbox-nav-btn" onclick="stepLightbox(-1)"><i                        
-                        class="fa-solid fa-chevron-right"></i></button>
-                                <span id="lightbox-counter"
-                    style="font-weight: 800; font-size: 14px; color: var(--text-main);">1 /
-                                        3</span>
-                                <button class="lightbox-nav-btn" onclick="stepLightbox(1)"><i                        
-                        class="fa-solid fa-chevron-left"></i></button>
-                                <button class="lightbox-nav-btn"
-                    style="border-color: var(--danger); color: var(--danger);"                    
-                    onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                    </div>
-            </div>
-
-       
     <script>
-        /* =========================================================
-           0. تشغيل شريط الإعلانات المتحرك (تم إصلاح مشكلة RTL)
-           ========================================================= */
+        // تشغيل شريط الإعلانات المتحرك (كل صورتين / ثانيتين انتقال)
         let currentSlideIndex = 0;
-        let sliderInterval = null;
-
-        function updateSliderPosition() {
+        function initPromoSlider() {
             const track = document.getElementById('slidesTrack');
-            const dots = document.querySelectorAll('.slider-dot');
             if (!track) return;
-            track.style.transform = `translateX(-${currentSlideIndex * 20}%)`;
-            dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentSlideIndex));
-        }
 
-        function goToPromoSlide(index) {
-            currentSlideIndex = index;
-            updateSliderPosition();
-            resetPromoSliderTimer();
-        }
-
-        function resetPromoSliderTimer() {
-            if (sliderInterval) clearInterval(sliderInterval);
-            sliderInterval = setInterval(() => {
+            setInterval(() => {
                 currentSlideIndex = (currentSlideIndex + 1) % 5;
-                updateSliderPosition();
-            }, 3500);
+                track.style.transform = `translateX(${currentSlideIndex * 20}%)`;
+            }, 2000); // 2000 تعني 2 ثانية بالتمام والكمال
         }
 
+        // تشغيل السلايدر فور تحميل الصفحة الرئيسية
         document.addEventListener('DOMContentLoaded', () => {
-            resetPromoSliderTimer();
+            initPromoSlider();
         });
-
         /* =========================================================
            1. إعدادات الربط مع Supabase والتلغرام
            ========================================================= */
@@ -1707,26 +1323,21 @@
         let telegramPollingTimer = null;
         let lastTelegramUpdateId = 0;
         let uploadedImages = ['', '', ''];
-
-        // متغيرات الفلترة، المكبر، وشريط التراجع بأسلوب تيليجرام
-        let allFeedItemsCache = [];
-        let filterMyAdsOnly = false;
-        let activeUndoItem = null;
-        let lightboxPhotos = [];
-        let lightboxCurrentIndex = 0;
-        let cityModalTargetMode = 'reg';
+        let undoTimersMap = {};
 
         /* =========================================================
-           2. التزامن اللحظي (Supabase Realtime)
+           2. التزامن اللحظي (Supabase Realtime) للإعلانات وحالة الحساب
            ========================================================= */
         function setupRealtimeListeners() {
             supabaseClient
                 .channel('zone-realtime-channel')
+                // الاستماع لأي إعلان جديد أو محذوف ليظهر عند الكل بنفس اللحظة
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'items_feed' }, () => {
                     if (activeSession) {
                         loadMainProductsFeed();
                     }
                 })
+                // الاستماع لحالة حساب الطالب (في حال تم تصفيره وطرده من الأدمن)
                 .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'platform_users' }, (payload) => {
                     if (activeSession && payload.new && payload.new.phone === activeSession.phone) {
                         if (payload.new.is_expired === 1 || payload.new.sub_status === 0) {
@@ -1743,7 +1354,7 @@
         }
 
         /* =========================================================
-           3. إدارة التبديل بين الشاشات واسترجاع الجلسة الدائم
+           3. إدارة التبديل الكامل بين الشاشات واسترجاع الجلسة الدائم
            ========================================================= */
         function switchActiveScreen(targetId) {
             document.querySelectorAll('.screen-container').forEach(screen => {
@@ -1763,9 +1374,10 @@
             document.getElementById('floating-support-btn').style.display = (targetId === 'home-screen') ? 'flex' : 'none';
         }
 
+        // التحقق من وجود حساب مفتوح مسبقاً عند تشغيل الموقع أو عمل Refresh
         window.addEventListener('DOMContentLoaded', () => {
             setupRealtimeListeners();
-            listenForAdminVerification();
+            listenForAdminVerification(); // يراقب أزرار الأدمن بالتلغرام دائماً
 
             setTimeout(async () => {
                 const splash = document.getElementById('splash-screen');
@@ -1803,6 +1415,7 @@
                                 return;
                             }
 
+                            // الدخول المباشر للرئيسية بدون المرور بشاشة تسجيل الدخول
                             activeSession = userRecord;
                             await loadMainProductsFeed();
                             switchActiveScreen('home-screen');
@@ -1963,6 +1576,7 @@
                     return;
                 }
 
+                // حفظ الجلسة بشكل دائم في الجوال/المتصفح
                 activeSession = userRecord;
                 localStorage.setItem('zone_saved_phone', userRecord.phone);
                 await loadMainProductsFeed();
@@ -2021,6 +1635,7 @@
                 const box = document.getElementById(`otp-${i}`);
                 if (box) {
                     box.value = '';
+                    box.classList.remove('active-success');
                     box.style.borderColor = '';
                     box.style.backgroundColor = 'transparent';
                     box.style.boxShadow = 'none';
@@ -2058,6 +1673,7 @@
                     setTimeout(() => {
                         document.getElementById('reset-stage-2').style.display = 'none';
                         document.getElementById('reset-stage-3').style.display = 'block';
+                        addEyeIconsToResetPasswords();
                     }, 950);
                 } else {
                     showCustomToast('كود التحقق غير صحيح، يرجى المحاولة مجدداً');
@@ -2067,6 +1683,34 @@
                     document.getElementById('otp-1').focus();
                 }
             }
+        }
+
+        function addEyeIconsToResetPasswords() {
+            ['new-reset-pass', 'confirm-reset-pass'].forEach(id => {
+                const input = document.getElementById(id);
+                if (!input || input.parentElement.querySelector('.pass-eye-toggle')) return;
+
+                const wrapper = input.parentElement;
+                wrapper.style.position = 'relative';
+
+                const eye = document.createElement('i');
+                eye.className = 'fa-solid fa-eye pass-eye-toggle';
+                eye.style.cssText = 'position: absolute; left: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #8fa3bf; font-size: 15px; z-index: 10;';
+
+                eye.onclick = () => {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        eye.className = 'fa-solid fa-eye-slash pass-eye-toggle';
+                        eye.style.color = '#33E0E6';
+                    } else {
+                        input.type = 'password';
+                        eye.className = 'fa-solid fa-eye pass-eye-toggle';
+                        eye.style.color = '#8fa3bf';
+                    }
+                };
+
+                wrapper.appendChild(eye);
+            });
         }
 
         async function finalizeNewPassword() {
@@ -2094,7 +1738,7 @@
         }
 
         /* =========================================================
-           5. شاشة الباقات، معالجة الطلب، وأزرار التلغرام للمدير
+           5. شاشة الباقات، معالجة الطلب، وأزرار التلغرام التفاعلية للمدير
            ========================================================= */
         function selectPlanAndPay(type, cost) {
             chosenPlan = { type, cost };
@@ -2105,29 +1749,10 @@
             document.getElementById('payment-modal').classList.remove('active');
         }
 
-        async function triggerPaymentVerification() {
+        function triggerPaymentVerification() {
             closePaymentModal();
             switchActiveScreen('wait-approval-screen');
             document.getElementById('wait-header-title').innerText = 'جاري معالجة الطلب';
-
-            // حفظ مبدئي بحالة قيد المراجعة لضمان عدم ضياع الحساب لو أغلق الطالب الصفحة
-            if (pendingUserData && pendingUserData.phone) {
-                await supabaseClient
-                    .from('platform_users')
-                    .upsert({
-                        fullname: pendingUserData.fullname,
-                        phone: pendingUserData.phone,
-                        city: pendingUserData.city,
-                        university: pendingUserData.university,
-                        major: pendingUserData.major,
-                        password: pendingUserData.password,
-                        is_active: 0,
-                        sub_status: 0,
-                        is_expired: 0,
-                        plan_type: chosenPlan.type,
-                        tg_chat_id: String(pendingUserData.tg_chat_id)
-                    }, { onConflict: 'phone' });
-            }
 
             const notifyMessage = `🔔 طلب تفعيل حساب طالب جديد:
 👤 الاسم: ${pendingUserData.fullname}
@@ -2204,11 +1829,6 @@
                                             })
                                         });
 
-                                        await supabaseClient
-                                            .from('platform_users')
-                                            .update({ is_active: 1, sub_status: 1, is_expired: 0 })
-                                            .eq('phone', phone);
-
                                         if (pendingUserData && pendingUserData.phone === phone) {
                                             await applyDecision(type);
                                         }
@@ -2245,6 +1865,7 @@
                                             })
                                         });
 
+                                        // تحديث حالة انتهاء الباقة في Supabase (سيقوم الـ Realtime بطرد الطالب فوراً)
                                         await supabaseClient
                                             .from('platform_users')
                                             .update({ is_expired: 1, sub_status: 0 })
@@ -2268,6 +1889,7 @@
             const headerTitle = document.getElementById('wait-header-title');
 
             if (status === 'accept' || status === 'gift') {
+                // حفظ أو تحديث بيانات الطالب مع الباقة المختارة في Supabase
                 const { data: savedUser, error } = await supabaseClient
                     .from('platform_users')
                     .upsert({
@@ -2308,7 +1930,7 @@
         }
 
         /* =========================================================
-           6. الواجهة الرئيسية، الفلترة، الأزرار الموحدة، وشريط التراجع بأسلوب تيليجرام
+           6. الواجهة الرئيسية، الإعلانات، وشريط التراجع الذكي (Undo Bar)
            ========================================================= */
         async function loadMainProductsFeed() {
             const { data: items, error } = await supabaseClient
@@ -2316,41 +1938,10 @@
                 .select('*')
                 .order('id', { ascending: false });
 
-            if (error || !items) {
-                allFeedItemsCache = [];
-            } else {
-                allFeedItemsCache = items;
-            }
-            renderFilteredFeed();
-        }
-
-        function toggleMyAdsFilter() {
-            filterMyAdsOnly = !filterMyAdsOnly;
-            document.getElementById('btn-filter-my-ads').classList.toggle('active', filterMyAdsOnly);
-            renderFilteredFeed();
-        }
-
-        function renderFilteredFeed() {
-            const searchQuery = (document.getElementById('feed-search-input')?.value || '').trim().toLowerCase();
             const emptyState = document.getElementById('empty-state-box');
             const feedGrid = document.getElementById('posts-container-grid');
 
-            const filtered = allFeedItemsCache.filter(item => {
-                // إخفاء العنصر المؤقت الموجود في شريط التراجع (Undo)
-                if (activeUndoItem && activeUndoItem.postId === item.id) return false;
-
-                if (filterMyAdsOnly && (!activeSession || item.owner_phone !== activeSession.phone)) {
-                    return false;
-                }
-
-                if (searchQuery) {
-                    const combinedText = `${item.title} ${item.owner_name} ${item.created_at || ''}`.toLowerCase();
-                    return combinedText.includes(searchQuery);
-                }
-                return true;
-            });
-
-            if (filtered.length === 0) {
+            if (error || !items || items.length === 0) {
                 emptyState.style.display = 'flex';
                 feedGrid.style.display = 'none';
                 feedGrid.innerHTML = '';
@@ -2359,143 +1950,99 @@
                 feedGrid.style.display = 'grid';
                 feedGrid.innerHTML = '';
 
-                filtered.forEach(item => {
+                items.forEach(item => {
                     const isOwner = activeSession && (activeSession.phone === item.owner_phone);
                     const cardContainer = document.createElement('div');
                     cardContainer.id = `ad-container-${item.id}`;
                     cardContainer.className = 'product-card-container';
 
-                    // فك دمج الاسم والمحافظة والجامعة (إن وجدوا)
-                    const parts = (item.owner_name || '').split(' | ');
-                    const cleanOwnerName = parts[0] || item.owner_name;
-                    const ownerCity = parts[1] || '';
-                    const ownerUni = parts[2] || '';
-
-                    const safeTitle = String(item.title).replace(/'/g, "\\'");
-
                     cardContainer.innerHTML = `
-                    <div class="product-card" id="card-inner-${item.id}">
-                        <div class="product-images-trio">
-                            <img src="${item.photo1}" alt="صورة 1" onclick="openLightbox(${item.id}, 0)">
-                            <img src="${item.photo2}" alt="صورة 2" onclick="openLightbox(${item.id}, 1)">
-                            <img src="${item.photo3}" alt="صورة 3" onclick="openLightbox(${item.id}, 2)">
-                        </div>
-                        <div class="product-details">
-                            <div class="product-header-row">
-                                <div class="product-title">${item.title}</div>
-                                <div class="product-price">${Number(item.price).toLocaleString()} ل.س</div>
-                            </div>
-
-                            <div class="product-meta-badges">
-                                <span class="meta-badge"><i class="fa-solid fa-user-graduate"></i> ${cleanOwnerName}</span>
-                                ${ownerCity ? `<span class="meta-badge"><i class="fa-solid fa-location-dot"></i> ${ownerCity}</span>` : ''}
-                                ${ownerUni ? `<span class="meta-badge"><i class="fa-solid fa-building-columns"></i> ${ownerUni}</span>` : ''}
-                            </div>
-
-                            <div class="product-card-actions">
-                                <button class="card-action-btn btn-contact" onclick="openContactOptions('${item.owner_phone}')">
-                                    <i class="fa-solid fa-phone"></i>
-                                    <span>تواصل</span>
-                                </button>
-                                <button class="card-action-btn btn-share" onclick="shareAdItem('${safeTitle}', '${item.price}', '${item.owner_phone}')">
-                                    <i class="fa-solid fa-share-nodes"></i>
-                                    <span>مشاركة</span>
-                                </button>
-                                ${isOwner ? `
-                                    <button class="card-action-btn btn-sold" id="btn-sold-${item.id}" onclick="triggerSoldUndoCountdown(${item.id})">
-                                        <i class="fa-solid fa-check-double"></i>
-                                        <span>تم البيع</span>
-                                    </button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    `;
+                    <div class="product-card" id="card-inner-${item.id}">
+                        <div class="product-images-trio">
+                            <img src="${item.photo1}" alt="صورة 1">
+                            <img src="${item.photo2}" alt="صورة 2">
+                            <img src="${item.photo3}" alt="صورة 3">
+                        </div>
+                        <div class="product-details">
+                            <div class="product-title">${item.title}</div>
+                            <div class="product-price">${Number(item.price).toLocaleString()} ل.س</div>
+                            <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+                                <i class="fa-solid fa-user-graduate"></i> المعلن: ${item.owner_name}
+                            </div>
+                            <div class="product-card-actions">
+                                <button class="nav-link-btn" style="flex:1; border:1px solid var(--border-navy); border-radius:10px; padding:8px;" onclick="shareAdItem('${item.title}', '${item.price}')">
+                                    <i class="fa-solid fa-share-nodes"></i> مشاركة
+                                </button>
+                                <button class="nav-link-btn" style="flex:1; background:var(--accent-turquoise); color:var(--primary-navy); border-radius:10px; padding:8px; font-weight:800;" onclick="openContactOptions('${item.owner_phone}')">
+                                    <i class="fa-solid fa-phone"></i> تواصل
+                                </button>
+                                ${isOwner ? `
+                                    <button class="nav-link-btn" id="btn-sold-${item.id}" style="border:1.5px solid var(--danger); color:var(--danger); border-radius:10px; padding:8px 12px; font-weight:700;" onclick="triggerSoldUndoCountdown(${item.id})">
+                                        تم البيع
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="undo-slot-${item.id}"></div>
+                `;
                     feedGrid.appendChild(cardContainer);
                 });
             }
         }
 
-        // نظام الحذف والتراجع العائم بأسلوب تيليجرام (Telegram Undo Snackbar)
-        async function commitPermanentDelete(postId) {
-            await supabaseClient
-                .from('items_feed')
-                .delete()
-                .eq('id', postId);
-            allFeedItemsCache = allFeedItemsCache.filter(i => i.id !== postId);
-        }
-
         function triggerSoldUndoCountdown(postId) {
-            // إذا كان هناك إعلان سابق قيد الحذف، نحذفه نهائياً قبل بدء الجديد
-            if (activeUndoItem && activeUndoItem.postId !== postId) {
-                clearInterval(activeUndoItem.interval);
-                commitPermanentDelete(activeUndoItem.postId);
-                activeUndoItem = null;
-            }
+            const undoSlot = document.getElementById(`undo-slot-${postId}`);
+            const soldBtn = document.getElementById(`btn-sold-${postId}`);
+            if (!undoSlot || undoTimersMap[postId]) return;
 
-            const cardEl = document.getElementById(`ad-container-${postId}`);
-            if (cardEl) {
-                cardEl.style.transform = 'scale(0.92)';
-                cardEl.style.opacity = '0';
-                setTimeout(() => {
-                    renderFilteredFeed();
-                }, 200);
-            }
+            if (soldBtn) soldBtn.style.display = 'none';
 
             let secondsLeft = 5;
-            const snackbar = document.getElementById('tg-undo-snackbar');
-            const timerSpan = document.getElementById('tg-undo-timer');
-            timerSpan.innerText = secondsLeft;
-            snackbar.classList.add('show');
+            undoSlot.innerHTML = `
+            <div class="undo-countdown-bottom-bar" id="bar-${postId}">
+                <div class="undo-left-info">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span>جاري حذف الإعلان نهائياً...</span>
+                    <span class="undo-timer-badge" id="countdown-val-${postId}">${secondsLeft}</span>
+                </div>
+                <button class="undo-revert-btn" onclick="cancelSoldUndo(${postId})">تراجع</button>
+            </div>
+        `;
 
-            const interval = setInterval(async () => {
-                secondsLeft--;
-                if (timerSpan) timerSpan.innerText = secondsLeft;
+            undoTimersMap[postId] = {
+                interval: setInterval(async () => {
+                    secondsLeft--;
+                    const badge = document.getElementById(`countdown-val-${postId}`);
+                    if (badge) badge.innerText = secondsLeft;
 
-                if (secondsLeft <= 0) {
-                    clearInterval(interval);
-                    snackbar.classList.remove('show');
-                    const targetId = activeUndoItem ? activeUndoItem.postId : postId;
-                    activeUndoItem = null;
-                    await commitPermanentDelete(targetId);
-                    renderFilteredFeed();
-                }
-            }, 1000);
+                    if (secondsLeft <= 0) {
+                        clearInterval(undoTimersMap[postId].interval);
+                        delete undoTimersMap[postId];
 
-            activeUndoItem = { postId, interval };
+                        await supabaseClient
+                            .from('items_feed')
+                            .delete()
+                            .eq('id', postId);
+
+                        const container = document.getElementById(`ad-container-${postId}`);
+                        if (container) container.remove();
+
+                        await loadMainProductsFeed();
+                    }
+                }, 1000)
+            };
         }
 
-        function revertLastSoldDeletion() {
-            if (!activeUndoItem) return;
-            clearInterval(activeUndoItem.interval);
-            activeUndoItem = null;
-            document.getElementById('tg-undo-snackbar').classList.remove('show');
-            renderFilteredFeed();
-            showCustomToast('تم التراجع واستعادة الإعلان بنجاح');
-        }
-
-        // عارض الصور المكبر (Lightbox)
-        function openLightbox(postId, photoIndex) {
-            const item = allFeedItemsCache.find(i => i.id === postId);
-            if (!item) return;
-            lightboxPhotos = [item.photo1, item.photo2, item.photo3].filter(Boolean);
-            lightboxCurrentIndex = photoIndex;
-            updateLightboxView();
-            document.getElementById('image-lightbox-modal').classList.add('active');
-        }
-
-        function updateLightboxView() {
-            document.getElementById('lightbox-main-img').src = lightboxPhotos[lightboxCurrentIndex];
-            document.getElementById('lightbox-counter').innerText = `${lightboxCurrentIndex + 1} / ${lightboxPhotos.length}`;
-        }
-
-        function stepLightbox(dir) {
-            lightboxCurrentIndex = (lightboxCurrentIndex + dir + lightboxPhotos.length) % lightboxPhotos.length;
-            updateLightboxView();
-        }
-
-        function closeLightbox() {
-            document.getElementById('image-lightbox-modal').classList.remove('active');
+        function cancelSoldUndo(postId) {
+            if (undoTimersMap[postId]) {
+                clearInterval(undoTimersMap[postId].interval);
+                delete undoTimersMap[postId];
+                const undoSlot = document.getElementById(`undo-slot-${postId}`);
+                if (undoSlot) undoSlot.innerHTML = '';
+                const soldBtn = document.getElementById(`btn-sold-${postId}`);
+                if (soldBtn) soldBtn.style.display = 'flex';
+            }
         }
 
         function openContactOptions(phone) {
@@ -2515,25 +2062,13 @@
             document.getElementById('contact-choice-modal').classList.remove('active');
         }
 
-        async function shareAdItem(title, price, ownerPhone) {
-            const formattedPrice = Number(price).toLocaleString();
-            const shareText = `📢 شاهد هذا العرض على منصة ZONE:\n📦 ${title}\n💰 السعر: ${formattedPrice} ل.س\n📞 للتواصل: ${ownerPhone}`;
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: `ZONE - ${title}`,
-                        text: shareText,
-                        url: window.location.href
-                    });
-                    return;
-                } catch (err) { }
-            }
-            const shareMsg = encodeURIComponent(shareText);
-            window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${shareMsg}`, '_blank');
+        function shareAdItem(title, price) {
+            const shareMsg = encodeURIComponent(`شاهد هذا العرض من منصة ZONE: ${title} بسعر ${price} ل.س!`);
+            window.open(`https://t.me/share/url?url=https://zone-sy.com&text=${shareMsg}`, '_blank');
         }
 
         /* =========================================================
-           7. ضغط الصور الذكي وإضافة الإعلان في Supabase
+           7. مربعات رفع ومعاينة الصور وإضافة الإعلان في Supabase
            ========================================================= */
         function openCreateAdModal() {
             uploadedImages = ['', '', ''];
@@ -2555,40 +2090,18 @@
             document.getElementById(`file-slot-${slotIndex}`).click();
         }
 
-        // دالة ضغط الصور لتقليل الحجم 90% والحفاظ على سرعة Supabase
-        function compressImageFile(file, maxWidth = 800, quality = 0.75) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        if (width > maxWidth) {
-                            height = Math.round((height * maxWidth) / width);
-                            width = maxWidth;
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', quality));
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        async function handleImageSelection(event, slotIndex) {
+        function handleImageSelection(event, slotIndex) {
             const file = event.target.files[0];
             if (file) {
-                const compressedDataUrl = await compressImageFile(file);
-                uploadedImages[slotIndex - 1] = compressedDataUrl;
-                const preview = document.getElementById(`preview-img-${slotIndex}`);
-                preview.src = compressedDataUrl;
-                preview.style.display = 'block';
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgData = e.target.result;
+                    uploadedImages[slotIndex - 1] = imgData;
+                    const preview = document.getElementById(`preview-img-${slotIndex}`);
+                    preview.src = imgData;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
             }
         }
 
@@ -2601,10 +2114,6 @@
                 return;
             }
 
-            const submitBtn = document.getElementById('btn-submit-ad');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري النشر...`;
-
             const fallbackPhotos = [
                 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400',
                 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400',
@@ -2615,14 +2124,11 @@
             const p2 = uploadedImages[1] || fallbackPhotos[1];
             const p3 = uploadedImages[2] || fallbackPhotos[2];
 
-            // دمج المحافظة والجامعة بشكل ذكي مع الاسم لعرضهم بالكرت بدون الحاجة لتعديل أعمدة الجدول
-            const enrichedOwnerName = `${activeSession.fullname} | ${activeSession.city || ''} | ${activeSession.university || ''}`;
-
             await supabaseClient
                 .from('items_feed')
                 .insert([{
                     owner_phone: activeSession.phone,
-                    owner_name: enrichedOwnerName,
+                    owner_name: activeSession.fullname,
                     title: title,
                     price: price,
                     photo1: p1,
@@ -2631,11 +2137,8 @@
                     created_at: new Date().toLocaleDateString('ar-SY')
                 }]);
 
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `نشر الإعلان الآن`;
             closeCreateAdModal();
             await loadMainProductsFeed();
-            showCustomToast('تم نشر إعلانك بنجاح!');
         }
 
         /* =========================================================
@@ -2664,7 +2167,6 @@
             const isCurrentlyDisabled = document.getElementById('prof-name').disabled;
             document.getElementById('prof-name').disabled = !isCurrentlyDisabled;
             document.getElementById('prof-city').disabled = !isCurrentlyDisabled;
-            document.getElementById('prof-city').style.cursor = isCurrentlyDisabled ? 'pointer' : 'default';
             document.getElementById('prof-university').disabled = !isCurrentlyDisabled;
             document.getElementById('prof-major').disabled = !isCurrentlyDisabled;
             document.getElementById('save-prof-btn').style.display = isCurrentlyDisabled ? 'block' : 'none';
@@ -2715,19 +2217,19 @@
 
             toast.innerHTML = `
 <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
-            background: #0b1a2d;
-            border: 1.5px solid #33E0E6; border-radius: 14px;
-            width: 88%; max-width: 450px; padding: 18px 16px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
-            z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
-            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-    <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
-    <span style="font-size: 14.5px; color: #f0f5ff; letter-spacing: 0.3px;">
-        ${msg}
-    </span>
+            background: #0b1a2d;
+            border: 1.5px solid #33E0E6; border-radius: 14px;
+            width: 88%; max-width: 450px; padding: 18px 16px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
+            z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
+            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+    <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+    <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+        ${msg}
+    </span>
 </div>
-    `;
+    `;
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
@@ -2740,16 +2242,6 @@
             }, 3800);
         }
 
-        // نافذة اختيار المحافظات الـ 14 الموحدة للتسجيل والملف الشخصي
-        let globalCityModal = null;
-        function openCitySelectorModal(mode = 'reg') {
-            cityModalTargetMode = mode;
-            if (globalCityModal) {
-                globalCityModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const citySelect = document.getElementById('reg-city');
             if (!citySelect) return;
@@ -2757,55 +2249,56 @@
             citySelect.style.display = 'none';
             const customBtn = document.createElement('div');
             customBtn.style.cssText = `
-        width: 100%; padding: 13px 16px; background-color: var(--card-navy, #0b1a2d);
-        border: 1.5px solid var(--border-navy, #1b314e); border-radius: 12px; color: #fff;
-        font-size: 14.5px; cursor: pointer; display: flex; justify-content: space-between;
-        align-items: center; font-family: 'Cairo', sans-serif; transition: 0.3s;
-    `;
+        width: 100%; padding: 13px 16px; background-color: var(--card-navy, #0b1a2d);
+        border: 1.5px solid var(--border-navy, #1b314e); border-radius: 12px; color: #fff;
+        font-size: 14.5px; cursor: pointer; display: flex; justify-content: space-between;
+        align-items: center; font-family: 'Cairo', sans-serif; transition: 0.3s;
+    `;
             customBtn.innerHTML = `<span id="selected-city-text">${citySelect.value || 'اختر المحافظة'}</span> <i class="fas fa-chevron-down" style="color: #33E0E6; font-size: 14px;"></i>`;
             citySelect.parentNode.insertBefore(customBtn, citySelect.nextSibling);
 
             const modal = document.createElement('div');
-            globalCityModal = modal;
             modal.style.cssText = `
-        position: fixed; inset: 0; background: rgba(5, 13, 26, 0.85); backdrop-filter: blur(6px);
-        display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px;
-        direction: rtl; overscroll-behavior: contain; touch-action: none;
-    `;
+        position: fixed; inset: 0; background: rgba(5, 13, 26, 0.85); backdrop-filter: blur(6px);
+        display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px;
+        direction: rtl; overscroll-behavior: contain; touch-action: none;
+    `;
 
             let optionsHtml = '';
             Array.from(citySelect.options).forEach(opt => {
                 optionsHtml += `
-            <div class="custom-city-opt" data-val="${opt.value}" style="
-                padding: 14px 18px; margin-bottom: 8px; background: #0f223a; border: 1px solid #1b314e;
-                border-radius: 10px; color: #f0f5ff; font-family: 'Cairo', sans-serif; font-size: 15px;
-                font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
-            ">
-                <span>${opt.text}</span>
-                <i class="fas fa-location-dot" style="color: #33E0E6; opacity: 0.7;"></i>
-            </div>
-        `;
+            <div class="custom-city-opt" data-val="${opt.value}" style="
+                padding: 14px 18px; margin-bottom: 8px; background: #0f223a; border: 1px solid #1b314e;
+                border-radius: 10px; color: #f0f5ff; font-family: 'Cairo', sans-serif; font-size: 15px;
+                font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
+            ">
+                <span>${opt.text}</span>
+                <i class="fas fa-location-dot" style="color: #33E0E6; opacity: 0.7;"></i>
+            </div>
+        `;
             });
 
             modal.innerHTML = `
-        <div style="background: #071220; border: 1.5px solid #33E0E6; border-radius: 18px; width: 100%; max-width: 400px; max-height: 75vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(51, 224, 230, 0.15); overflow: hidden; touch-action: auto;">
-            <div style="padding: 18px 20px; border-bottom: 1px solid #1b314e; display: flex; justify-content: space-between; align-items: center; background: #0b1a2d;">
-                <h3 style="color: #33E0E6; font-family: 'Cairo', sans-serif; font-size: 17px; margin: 0;">اختر المحافظة</h3>
-                <i class="fas fa-xmark" id="close-city-modal" style="color: #8a9fc2; font-size: 20px; cursor: pointer;"></i>
-            </div>
-            <div style="padding: 16px; overflow-y: auto; overscroll-behavior: contain;">
-                ${optionsHtml}
-            </div>
-        </div>
-    `;
+        <div style="background: #071220; border: 1.5px solid #33E0E6; border-radius: 18px; width: 100%; max-width: 400px; max-height: 75vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(51, 224, 230, 0.15); overflow: hidden; touch-action: auto;">
+            <div style="padding: 18px 20px; border-bottom: 1px solid #1b314e; display: flex; justify-content: space-between; align-items: center; background: #0b1a2d;">
+                <h3 style="color: #33E0E6; font-family: 'Cairo', sans-serif; font-size: 17px; margin: 0;">اختر المحافظة</h3>
+                <i class="fas fa-xmark" id="close-city-modal" style="color: #8a9fc2; font-size: 20px; cursor: pointer;"></i>
+            </div>
+            <div style="padding: 16px; overflow-y: auto; overscroll-behavior: contain;">
+                ${optionsHtml}
+            </div>
+        </div>
+    `;
             document.body.appendChild(modal);
 
+            const lockScroll = () => { document.body.style.overflow = 'hidden'; };
             const unlockScroll = () => { document.body.style.overflow = ''; };
 
             customBtn.onclick = () => {
                 customBtn.style.borderColor = '#33E0E6';
                 customBtn.style.boxShadow = '0 0 12px rgba(51, 224, 230, 0.25)';
-                openCitySelectorModal('reg');
+                modal.style.display = 'flex';
+                lockScroll();
             };
 
             modal.querySelector('#close-city-modal').onclick = () => {
@@ -2824,12 +2317,8 @@
                 item.onmouseout = () => { item.style.borderColor = '#1b314e'; item.style.background = '#0f223a'; };
                 item.onclick = () => {
                     const val = item.getAttribute('data-val');
-                    if (cityModalTargetMode === 'prof') {
-                        document.getElementById('prof-city').value = val;
-                    } else {
-                        citySelect.value = val;
-                        document.getElementById('selected-city-text').innerText = val;
-                    }
+                    citySelect.value = val;
+                    document.getElementById('selected-city-text').innerText = val;
                     modal.style.display = 'none';
                     unlockScroll();
                 };
@@ -2844,20 +2333,20 @@
             toast.className = 'account-not-found-toast';
 
             toast.innerHTML = `
-        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
-                    background: #0b1a2d; 
-                    border: 1.5px solid #33E0E6; border-radius: 14px; 
-                    width: 88%; max-width: 450px; padding: 18px 16px; 
-                    display: flex; align-items: center; justify-content: center; gap: 12px; 
-                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15); 
-                    z-index: 999999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
-                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
-            <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
-                لم يتم العثور على الحساب المرتبط بهذا الرقم
-            </span>
-        </div>
-    `;
+        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
+                    background: #0b1a2d; 
+                    border: 1.5px solid #33E0E6; border-radius: 14px; 
+                    width: 88%; max-width: 450px; padding: 18px 16px; 
+                    display: flex; align-items: center; justify-content: center; gap: 12px; 
+                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15); 
+                    z-index: 999999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
+                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+            <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
+                لم يتم العثور على الحساب المرتبط بهذا الرقم
+            </span>
+        </div>
+    `;
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
