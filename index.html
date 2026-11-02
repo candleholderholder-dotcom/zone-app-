@@ -19,18 +19,24 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* تنسيق حاوية الأزرار لتكون متساوية تماماً */
+        /* حاوية الأزرار لتأخذ عرض الكرت بالكامل وتتوزع بانتظام */
         .card-actions-container {
             display: flex;
-            gap: 8px;
             width: 100%;
-            margin-top: 12px;
+            gap: 8px;
+            /* مسافة بسيطة ومنتظمة بين الأزرار */
+            margin-top: 14px;
+            box-sizing: border-box;
         }
 
-        /* تنسيق الأزرار لتاخذ مساحات متساوية flex: 1 */
+        /* تنسيق كل زر ليكون مستطيلاً متساوياً يملأ الفراغ بدقة */
         .card-actions-container .action-btn {
             flex: 1;
-            padding: 10px 8px;
+            min-width: 0;
+            /* لمنع تمدد الزر أكثر من زملائه بسبب النصوص */
+            height: 38px;
+            /* ارتفاع ثابت ومتساوي تماماً لجميع الأزرار */
+            padding: 0 8px;
             border-radius: 10px;
             border: none;
             font-family: inherit;
@@ -40,11 +46,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
+            white-space: nowrap;
+            /* لمنع نزول النص سطر جديد */
             transition: var(--transition-smooth, 0.2s ease);
         }
 
-        /* ألوان الأزرار بتنسيق احترافي */
+        /* ألوان الأزرار باحترافية */
         .btn-sold-action {
             background: rgba(255, 82, 82, 0.1);
             color: #ff5252;
@@ -2134,7 +2142,10 @@
         }
 
         function closeContactModal() {
-            document.getElementById('contact-choice-modal').classList.remove('active');
+            const modal = document.getElementById('contact-choice-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
         }
 
         function shareAdItem(title, price) {
