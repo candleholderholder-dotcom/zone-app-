@@ -1339,6 +1339,56 @@
     </div>
 
     <script>
+        // دالة إظهار إشعار الحذف العائم بتصميم التليجرام
+        function showTelegramToast(message, onUndo) {
+            const existingToast = document.querySelector('.telegram-toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'telegram-toast';
+            toast.innerHTML = `
+        <i class="fa-solid fa-trash-can" style="color: #ff5252;"></i>
+        <span>${message}</span>
+        <button class="undo-btn">تراجع</button>
+    `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+
+            const undoBtn = toast.querySelector('.undo-btn');
+            let isUndone = false;
+
+            undoBtn.addEventListener('click', () => {
+                isUndone = true;
+                if (onUndo) onUndo();
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            });
+
+            setTimeout(() => {
+                if (!isUndone) {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 4000);
+        }
+
+        // دالة زر تم البيع
+        function handleSoldAction(itemId) {
+            const soldBtn = document.getElementById(`btn-sold-${itemId}`);
+            if (soldBtn) {
+                soldBtn.style.opacity = '0.5';
+                soldBtn.innerText = 'تم البيع';
+
+                showTelegramToast('تم تحديد الإعلان كمباع بنجاح', () => {
+                    soldBtn.style.opacity = '1';
+                    soldBtn.innerHTML = '<i class="fa-solid fa-check"></i> تم البيع';
+                });
+            }
+        }
         // دالة فتح نافذة التواصل وتوجيه المستخدم لتطبيق الواتساب أو التليجرام برقم ومعرف صاحب الإعلان
         function openContactModal(phone, telegramUsername) {
             const modal = document.getElementById('contact-choice-modal');
@@ -2078,10 +2128,10 @@
                             <div class="product-card-actions">
         <div class="product-card-actions">
         <div class="card-actions-container">
-            <button class="action-btn btn-sold-action" id="btn-sold-${item.id}" onclick="handleSoldAction(${item.id})">
-                <i class="fa-solid fa-check"></i> تم البيع
-            </button>
-            <button class="action-btn btn-contact-action" onclick="openContactModal('${item.owner_phone}', '${item.telegram_username || ''}')">
+           <button class="action-btn btn-sold-action" id="btn-sold-${item.id}" onclick="handleSoldAction(${item.id})">
+    <i class="fa-solid fa-check"></i> تم البيع
+</button>
+            <button class="action-btn btn-contact-action" onclick="openContactModal('${item.owner_phone}')">
     <i class="fa-solid fa-phone"></i> تواصل
 </button>
             <button class="action-btn btn-share-action" onclick="shareAd(${item.id})">
