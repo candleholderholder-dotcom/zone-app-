@@ -19,87 +19,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* تنسيق إشعار الحذف العائم (مثل التليجرام) */
-        .telegram-toast {
-            position: fixed;
-            bottom: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #212121;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 9999;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        .telegram-toast.show {
-            bottom: 30px;
-        }
-
-        .telegram-toast .undo-btn {
-            background: none;
-            border: none;
-            color: var(--accent-turquoise, #00ADB5);
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 14px;
-            padding: 0;
-        }
-
-        /* حاوية أزرار التفاعل داخل الكرت بتوزيع متساوٍ */
-        .card-actions-container {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            margin-top: 14px;
-        }
-
-        /* تنسيق موحد لجميع الأزرار لضمان التساوي التام */
-        .card-actions-container .action-btn {
-            flex: 1;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            white-space: nowrap;
-        }
-
-        /* زر التواصل الأساسي (لون توركواز بارز) */
-        .btn-contact-action {
-            background: var(--accent-turquoise);
-            color: var(--primary-navy);
-            border: none;
-            box-shadow: 0 4px 15px var(--turquoise-glow);
-        }
-
-        /* زر المشاركة (زجاجي أنيق) */
-        .btn-share-action {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-navy);
-            color: var(--text-main);
-        }
-
-        /* زر تم البيع (يظهر عند الحاجة بلون هادئ وإطار أنيق) */
-        .btn-sold-action {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-        }
-
         /* تنسيق شريط الإعلانات الترويجي (Slider) */
         .promo-slider-container {
             width: 100%;
@@ -1197,11 +1116,11 @@
             <!-- شريط الإعلانات المتحرك الترويجي -->
             <div class="promo-slider-container" id="promoSlider">
                 <div class="promo-slides-track" id="slidesTrack">
-                    <div class="promo-slide-item"><img src="./adv1/adv1.jpg" alt="adv1"></div>
-                    <div class="promo-slide-item"><img src="./adv2/adv2.jpg" alt="adv2"></div>
-                    <div class="promo-slide-item"><img src="./adv3/adv3.jpg" alt="adv3"></div>
-                    <div class="promo-slide-item"><img src="./adv4/adv4.jpg" alt="adv4"></div>
-                    <div class="promo-slide-item"><img src="./adv5/adv5.jpg" alt="adv5"></div>
+                    <div class="promo-slide-item"><img src="./ad1.jpg" alt="إعلان 1"></div>
+                    <div class="promo-slide-item"><img src="./ad2.jpg" alt="إعلان 2"></div>
+                    <div class="promo-slide-item"><img src="./ad3.jpg" alt="إعلان 3"></div>
+                    <div class="promo-slide-item"><img src="./ad4.jpg" alt="إعلان 4"></div>
+                    <div class="promo-slide-item"><img src="./ad5.jpg" alt="إعلان 5"></div>
                 </div>
             </div>
 
@@ -2052,12 +1971,19 @@
                                 <i class="fa-solid fa-user-graduate"></i> المعلن: ${item.owner_name}
                             </div>
                             <div class="product-card-actions">
-        <div class="card-actions-container">
-            <button class="action-btn btn-sold-action"><i class="fa-solid fa-check"></i> تم البيع</button>
-            <button class="action-btn btn-contact-action"><i class="fa-solid fa-phone"></i> تواصل</button>
-            <button class="action-btn btn-share-action"><i class="fa-solid fa-share-nodes"></i> مشاركة</button>
-        </div>
-    </div>
+                                <button class="nav-link-btn" style="flex:1; border:1px solid var(--border-navy); border-radius:10px; padding:8px;" onclick="shareAdItem('${item.title}', '${item.price}')">
+                                    <i class="fa-solid fa-share-nodes"></i> مشاركة
+                                </button>
+                                <button class="nav-link-btn" style="flex:1; background:var(--accent-turquoise); color:var(--primary-navy); border-radius:10px; padding:8px; font-weight:800;" onclick="openContactOptions('${item.owner_phone}')">
+                                    <i class="fa-solid fa-phone"></i> تواصل
+                                </button>
+                                ${isOwner ? `
+                                    <button class="nav-link-btn" id="btn-sold-${item.id}" style="border:1.5px solid var(--danger); color:var(--danger); border-radius:10px; padding:8px 12px; font-weight:700;" onclick="triggerSoldUndoCountdown(${item.id})">
+                                        تم البيع
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
                     </div>
                     <div id="undo-slot-${item.id}"></div>
                 `;
@@ -2431,66 +2357,6 @@
             setTimeout(() => {
                 toastInner.style.top = '-120px';
                 setTimeout(() => { toast.remove(); }, 500);
-            }, 4000);
-        }
-        // كود ذكي لإضافة أزرار التفاعل المتساوية لجميع إعلانات منصة ZONE تلقائياً
-        document.addEventListener("DOMContentLoaded", function () {
-            // ابحث عن جميع كروت الإعلانات في الصفحة
-            const adCards = document.querySelectorAll(".ad-card, .card"); // حسب الكلاس المستخدم لديك للكرت
-
-            adCards.forEach(card => {
-                // تأكد من عدم تكرار الأزرار إذا تمت إضافتها مسبقاً
-                if (!card.querySelector(".card-actions-container")) {
-                    const actionsHTML = `
-                <div class="card-actions-container">
-                    <button class="action-btn btn-sold-action"><i class="fa-solid fa-check"></i> تم البيع</button>
-                    <button class="action-btn btn-contact-action"><i class="fa-solid fa-phone"></i> تواصل</button>
-                    <button class="action-btn btn-share-action"><i class="fa-solid fa-share-nodes"></i> مشاركة</button>
-                </div>
-            `;
-                    card.insertAdjacentHTML("beforeend", actionsHTML);
-                }
-            });
-        });
-        // دالة إظهار إشعار الحذف العائم بتصميم التليجرام
-        function showTelegramToast(message, onUndo) {
-            // إزالة أي إشعار سابق إن وجد
-            const existingToast = document.querySelector('.telegram-toast');
-            if (existingToast) existingToast.remove();
-
-            // إنشاء عنصر الإشعار
-            const toast = document.createElement('div');
-            toast.className = 'telegram-toast';
-            toast.innerHTML = `
-        <i class="fa-solid fa-trash-can" style="color: #ff5252;"></i>
-        <span>${message}</span>
-        <button class="undo-btn">تراجع</button>
-    `;
-
-            document.body.appendChild(toast);
-
-            // إظهار الإشعار بحركة انسيابية
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 100);
-
-            // تفعيل زر التراجع
-            const undoBtn = toast.querySelector('.undo-btn');
-            let isUndone = false;
-
-            undoBtn.addEventListener('click', () => {
-                isUndone = true;
-                if (onUndo) onUndo();
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            });
-
-            // إخفاء الإشعار تلقائياً بعد 4 ثواني إذا لم يتم الضغط على تراجع
-            setTimeout(() => {
-                if (!isUndone) {
-                    toast.classList.remove('show');
-                    setTimeout(() => toast.remove(), 300);
-                }
             }, 4000);
         }
     </script>
