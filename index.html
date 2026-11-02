@@ -1339,6 +1339,29 @@
     </div>
 
     <script>
+        // دالة فتح نافذة التواصل وتوجيه المستخدم لتطبيق الواتساب أو التليجرام برقم ومعرف صاحب الإعلان
+        function openContactModal(phone, telegramUsername) {
+            const modal = document.getElementById('contact-choice-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+
+                // ربط زر الواتساب برقم صاحب الإعلان
+                const waBtn = document.getElementById('btn-choice-wa');
+                if (waBtn) {
+                    waBtn.onclick = function () {
+                        window.open(`https://wa.me/${phone}`, '_blank');
+                    };
+                }
+
+                // ربط زر التليجرام بمعرف صاحب الإعلان
+                const tgBtn = document.getElementById('btn-choice-tg');
+                if (tgBtn) {
+                    tgBtn.onclick = function () {
+                        window.open(`https://t.me/${telegramUsername}`, '_blank');
+                    };
+                }
+            }
+        }
         // دالة زر التواصل
         function openContactModal(itemId) {
             // يمكنك ربطها بفتح نافذة التواصل الخاصة بك
@@ -2058,9 +2081,9 @@
             <button class="action-btn btn-sold-action" id="btn-sold-${item.id}" onclick="handleSoldAction(${item.id})">
                 <i class="fa-solid fa-check"></i> تم البيع
             </button>
-            <button class="action-btn btn-contact-action" onclick="openContactModal(${item.id})">
-                <i class="fa-solid fa-phone"></i> تواصل
-            </button>
+            <button class="action-btn btn-contact-action" onclick="openContactModal('${item.owner_phone}', '${item.telegram_username || ''}')">
+    <i class="fa-solid fa-phone"></i> تواصل
+</button>
             <button class="action-btn btn-share-action" onclick="shareAd(${item.id})">
                 <i class="fa-solid fa-share-nodes"></i> مشاركة
             </button>
