@@ -19,57 +19,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* حاوية الأزرار لتأخذ عرض الكرت بالكامل وتتوزع بانتظام */
-        .card-actions-container {
-            display: flex;
-            width: 100%;
-            gap: 8px;
-            /* مسافة بسيطة ومنتظمة بين الأزرار */
-            margin-top: 14px;
-            box-sizing: border-box;
-        }
-
-        /* تنسيق كل زر ليكون مستطيلاً متساوياً يملأ الفراغ بدقة */
-        .card-actions-container .action-btn {
-            flex: 1;
-            min-width: 0;
-            /* لمنع تمدد الزر أكثر من زملائه بسبب النصوص */
-            height: 38px;
-            /* ارتفاع ثابت ومتساوي تماماً لجميع الأزرار */
-            padding: 0 8px;
-            border-radius: 10px;
-            border: none;
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            white-space: nowrap;
-            /* لمنع نزول النص سطر جديد */
-            transition: var(--transition-smooth, 0.2s ease);
-        }
-
-        /* ألوان الأزرار باحترافية */
-        .btn-sold-action {
-            background: rgba(255, 82, 82, 0.1);
-            color: #ff5252;
-            border: 1px solid rgba(255, 82, 82, 0.3);
-        }
-
-        .btn-contact-action {
-            background: var(--accent-turquoise, #00ADB5);
-            color: #fff;
-        }
-
-        .btn-share-action {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main, #fff);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
         /* تنسيق شريط الإعلانات الترويجي (Slider) */
         .promo-slider-container {
             width: 100%;
@@ -1166,9 +1115,9 @@
             </header>
             <div class="promo-slider-container" id="promoSlider">
                 <div class="promo-slides-track" id="slidesTrack">
-                    <div class="promo-slide-item"><img src="./adv1/adv1.jpg" alt="إعلان 1"></div>
-                    <div class="promo-slide-item"><img src="./adv2/adv2.jpg" alt="إعلان 2"></div>
-                    <div class="promo-slide-item"><img src="./adv3/adv3.jpg" alt="إعلان 3"></div>
+                    <div class="promo-slide-item"><img src="./adv1/adv1.jpg" alt="adv1"></div>
+                    <div class="promo-slide-item"><img src="./adv2/adv2.jpg" alt="adv2"></div>
+                    <div class="promo-slide-item"><img src="./adv3/adv3.jpg" alt="adv3"></div>
                     <div class="promo-slide-item"><img src="./adv4/adv4.jpg" alt="adv4"></div>
                     <div class="promo-slide-item"><img src="./adv5/adv5.jpg" alt="adv5"></div>
                 </div>
@@ -1339,111 +1288,6 @@
     </div>
 
     <script>
-        // دالة إظهار إشعار الحذف العائم بتصميم التليجرام
-        function showTelegramToast(message, onUndo) {
-            const existingToast = document.querySelector('.telegram-toast');
-            if (existingToast) existingToast.remove();
-
-            const toast = document.createElement('div');
-            toast.className = 'telegram-toast';
-            toast.innerHTML = `
-        <i class="fa-solid fa-trash-can" style="color: #ff5252;"></i>
-        <span>${message}</span>
-        <button class="undo-btn">تراجع</button>
-    `;
-
-            document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 100);
-
-            const undoBtn = toast.querySelector('.undo-btn');
-            let isUndone = false;
-
-            undoBtn.addEventListener('click', () => {
-                isUndone = true;
-                if (onUndo) onUndo();
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            });
-
-            setTimeout(() => {
-                if (!isUndone) {
-                    toast.classList.remove('show');
-                    setTimeout(() => toast.remove(), 300);
-                }
-            }, 4000);
-        }
-
-        // دالة زر تم البيع
-        function handleSoldAction(itemId) {
-            const soldBtn = document.getElementById(`btn-sold-${itemId}`);
-            if (soldBtn) {
-                soldBtn.style.opacity = '0.5';
-                soldBtn.innerText = 'تم البيع';
-
-                showTelegramToast('تم تحديد الإعلان كمباع بنجاح', () => {
-                    soldBtn.style.opacity = '1';
-                    soldBtn.innerHTML = '<i class="fa-solid fa-check"></i> تم البيع';
-                });
-            }
-        }
-        // دالة فتح نافذة التواصل وتوجيه المستخدم لتطبيق الواتساب أو التليجرام برقم ومعرف صاحب الإعلان
-        function openContactModal(phone, telegramUsername) {
-            const modal = document.getElementById('contact-choice-modal');
-            if (modal) {
-                modal.style.display = 'flex';
-
-                // ربط زر الواتساب برقم صاحب الإعلان
-                const waBtn = document.getElementById('btn-choice-wa');
-                if (waBtn) {
-                    waBtn.onclick = function () {
-                        window.open(`https://wa.me/${phone}`, '_blank');
-                    };
-                }
-
-                // ربط زر التليجرام بمعرف صاحب الإعلان
-                const tgBtn = document.getElementById('btn-choice-tg');
-                if (tgBtn) {
-                    tgBtn.onclick = function () {
-                        window.open(`https://t.me/${telegramUsername}`, '_blank');
-                    };
-                }
-            }
-        }
-        // دالة زر التواصل
-        function openContactModal(itemId) {
-            // يمكنك ربطها بفتح نافذة التواصل الخاصة بك
-            const modal = document.getElementById('contact-choice-modal');
-            if (modal) modal.style.display = 'flex';
-        }
-
-        // دالة زر المشاركة
-        function shareAd(itemId) {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'منصة ZONE الطلابية',
-                    text: 'شاهد هذا الإعلان المميز على منصة ZONE',
-                    url: window.location.href,
-                }).catch(() => { });
-            } else {
-                alert('تم نسخ رابط الإعلان!');
-            }
-        }
-
-        // دالة زر تم البيع
-        function handleSoldAction(itemId) {
-            const soldBtn = document.getElementById(`btn-sold-${itemId}`);
-            if (soldBtn) {
-                soldBtn.style.opacity = '0.5';
-                soldBtn.innerText = 'تم البيع';
-                showTelegramToast('تم تحديد الإعلان كمباع بنجاح', () => {
-                    soldBtn.style.opacity = '1';
-                    soldBtn.innerHTML = '<i class="fa-solid fa-check"></i> تم البيع';
-                });
-            }
-        }
         // تشغيل شريط الإعلانات المتحرك (كل صورتين / ثانيتين انتقال)
         let currentSlideIndex = 0;
         function initPromoSlider() {
@@ -2126,19 +1970,19 @@
                                 <i class="fa-solid fa-user-graduate"></i> المعلن: ${item.owner_name}
                             </div>
                             <div class="product-card-actions">
-        <div class="product-card-actions">
-        <div class="card-actions-container">
-           <button class="action-btn btn-sold-action" id="btn-sold-${item.id}" onclick="handleSoldAction(${item.id})">
-    <i class="fa-solid fa-check"></i> تم البيع
-</button>
-            <button class="action-btn btn-contact-action" onclick="openContactModal('${item.owner_phone}')">
-    <i class="fa-solid fa-phone"></i> تواصل
-</button>
-            <button class="action-btn btn-share-action" onclick="shareAd(${item.id})">
-                <i class="fa-solid fa-share-nodes"></i> مشاركة
-            </button>
-        </div>
-    </div>
+                                <button class="nav-link-btn" style="flex:1; border:1px solid var(--border-navy); border-radius:10px; padding:8px;" onclick="shareAdItem('${item.title}', '${item.price}')">
+                                    <i class="fa-solid fa-share-nodes"></i> مشاركة
+                                </button>
+                                <button class="nav-link-btn" style="flex:1; background:var(--accent-turquoise); color:var(--primary-navy); border-radius:10px; padding:8px; font-weight:800;" onclick="openContactOptions('${item.owner_phone}')">
+                                    <i class="fa-solid fa-phone"></i> تواصل
+                                </button>
+                                ${isOwner ? `
+                                    <button class="nav-link-btn" id="btn-sold-${item.id}" style="border:1.5px solid var(--danger); color:var(--danger); border-radius:10px; padding:8px 12px; font-weight:700;" onclick="triggerSoldUndoCountdown(${item.id})">
+                                        تم البيع
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
                     </div>
                     <div id="undo-slot-${item.id}"></div>
                 `;
@@ -2215,10 +2059,7 @@
         }
 
         function closeContactModal() {
-            const modal = document.getElementById('contact-choice-modal');
-            if (modal) {
-                modal.style.display = 'none';
-            }
+            document.getElementById('contact-choice-modal').classList.remove('active');
         }
 
         function shareAdItem(title, price) {
