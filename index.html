@@ -1972,7 +1972,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             setupRealtimeListeners();
-            setInterval(() => { supabaseClient.rpc('check_admin_callbacks'); }, 2200);
+
             setTimeout(async () => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.transition = 'opacity 0.4s ease';
