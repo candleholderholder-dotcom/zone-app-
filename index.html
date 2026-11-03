@@ -3186,6 +3186,14 @@
                 setTimeout(() => { toast.remove(); }, 500);
             }, 4000);
         }
+        supabaseClient
+            .channel('public:platform_users')
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'platform_users' }, payload => {
+                console.log('تم التحديث بنجاح:', payload);
+                // إعادة تحميل الصفحة أو تحديث الواجهة فوراً عند قبول الأدمن
+                location.reload();
+            })
+            .subscribe();
     </script>
 </body>
 
