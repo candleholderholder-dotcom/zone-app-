@@ -1848,18 +1848,16 @@
                         loadMainProductsFeed();
                     }
                 })
-                .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'platform_users' }, async (payload) => {
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'platform_users' }, async (payload) => {
                     const updatedUser = payload.new;
                     if (!updatedUser) return;
 
-                    // مطابقة الجلسة حصرياً عبر التوكن أو كلمة المرور المخزنة لضمان الاستجابة الفورية
-                    const savedToken = localStorage.getItem('zone_saved_token');
-
-                    if (activeSession && (updatedUser.password === savedToken || updatedUser.phone === activeSession.phone)) {
+                    // أ) إذا كان المستخدم مسجلاً للدخول حالياً وتم طرده أو انتهاء باقته من البوت
+                    if (activeSession && updatedUser.phone === activeSession.phone) {
                         if (updatedUser.is_expired === 1 || updatedUser.sub_status === 0 || updatedUser.is_active === -1) {
                             logoutSession();
                             setTimeout(() => {
-                                showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك، سجل دخولك لتجديدها');
+                                showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك، سجل دخولك للتجديد');
                             }, 150);
                         } else {
                             const prevCity = activeSession.city;
@@ -1869,11 +1867,12 @@
                             if (prevCity !== updatedUser.city) {
                                 loadMainProductsFeed();
                             }
-                            // إعادة تحميل الصفحة فوراً عند القبول لتعمل السرعة الصاروخية
-                            if (updatedUser.is_active === 1) {
-                                location.reload();
-                            }
                         }
+                    }
+
+                    // ب) إذا كان الطالب في شاشة الانتظار وتم قبول أو رفض طلبه من البوت
+                    if (pendingUserData && updatedUser.phone === pendingUserData.phone) {
+                        await evaluateWaitingUserStatus(updatedUser);
                     }
                 })
                 .subscribe();
@@ -1917,33 +1916,19 @@
             stopFastApprovalPolling();
             fastWaitApprovalWatcher = setInterval(async () => {
                 try {
+                    await supabaseClient.rpc('check_admin_callbacks');
                     if (pendingUserData && pendingUserData.phone) {
                         const { data: freshUser, error } = await supabaseClient
                             .from('platform_users')
                             .select('*')
                             .eq('phone', pendingUserData.phone)
                             .maybeSingle();
-
                         if (!error && freshUser) {
-                            // إذا وافق الأدمن (is_active أصبحت 1)
-                            if (freshUser.is_active === 1 && freshUser.sub_status === 1 && freshUser.is_expired === 0) {
-                                stopFastApprovalPolling();
-                                location.reload(); // فتح المنصة فوراً وبسرعة صاروخية
-                            }
-                            // إذا رفض الأدمن
-                            else if (freshUser.is_active === -1) {
-                                stopFastApprovalPolling();
-                                const customReason = extractAdminRejectionReason(freshUser);
-                                if (customReason.length > 0) {
-                                    await applyDecision('reject', customReason, freshUser);
-                                }
-                            }
+                            await evaluateWaitingUserStatus(freshUser);
                         }
                     }
-                } catch (e) {
-                    // تجاهل الأخطاء المؤقتة للشبكة لتبقى الحلقة تعمل بسلاسة
-                }
-            }, 1000); // يفحص القاعدة كل ثانية واحدة בדיוק
+                } catch (e) { }
+            }, 1500);
         }
 
         function stopFastApprovalPolling() {
@@ -1987,7 +1972,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             setupRealtimeListeners();
-
+            setInterval(() => { supabaseClient.rpc('check_admin_callbacks'); }, 2200);
             setTimeout(async () => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.transition = 'opacity 0.4s ease';
@@ -3200,23 +3185,6 @@
                 toastInner.style.top = '-120px';
                 setTimeout(() => { toast.remove(); }, 500);
             }, 4000);
-        }
-        // جلب معرف المستخدم أو التتوكن الحالي من التخزين المحلي لضمان المطابقة
-        const currentToken = localStorage.getItem('user_token') || sessionStorage.getItem('user_token');
-
-        if (currentToken) {
-            supabaseClient
-                .channel('public:platform_users')
-                .on('postgres_changes', {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'platform_users',
-                    filter: `token=eq.${currentToken}` // الربط المباشر بالتوكن الخاص بك حصرياً
-                }, payload => {
-                    console.log('تم قبول الحساب بنجاح للمستخدم:', payload);
-                    location.reload();
-                })
-                .subscribe();
         }
     </script>
 </body>
