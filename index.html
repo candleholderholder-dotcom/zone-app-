@@ -464,7 +464,6 @@
             filter: drop-shadow(0 0 18px var(--turquoise-glow));
         }
 
-        /* قبعة وقاعدة الساعة الرملية بدرجتين (مطابقة للصورة) */
         .hg-cap-outer {
             fill: var(--turquoise-light);
         }
@@ -473,7 +472,6 @@
             fill: var(--accent-turquoise);
         }
 
-        /* زجاج الساعة الرملية ذو الانحناء الدائري والخصر الضيق */
         .hg-bulb-outline {
             fill: rgba(0, 173, 181, 0.05);
             stroke: var(--turquoise-light);
@@ -482,21 +480,18 @@
             stroke-linejoin: round;
         }
 
-        /* الرمل العلوي على شكل نصف كرة ينحسر تدريجياً */
         .hg-sand-top-dome {
             fill: var(--accent-turquoise);
             transform-origin: 50px 48px;
             animation: hg-top-sand-drain 3.6s ease-in-out infinite;
         }
 
-        /* عمود الرمل المتدفق العريض في المنتصف */
         .hg-sand-pillar {
             fill: var(--turquoise-light);
             transform-origin: 50px 46px;
             animation: hg-pillar-flow 3.6s linear infinite;
         }
 
-        /* الرمل السفلي على شكل قبة دائرية ترتفع تدريجياً */
         .hg-sand-bottom-mound {
             fill: var(--turquoise-light);
             transform-origin: 50px 77px;
@@ -1452,24 +1447,18 @@
             <div class="wait-processing-box">
                 <div class="luxury-hourglass-wrapper" id="hourglass-anim-box">
                     <svg class="luxury-hourglass" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- القبعة العلوية المدرجة (بدرجتين مطابقة تماماً للصورة) -->
                         <rect x="20" y="10" width="60" height="5.5" rx="1.5" class="hg-cap-outer" />
                         <rect x="25" y="15.5" width="50" height="5" rx="1" class="hg-cap-inner" />
 
-                        <!-- القاعدة السفلية المدرجة (بدرجتين مطابقة تماماً للصورة) -->
                         <rect x="25" y="79.5" width="50" height="5" rx="1" class="hg-cap-inner" />
                         <rect x="20" y="84.5" width="60" height="5.5" rx="1.5" class="hg-cap-outer" />
 
-                        <!-- الرمل العلوي (نصف كرة ينحسر تدريجياً) -->
                         <path d="M 33 38 H 67 C 66 45, 58 48, 50 48 C 42 48, 34 45, 33 38 Z" class="hg-sand-top-dome" />
 
-                        <!-- عمود الرمل المتساقط في المنتصف -->
                         <rect x="47.2" y="45" width="5.6" height="28" rx="2.5" class="hg-sand-pillar" />
 
-                        <!-- الرمل السفلي المتجمع (قبة دائرية ترتفع) -->
                         <path d="M 35 77 C 35 64, 65 64, 65 77 Z" class="hg-sand-bottom-mound" />
 
-                        <!-- الهيكل الزجاجي المنحني ذو الخصر الضيق -->
                         <path d="M 29 20.5 C 29 37, 36 45, 45 48.5 L 45 51.5 C 36 55, 29 63, 29 79.5"
                             class="hg-bulb-outline" />
                         <path d="M 71 20.5 C 71 37, 64 45, 55 48.5 L 55 51.5 C 64 55, 71 63, 71 79.5"
@@ -1825,9 +1814,10 @@
         let resetTargetPhone = '';
         let fastWaitApprovalWatcher = null;
 
-        // أقفال الحماية لمنع سباق البيانات (Race Conditions) وتكرار إشعارات البوت
+        // أقفال الحماية لمنع سباق البيانات (Race Conditions) وتكرار الطلبات الشبكية
         let isAuthBusy = false;
         let isPaymentNotifiedLock = false;
+        let isCheckingDecisionLock = false;
 
         // متغيرات الفلترة، المكبر، وشريط التراجع بأسلوب تيليجرام
         let allFeedItemsCache = [];
@@ -1838,7 +1828,7 @@
         let cityModalTargetMode = 'reg';
 
         /* =========================================================
-           2. التزامن اللحظي الشامل + التقاط سبب الرفض المخصص بدقة
+           2. التزامن اللحظي الشامل + التقاط قرار البوت وسبب الرفض فوراً
            ========================================================= */
         function setupRealtimeListeners() {
             supabaseClient
@@ -1852,9 +1842,11 @@
                     const updatedUser = payload.new;
                     if (!updatedUser) return;
 
+                    const normalizedUpdatedPhone = normalizeSyrianPhone(updatedUser.phone);
+
                     // أ) إذا كان المستخدم مسجلاً للدخول حالياً وتم طرده أو انتهاء باقته من البوت
-                    if (activeSession && updatedUser.phone === activeSession.phone) {
-                        if (updatedUser.is_expired === 1 || updatedUser.sub_status === 0 || updatedUser.is_active === -1) {
+                    if (activeSession && normalizeSyrianPhone(activeSession.phone) === normalizedUpdatedPhone) {
+                        if (Number(updatedUser.is_expired) === 1 || Number(updatedUser.sub_status) === 0 || Number(updatedUser.is_active) === -1) {
                             logoutSession();
                             setTimeout(() => {
                                 showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك، سجل دخولك للتجديد');
@@ -1871,23 +1863,34 @@
                     }
 
                     // ب) إذا كان الطالب في شاشة الانتظار وتم قبول أو رفض طلبه من البوت
-                    if (pendingUserData && updatedUser.phone === pendingUserData.phone) {
+                    if (pendingUserData && normalizeSyrianPhone(pendingUserData.phone) === normalizedUpdatedPhone) {
                         await evaluateWaitingUserStatus(updatedUser);
                     }
                 })
                 .subscribe();
         }
 
-        // استخراج سبب الرفض الفعلي فقط بعد أن يكتبه الأدمن في البوت (وليس بمجرد كبس زر الرفض الأولي)
+        // استخراج سبب الرفض الفعلي فقط بعد أن يكتبه الأدمن في البوت ويرسله
         function extractAdminRejectionReason(userRecord) {
-            const directReason = String(userRecord.reject_reason || userRecord.rejection_reason || userRecord.admin_note || '').trim();
-            if (directReason && !['pending', 'waiting', 'wait_reason', 'كتب_السبب'].includes(directReason.toLowerCase())) {
-                return directReason;
+            const possibleFields = [
+                userRecord.reject_reason,
+                userRecord.rejection_reason,
+                userRecord.admin_note,
+                userRecord.reason,
+                userRecord.status_note
+            ];
+
+            for (const field of possibleFields) {
+                const val = String(field || '').trim();
+                if (val && !['null', 'undefined', 'pending', 'waiting', 'wait_reason', 'pending_reject', 'كتب_السبب'].includes(val.toLowerCase())) {
+                    return val;
+                }
             }
+
             const pType = String(userRecord.plan_type || '').trim();
-            if (pType && !['monthly', 'yearly', 'gift', 'pending_reject', 'wait_reason'].includes(pType)) {
-                const cleaned = pType.replace(/^reject[:_-]?/i, '').trim();
-                if (cleaned && cleaned.toLowerCase() !== 'pending') {
+            if (pType && !['monthly', 'yearly', 'gift', 'pending', 'waiting', 'pending_reject', 'wait_reason'].includes(pType.toLowerCase())) {
+                const cleaned = pType.replace(/^(reject|rejected|reason)[:_\-\s]*/i, '').trim();
+                if (cleaned && !['pending', 'waiting', 'wait_reason'].includes(cleaned.toLowerCase())) {
                     return cleaned;
                 }
             }
@@ -1899,12 +1902,21 @@
             const waitScreen = document.getElementById('wait-approval-screen');
             if (!waitScreen || !waitScreen.classList.contains('active-screen')) return;
 
-            if (userRecord.is_active === 1 && userRecord.sub_status === 1 && userRecord.is_expired === 0) {
+            const isActive = Number(userRecord.is_active);
+            const subStatus = Number(userRecord.sub_status);
+            const isExpired = Number(userRecord.is_expired);
+
+            // 1) حالة القبول العادي أو التفعيل المجاني
+            if (isActive === 1 && subStatus === 1 && isExpired === 0) {
                 stopFastApprovalPolling();
                 await applyDecision(userRecord.plan_type === 'gift' ? 'gift' : 'accept', '', userRecord);
-            } else if (userRecord.is_active === -1) {
-                const customReason = extractAdminRejectionReason(userRecord);
-                // لا يتم إظهار رسالة وزر الرفض للطالب إلا بعد أن يكتب الأدمن السبب فعلياً في البوت
+                return;
+            }
+
+            // 2) حالة الرفض (سواء تم تغيير is_active إلى -1 أو كتابة سبب الرفض في الحقل المخصص)
+            const customReason = extractAdminRejectionReason(userRecord);
+            if (isActive === -1 || customReason.length > 0) {
+                // إذا ضغط الأدمن "رفض" في البوت ولم يكتب السبب بعد، تبقى الساعة الرملية بانتظار كتابة السبب
                 if (customReason.length > 0) {
                     stopFastApprovalPolling();
                     await applyDecision('reject', customReason, userRecord);
@@ -1912,23 +1924,43 @@
             }
         }
 
+        // دالة مراقبة سريعة ومنظمة بدون تداخل (Non-overlapping Polling) لضمان استجابة لحظية خلال 1 ثانية
+        async function checkAdminDecisionNow() {
+            if (isCheckingDecisionLock || !pendingUserData || !pendingUserData.phone) return;
+            const waitScreen = document.getElementById('wait-approval-screen');
+            if (!waitScreen || !waitScreen.classList.contains('active-screen')) return;
+
+            isCheckingDecisionLock = true;
+            try {
+                // سحب التحديثات من البوت أولاً
+                await supabaseClient.rpc('check_admin_callbacks');
+
+                const localPhone = normalizeSyrianPhone(pendingUserData.phone);
+                const internationalPhone = localPhone.startsWith('09') ? '+963' + localPhone.substring(1) : localPhone;
+
+                const { data: users, error } = await supabaseClient
+                    .from('platform_users')
+                    .select('*')
+                    .or(`phone.eq.${localPhone},phone.eq.${internationalPhone}`)
+                    .limit(1);
+
+                const freshUser = users && users[0];
+                if (!error && freshUser) {
+                    await evaluateWaitingUserStatus(freshUser);
+                }
+            } catch (e) {
+                // تجاهل أخطاء الشبكة المؤقتة لضمان استمرار الفحص بسلاسة
+            } finally {
+                isCheckingDecisionLock = false;
+            }
+        }
+
         function startFastApprovalPolling() {
             stopFastApprovalPolling();
-            fastWaitApprovalWatcher = setInterval(async () => {
-                try {
-                    await supabaseClient.rpc('check_admin_callbacks');
-                    if (pendingUserData && pendingUserData.phone) {
-                        const { data: freshUser, error } = await supabaseClient
-                            .from('platform_users')
-                            .select('*')
-                            .eq('phone', pendingUserData.phone)
-                            .maybeSingle();
-                        if (!error && freshUser) {
-                            await evaluateWaitingUserStatus(freshUser);
-                        }
-                    }
-                } catch (e) { }
-            }, 1500);
+            checkAdminDecisionNow();
+            fastWaitApprovalWatcher = setInterval(() => {
+                checkAdminDecisionNow();
+            }, 1000);
         }
 
         function stopFastApprovalPolling() {
@@ -1936,6 +1968,7 @@
                 clearInterval(fastWaitApprovalWatcher);
                 fastWaitApprovalWatcher = null;
             }
+            isCheckingDecisionLock = false;
         }
 
         /* =========================================================
@@ -1972,7 +2005,14 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             setupRealtimeListeners();
-            setInterval(() => { supabaseClient.rpc('check_admin_callbacks'); }, 2200);
+
+            // فحص خلفي هادئ فقط عندما لا نكون في شاشة الانتظار السريعة لمنع تضارب الطلبات
+            setInterval(() => {
+                if (!fastWaitApprovalWatcher && !isCheckingDecisionLock) {
+                    supabaseClient.rpc('check_admin_callbacks').then(() => { }).catch(() => { });
+                }
+            }, 3500);
+
             setTimeout(async () => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.transition = 'opacity 0.4s ease';
@@ -1993,8 +2033,7 @@
                             .maybeSingle();
 
                         if (userRecord && !error) {
-                            // إذا كان الحساب مطروداً أو منتهي الصلاحية، يحول لصفحة تجديد الاشتراك
-                            if (userRecord.is_expired === 1 || userRecord.sub_status === 0 || userRecord.is_active !== 1) {
+                            if (Number(userRecord.is_expired) === 1 || Number(userRecord.sub_status) === 0 || Number(userRecord.is_active) !== 1) {
                                 localStorage.removeItem('zone_saved_phone');
                                 localStorage.removeItem('zone_saved_token');
                                 pendingUserData = {
@@ -2014,14 +2053,12 @@
                                 return;
                             }
 
-                            // حساب نظامي وفعال: يدخل فوراً للواجهة الرئيسية دون معاملته كغريب
                             activeSession = userRecord;
                             updateHeaderMarketBadge();
                             await loadMainProductsFeed();
                             switchActiveScreen('home-screen');
                             return;
                         } else {
-                            // إغلاق ثغرة التلاعب بالـ LocalStorage إذا لم يتطابق الـ Token المشفر
                             localStorage.removeItem('zone_saved_phone');
                             localStorage.removeItem('zone_saved_token');
                         }
@@ -2088,10 +2125,9 @@
                         btnLabel.innerText = 'إعادة محاولة الربط';
                     }
                 }
-            }, 2000);
+            }, 1500);
         }
 
-        // التحقق عند إنشاء حساب جديد: يمنع تسجيل رقم مستخدم بالفعل (سواء كان فعالاً أو مطروداً)
         async function proceedToSubscription() {
             if (isAuthBusy) return;
 
@@ -2121,18 +2157,14 @@
             try {
                 let internationalPhone = phone.startsWith('09') ? '+963' + phone.substring(1) : phone;
 
-                // فحص ما إذا كان الرقم مسجلاً مسبقاً في قاعدة البيانات
                 const { data: existingUser } = await supabaseClient
                     .from('platform_users')
                     .select('phone, is_active, sub_status, is_expired')
                     .or(`phone.eq.${phone},phone.eq.${internationalPhone}`)
                     .maybeSingle();
 
-                // إذا كان الرقم مسجلاً مسبقاً (وليس في حالة مراجعة البيانات لنفس الجلسة الحالية)
-                if (existingUser && (!pendingUserData.isReviewingData || pendingUserData.phone !== existingUser.phone)) {
+                if (existingUser && (!pendingUserData.isReviewingData || normalizeSyrianPhone(pendingUserData.phone) !== normalizeSyrianPhone(existingUser.phone))) {
                     showCustomToast('هذا الرقم مستخدم بالفعل! يرجى تسجيل الدخول بحسابك');
-                    isAuthBusy = false;
-                    if (regBtn) regBtn.disabled = false;
                     return;
                 }
 
@@ -2157,7 +2189,6 @@
             }
         }
 
-        // تسجيل الدخول: يدخل الحساب الساري فوراً دون معاملته كغريب، ويحول المطرود/المنتهي لصفحة التجديد
         async function performLogin() {
             if (isAuthBusy) return;
 
@@ -2183,7 +2214,6 @@
                 const userRecord = users && users[0];
 
                 if (userRecord && !error) {
-                    // ترقية كلمة المرور تلقائياً إلى SHA-256 إن كانت قديمة
                     if (userRecord.password === passInput && passInput !== hashedInput) {
                         await supabaseClient
                             .from('platform_users')
@@ -2197,8 +2227,7 @@
                         return;
                     }
 
-                    // 1) إذا كان الحساب مطروداً أو منتهي الصلاحية -> ينقله مباشرة لصفحة تجديد الاشتراك
-                    if (userRecord.is_expired === 1 || userRecord.sub_status === 0 || userRecord.is_active === -1) {
+                    if (Number(userRecord.is_expired) === 1 || Number(userRecord.sub_status) === 0 || Number(userRecord.is_active) === -1) {
                         pendingUserData = {
                             fullname: userRecord.fullname,
                             phone: userRecord.phone,
@@ -2216,8 +2245,7 @@
                         return;
                     }
 
-                    // 2) إذا كان الحساب قيد المراجعة حالياً (لم يتم قبوله بعد) -> ينقله لشاشة الانتظار
-                    if (userRecord.is_active === 0) {
+                    if (Number(userRecord.is_active) === 0) {
                         pendingUserData = {
                             fullname: userRecord.fullname,
                             phone: userRecord.phone,
@@ -2232,7 +2260,6 @@
                         return;
                     }
 
-                    // 3) إذا كان الحساب فعالاً وسارياً (سجل خروج ورجع دخل) -> يدخل فوراً للرئيسية كصاحب بيت
                     activeSession = userRecord;
                     localStorage.setItem('zone_saved_phone', userRecord.phone);
                     localStorage.setItem('zone_saved_token', userRecord.password);
@@ -2399,28 +2426,42 @@
 
             try {
                 if (pendingUserData && pendingUserData.phone) {
-                    // تصفير أي سبب رفض قديم في قاعدة البيانات ريثما يكتب الأدمن قراراً جديداً
-                    await supabaseClient
+                    const cleanPhone = normalizeSyrianPhone(pendingUserData.phone);
+                    pendingUserData.phone = cleanPhone;
+
+                    // حفظ الطلب وتصفير أي سبب رفض قديم بشكل متوافق مع بنية الجدول
+                    const basePayload = {
+                        fullname: pendingUserData.fullname,
+                        phone: cleanPhone,
+                        city: pendingUserData.city,
+                        university: pendingUserData.university,
+                        major: pendingUserData.major,
+                        password: pendingUserData.password,
+                        is_active: 0,
+                        sub_status: 0,
+                        is_expired: 0,
+                        plan_type: chosenPlan.type,
+                        tg_chat_id: String(pendingUserData.tg_chat_id)
+                    };
+
+                    const { error: upsertErr } = await supabaseClient
                         .from('platform_users')
                         .upsert({
-                            fullname: pendingUserData.fullname,
-                            phone: pendingUserData.phone,
-                            city: pendingUserData.city,
-                            university: pendingUserData.university,
-                            major: pendingUserData.major,
-                            password: pendingUserData.password,
-                            is_active: 0,
-                            sub_status: 0,
-                            is_expired: 0,
-                            plan_type: chosenPlan.type,
+                            ...basePayload,
                             reject_reason: null,
-                            admin_note: null,
-                            tg_chat_id: String(pendingUserData.tg_chat_id)
+                            admin_note: null
                         }, { onConflict: 'phone' });
+
+                    // حماية إضافية في حال كان الجدول لا يحتوي على أعمدة reject_reason أو admin_note
+                    if (upsertErr) {
+                        await supabaseClient
+                            .from('platform_users')
+                            .upsert(basePayload, { onConflict: 'phone' });
+                    }
 
                     await supabaseClient.rpc('notify_admin_payment', {
                         p_fullname: pendingUserData.fullname,
-                        p_phone: pendingUserData.phone,
+                        p_phone: cleanPhone,
                         p_city: pendingUserData.city,
                         p_university: pendingUserData.university,
                         p_major: pendingUserData.major,
@@ -2486,7 +2527,7 @@
                 setTimeout(async () => {
                     await loadMainProductsFeed();
                     switchActiveScreen('home-screen');
-                }, 900);
+                }, 800);
 
             } else if (status === 'reject') {
                 if (hgBox) hgBox.style.display = 'none';
@@ -2496,8 +2537,8 @@
 
                 if (rejectBox) {
                     rejectBox.style.display = 'flex';
-                    // إظهار زر واحد فقط بدقة بناءً على سبب الرفض الذي كتبه الأدمن (دون إظهار الزرين معاً إطلاقاً)
-                    const dataKeywords = ['بيانات', 'اسم', 'جامعة', 'فرع', 'تخصص', 'رقم', 'هاتف', 'معلومات', 'محافظة', 'هوية', 'حساب', 'ثلاثي', 'كلية'];
+                    // إظهار زر واحد فقط بدقة بناءً على سبب الرفض الذي كتبه الأدمن في البوت
+                    const dataKeywords = ['بيانات', 'اسم', 'جامعة', 'فرع', 'تخصص', 'رقم', 'هاتف', 'معلومات', 'محافظة', 'هوية', 'حساب', 'ثلاثي', 'كلية', 'وهمي', 'خطأ في'];
                     const isDataIssue = dataKeywords.some(kw => reasonText.includes(kw));
 
                     if (isDataIssue) {
@@ -2647,13 +2688,35 @@
             }
         }
 
+        // حماية أمنية صارمة قبل تنفيذ الحذف النهائي للإعلان
         async function commitPermanentDelete(postId) {
             if (!activeSession) return;
 
+            const savedPhone = localStorage.getItem('zone_saved_phone');
+            const savedToken = localStorage.getItem('zone_saved_token');
+            if (!savedPhone || !savedToken || savedPhone !== activeSession.phone || savedToken !== activeSession.password) {
+                showCustomToast('جلسة غير صالحة أمنياً، يرجى إعادة تسجيل الدخول');
+                logoutSession();
+                return;
+            }
+
+            const { data: verifiedUser, error: authErr } = await supabaseClient
+                .from('platform_users')
+                .select('phone')
+                .eq('phone', savedPhone)
+                .eq('password', savedToken)
+                .eq('is_active', 1)
+                .maybeSingle();
+
+            if (authErr || !verifiedUser) {
+                showCustomToast('غير مصرح لك بإجراء هذه العملية!');
+                return;
+            }
+
             const { data: deletedOk, error } = await supabaseClient.rpc('delete_own_ad', {
                 p_ad_id: postId,
-                p_phone: activeSession.phone,
-                p_pass: activeSession.password
+                p_phone: verifiedUser.phone,
+                p_pass: savedToken
             });
 
             if (!error && deletedOk) {
@@ -2884,7 +2947,7 @@
                 return;
             }
 
-            if (!activeSession || activeSession.is_expired === 1 || activeSession.sub_status === 0) {
+            if (!activeSession || Number(activeSession.is_expired) === 1 || Number(activeSession.sub_status) === 0) {
                 showCustomToast('انتهت صلاحية اشتراكك، لا يمكنك نشر إعلان');
                 return;
             }
@@ -2926,7 +2989,7 @@
         }
 
         /* =========================================================
-           8. شاشة الملف الشخصي (أنا) + نقل السوق عند تغيير المحافظة
+           8. شاشة الملف الشخصي (أنا) + توثيق أمني صارم عند تعديل البيانات
            ========================================================= */
         function navTo(screenId) {
             document.getElementById('nav-btn-home').classList.toggle('active', screenId === 'home-screen');
@@ -2958,6 +3021,16 @@
         }
 
         async function saveProfileUpdates() {
+            if (!activeSession) return;
+
+            const savedPhone = localStorage.getItem('zone_saved_phone');
+            const savedToken = localStorage.getItem('zone_saved_token');
+            if (!savedPhone || !savedToken || savedPhone !== activeSession.phone || savedToken !== activeSession.password) {
+                showCustomToast('انتهت صلاحية الجلسة، يرجى إعادة تسجيل الدخول');
+                logoutSession();
+                return;
+            }
+
             const previousCity = activeSession.city;
             const newName = document.getElementById('prof-name').value.trim();
             const newCity = document.getElementById('prof-city').value.trim();
@@ -2969,27 +3042,31 @@
                 return;
             }
 
-            activeSession.fullname = newName;
-            activeSession.city = newCity;
-            activeSession.university = newUni;
-            activeSession.major = newMajor;
-
-            await supabaseClient
+            // التحقق من صحة الجلسة والتوكن المشفر في السيرفر قبل السماح بتعديل الملف الشخصي أو الإعلانات
+            const { data: updatedRows, error: updateErr } = await supabaseClient
                 .from('platform_users')
                 .update({
-                    fullname: activeSession.fullname,
-                    city: activeSession.city,
-                    university: activeSession.university,
-                    major: activeSession.major
+                    fullname: newName,
+                    city: newCity,
+                    university: newUni,
+                    major: newMajor
                 })
-                .eq('phone', activeSession.phone)
-                .eq('password', activeSession.password);
+                .eq('phone', savedPhone)
+                .eq('password', savedToken)
+                .select('*');
+
+            if (updateErr || !updatedRows || updatedRows.length === 0) {
+                showCustomToast('فشل التحقق الأمني لتحديث البيانات!');
+                return;
+            }
+
+            activeSession = updatedRows[0];
 
             const updatedOwnerTag = `${activeSession.fullname} | ${activeSession.city} | ${activeSession.university}`;
             await supabaseClient
                 .from('items_feed')
                 .update({ owner_name: updatedOwnerTag })
-                .eq('owner_phone', activeSession.phone);
+                .eq('owner_phone', savedPhone);
 
             await supabaseClient.rpc('notify_profile_update', {
                 p_fullname: activeSession.fullname,
