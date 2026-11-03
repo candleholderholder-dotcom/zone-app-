@@ -1917,19 +1917,33 @@
             stopFastApprovalPolling();
             fastWaitApprovalWatcher = setInterval(async () => {
                 try {
-                    await supabaseClient.rpc('check_admin_callbacks');
                     if (pendingUserData && pendingUserData.phone) {
                         const { data: freshUser, error } = await supabaseClient
                             .from('platform_users')
                             .select('*')
                             .eq('phone', pendingUserData.phone)
                             .maybeSingle();
+
                         if (!error && freshUser) {
-                            await evaluateWaitingUserStatus(freshUser);
+                            // إذا وافق الأدمن (is_active أصبحت 1)
+                            if (freshUser.is_active === 1 && freshUser.sub_status === 1 && freshUser.is_expired === 0) {
+                                stopFastApprovalPolling();
+                                location.reload(); // فتح المنصة فوراً وبسرعة صاروخية
+                            }
+                            // إذا رفض الأدمن
+                            else if (freshUser.is_active === -1) {
+                                stopFastApprovalPolling();
+                                const customReason = extractAdminRejectionReason(freshUser);
+                                if (customReason.length > 0) {
+                                    await applyDecision('reject', customReason, freshUser);
+                                }
+                            }
                         }
                     }
-                } catch (e) { }
-            }, 1500);
+                } catch (e) {
+                    // تجاهل الأخطاء المؤقتة للشبكة لتبقى الحلقة تعمل بسلاسة
+                }
+            }, 1000); // يفحص القاعدة كل ثانية واحدة בדיוק
         }
 
         function stopFastApprovalPolling() {
