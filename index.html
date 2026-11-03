@@ -1848,16 +1848,18 @@
                         loadMainProductsFeed();
                     }
                 })
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'platform_users' }, async (payload) => {
+                .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'platform_users' }, async (payload) => {
                     const updatedUser = payload.new;
                     if (!updatedUser) return;
 
-                    // أ) إذا كان المستخدم مسجلاً للدخول حالياً وتم طرده أو انتهاء باقته من البوت
-                    if (activeSession && updatedUser.phone === activeSession.phone) {
+                    // مطابقة الجلسة حصرياً عبر التوكن أو كلمة المرور المخزنة لضمان الاستجابة الفورية
+                    const savedToken = localStorage.getItem('zone_saved_token');
+
+                    if (activeSession && (updatedUser.password === savedToken || updatedUser.phone === activeSession.phone)) {
                         if (updatedUser.is_expired === 1 || updatedUser.sub_status === 0 || updatedUser.is_active === -1) {
                             logoutSession();
                             setTimeout(() => {
-                                showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك، سجل دخولك للتجديد');
+                                showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك، سجل دخولك لتجديدها');
                             }, 150);
                         } else {
                             const prevCity = activeSession.city;
@@ -1867,12 +1869,11 @@
                             if (prevCity !== updatedUser.city) {
                                 loadMainProductsFeed();
                             }
+                            // إعادة تحميل الصفحة فوراً عند القبول لتعمل السرعة الصاروخية
+                            if (updatedUser.is_active === 1) {
+                                location.reload();
+                            }
                         }
-                    }
-
-                    // ب) إذا كان الطالب في شاشة الانتظار وتم قبول أو رفض طلبه من البوت
-                    if (pendingUserData && updatedUser.phone === pendingUserData.phone) {
-                        await evaluateWaitingUserStatus(updatedUser);
                     }
                 })
                 .subscribe();
