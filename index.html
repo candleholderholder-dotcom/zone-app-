@@ -449,48 +449,49 @@
             width: 100%;
         }
 
+        /* تصميم الساعة الرملية المطابق لصورة الأمبلاج - ZONE */
         .luxury-hourglass-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-bottom: 26px;
+            margin: 25px 0;
         }
 
         .luxury-hourglass {
-            width: 78px;
-            height: 78px;
+            width: 82px;
+            height: 82px;
             animation: hourglass-flip 3.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
             filter: drop-shadow(0 0 16px var(--turquoise-glow));
         }
 
         .hg-frame {
             stroke: var(--turquoise-light);
-            stroke-width: 4;
-            stroke-linecap: round;
+            stroke-width: 4.5;
+            stroke-linecap: square;
         }
 
         .hg-glass {
-            fill: rgba(0, 173, 181, 0.06);
-            stroke: rgba(255, 255, 255, 0.35);
+            fill: rgba(0, 173, 181, 0.05);
+            stroke: rgba(255, 255, 255, 0.3);
             stroke-width: 1.8;
         }
 
         .hg-sand-top {
             fill: var(--accent-turquoise);
-            transform-origin: 32px 30px;
+            transform-origin: 32px 28px;
             animation: sand-drain-top 3.2s linear infinite;
         }
 
         .hg-sand-bottom {
             fill: var(--turquoise-light);
-            transform-origin: 32px 54px;
+            transform-origin: 32px 56px;
             animation: sand-fill-bottom 3.2s linear infinite;
         }
 
         .hg-sand-stream {
             stroke: var(--turquoise-light);
-            stroke-width: 2.2;
+            stroke-width: 2.5;
             stroke-dasharray: 4 3;
             animation: stream-flow 3.2s linear infinite;
         }
@@ -2074,7 +2075,7 @@
 
             const hashedInput = await hashPasswordSecure(passInput);
 
-            // دعم الحسابات المشفرة بـ SHA-256 مع التوافق التلقائي للحسابات القديمة وترقيتها
+            // البحث عن المستخدم بغض النظر عن حالة حظره لضمان أن صاحب الحساب الشرعي يستطيع الدخول لرؤية حسابه أو تجديده
             const { data: users, error } = await supabaseClient
                 .from('platform_users')
                 .select('*')
@@ -2084,7 +2085,6 @@
             const userRecord = users && users[0];
 
             if (userRecord && !error) {
-                // إذا كانت كلمة المرور قديمة بنص صريح، يتم تشفيرها تلقائياً في قاعدة البيانات
                 if (userRecord.password === passInput && passInput !== hashedInput) {
                     await supabaseClient
                         .from('platform_users')
@@ -2093,11 +2093,16 @@
                     userRecord.password = hashedInput;
                 }
 
-                if (!userRecord.tg_chat_id) {
-                    showCustomToast('يرجى ربط حسابك بالبوت');
+                // 1. إذا كان الحساب مرفوضاً أو مطروداً (is_active === -1)
+                if (userRecord.is_active === -1) {
+                    pendingUserData = userRecord;
+                    switchActiveScreen('wait-approval-screen');
+                    let customReason = userRecord.reject_reason || userRecord.rejection_reason || userRecord.admin_note || 'يرجى مراجعة الإدارة';
+                    await applyDecision('reject', customReason, userRecord);
                     return;
                 }
 
+                // 2. إذا كان الاشتراك منتهياً (is_expired === 1 أو sub_status === 0)
                 if (userRecord.is_expired === 1 || userRecord.sub_status === 0) {
                     pendingUserData = {
                         fullname: userRecord.fullname,
@@ -2110,18 +2115,19 @@
                     };
                     switchActiveScreen('subs-screen');
                     setTimeout(() => {
-                        showCustomToast('يرجى تجديد باقة الاشتراك');
+                        showCustomToast('يرجى تجديد باقة الاشتراك الخاصة بك');
                     }, 150);
                     return;
                 }
 
+                // 3. دخول طبيعي وسلس للمستخدم الفعال
                 activeSession = userRecord;
                 localStorage.setItem('zone_saved_phone', userRecord.phone);
                 updateHeaderMarketBadge();
                 await loadMainProductsFeed();
                 switchActiveScreen('home-screen');
             } else {
-                showCustomToast('البيانات المدخلة غير صحيحة أو أن الحساب قيد المراجعة');
+                showCustomToast('رقم الهاتف أو كلمة المرور غير صحيحة');
             }
         }
 
@@ -2343,7 +2349,6 @@
                     headerTitle.innerHTML = `<span style="color: var(--turquoise-light);"><i class="fa-solid fa-gift"></i> تم تفعيل حسابك مجاناً!</span>`;
                 }
 
-                // انتقال سريع وسلس للواجهة الرئيسية
                 setTimeout(async () => {
                     await loadMainProductsFeed();
                     switchActiveScreen('home-screen');
@@ -2357,33 +2362,24 @@
 
                 if (rejectBox) {
                     rejectBox.style.display = 'flex';
-                    // تحديد ذكي لنوع الزر بناءً على الكلمات المفتاحية في سبب الرفض الذي كتبه الأدمن
-                    const dataKeywords = ['بيانات', 'اسم', 'جامعة', 'فرع', 'تخصص', 'رقم', 'هاتف', 'معلومات', 'محافظة', 'هوية'];
+                    const textLower = reasonText.toLowerCase();
+                    const dataKeywords = ['بيانات', 'اسم', 'جامعة', 'فرع', 'تخصص', 'رقم', 'معلومات', 'محافظة', 'هوية'];
                     const paymentKeywords = ['دفع', 'تحويل', 'شام', 'كاش', 'اشعار', 'إشعار', 'مبلغ', 'رصيد', 'باقة', 'اشتراك', 'وصل', 'صورة'];
 
-                    const isDataIssue = dataKeywords.some(kw => reasonText.includes(kw));
-                    const isPaymentIssue = paymentKeywords.some(kw => reasonText.includes(kw));
+                    const isDataIssue = dataKeywords.some(kw => textLower.includes(kw));
+                    const isPaymentIssue = paymentKeywords.some(kw => textLower.includes(kw));
 
+                    // قاعدة صارمة: إظهار زر واحد فقط لا غير حسب نوع السبب
                     if (isDataIssue && !isPaymentIssue) {
                         rejectBox.innerHTML = `
                             <button class="btn-action-primary" onclick="returnToReviewData()">
                                 <i class="fa-solid fa-user-pen"></i> العودة لمراجعة البيانات
                             </button>
                         `;
-                    } else if (isPaymentIssue && !isDataIssue) {
-                        rejectBox.innerHTML = `
-                            <button class="btn-action-primary" onclick="returnToReviewPayment()">
-                                <i class="fa-solid fa-receipt"></i> العودة لمراجعة الدفع
-                            </button>
-                        `;
                     } else {
-                        // إذا كان السبب شاملاً أو غير محدد بكلمة مفتاحية، يظهر الزران معاً لراحة الطالب
                         rejectBox.innerHTML = `
                             <button class="btn-action-primary" onclick="returnToReviewPayment()">
                                 <i class="fa-solid fa-receipt"></i> العودة لمراجعة الدفع
-                            </button>
-                            <button class="btn-tg-connect" style="margin-bottom: 0;" onclick="returnToReviewData()">
-                                <i class="fa-solid fa-user-pen"></i> العودة لمراجعة البيانات
                             </button>
                         `;
                     }
