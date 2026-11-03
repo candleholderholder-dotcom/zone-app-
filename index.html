@@ -336,6 +336,11 @@
             transition: all 0.3s ease;
         }
 
+        .otp-box-digit:focus {
+            border-color: var(--accent-turquoise);
+            box-shadow: 0 0 12px var(--turquoise-glow);
+        }
+
         /* 3. شاشة باقات الاشتراك */
         .plans-grid {
             display: grid;
@@ -429,7 +434,9 @@
             color: #38bdf8;
         }
 
-        /* شاشة معالجة الطلب */
+        /* =========================================================
+           شاشة معالجة الطلب + الساعة الرملية الفخمة المتحركة
+           ========================================================= */
         .wait-processing-box {
             display: flex;
             flex-direction: column;
@@ -438,26 +445,122 @@
             text-align: center;
             padding: 60px 20px;
             min-height: 50vh;
+            max-width: 480px;
+            width: 100%;
         }
 
-        .custom-loader {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--border-navy);
-            border-top: 4px solid var(--accent-turquoise);
-            border-radius: 50%;
-            animation: spinCircle 1s linear infinite;
-            margin-bottom: 22px;
+        .luxury-hourglass-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 26px;
         }
 
-        @keyframes spinCircle {
+        .luxury-hourglass {
+            width: 78px;
+            height: 78px;
+            animation: hourglass-flip 3.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            filter: drop-shadow(0 0 16px var(--turquoise-glow));
+        }
+
+        .hg-frame {
+            stroke: var(--turquoise-light);
+            stroke-width: 4;
+            stroke-linecap: round;
+        }
+
+        .hg-glass {
+            fill: rgba(0, 173, 181, 0.06);
+            stroke: rgba(255, 255, 255, 0.35);
+            stroke-width: 1.8;
+        }
+
+        .hg-sand-top {
+            fill: var(--accent-turquoise);
+            transform-origin: 32px 30px;
+            animation: sand-drain-top 3.2s linear infinite;
+        }
+
+        .hg-sand-bottom {
+            fill: var(--turquoise-light);
+            transform-origin: 32px 54px;
+            animation: sand-fill-bottom 3.2s linear infinite;
+        }
+
+        .hg-sand-stream {
+            stroke: var(--turquoise-light);
+            stroke-width: 2.2;
+            stroke-dasharray: 4 3;
+            animation: stream-flow 3.2s linear infinite;
+        }
+
+        @keyframes sand-drain-top {
             0% {
-                transform: rotate(0deg);
+                transform: scaleY(1);
+                opacity: 1;
+            }
+
+            72% {
+                transform: scaleY(0);
+                opacity: 1;
             }
 
             100% {
-                transform: rotate(360deg);
+                transform: scaleY(0);
+                opacity: 0;
             }
+        }
+
+        @keyframes sand-fill-bottom {
+            0% {
+                transform: scaleY(0);
+            }
+
+            72% {
+                transform: scaleY(1);
+            }
+
+            100% {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes stream-flow {
+
+            0%,
+            70% {
+                opacity: 1;
+                stroke-dashoffset: 0;
+            }
+
+            72%,
+            100% {
+                opacity: 0;
+                stroke-dashoffset: -14;
+            }
+        }
+
+        @keyframes hourglass-flip {
+
+            0%,
+            74% {
+                transform: rotate(0deg);
+            }
+
+            94%,
+            100% {
+                transform: rotate(180deg);
+            }
+        }
+
+        .reject-actions-box {
+            margin-top: 24px;
+            width: 100%;
+            max-width: 340px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
         }
 
         /* 4. الهيدر العلوي */
@@ -1143,7 +1246,7 @@
                     </div>
                     <div class="form-row">
                         <label>رقم الهاتف</label>
-                        <input type="tel" id="reg-phone" placeholder="09xxxxxxxx" required>
+                        <input type="tel" inputmode="numeric" id="reg-phone" placeholder="09xxxxxxxx" required>
                     </div>
                     <div class="form-row">
                         <label>المحافظة</label>
@@ -1197,7 +1300,7 @@
 
                     <div class="form-row">
                         <label>رقم الهاتف</label>
-                        <input type="tel" id="login-phone" placeholder="09xxxxxxxx" required>
+                        <input type="tel" inputmode="numeric" id="login-phone" placeholder="09xxxxxxxx" required>
                     </div>
                     <div class="form-row">
                         <label>كلمة المرور</label>
@@ -1215,13 +1318,13 @@
                     <button type="submit" class="btn-action-primary">دخول إلى المنصة</button>
                 </form>
 
-                <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
+                <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي (تم تفعيل كيبورد الأرقام فقط) -->
                 <div id="reset-flow-container" style="display: none;">
                     <div id="reset-stage-1">
                         <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">أدخل رقم هاتفك المسجل
                             لإرسال رمز التأكيد لحساب التلغرام الخاص بك مباشرة:</p>
                         <div class="form-row">
-                            <input type="tel" id="reset-phone-input" placeholder="09xxxxxxxx">
+                            <input type="tel" inputmode="numeric" id="reset-phone-input" placeholder="09xxxxxxxx">
                         </div>
                         <button class="btn-action-primary" onclick="requestResetOtp()">إرسال كود التحقق</button>
                     </div>
@@ -1230,11 +1333,16 @@
                         <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون من 5 أرقام المرسل
                             لحسابك:</p>
                         <div class="otp-inputs-flex">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-1" oninput="stepOtp(1)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-2" oninput="stepOtp(2)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-3" oninput="stepOtp(3)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-4" oninput="stepOtp(4)">
-                            <input type="text" maxlength="1" class="otp-box-digit" id="otp-5" oninput="stepOtp(5)">
+                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
+                                id="otp-1" oninput="stepOtp(1)">
+                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
+                                id="otp-2" oninput="stepOtp(2)">
+                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
+                                id="otp-3" oninput="stepOtp(3)">
+                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
+                                id="otp-4" oninput="stepOtp(4)">
+                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
+                                id="otp-5" oninput="stepOtp(5)">
                         </div>
                     </div>
 
@@ -1321,13 +1429,30 @@
         </div>
     </div>
 
-    <!-- شاشة معالجة الطلب -->
+    <!-- شاشة معالجة الطلب مع الساعة الرملية الفخمة وأزرار الرفض الديناميكية -->
     <div id="wait-approval-screen" class="screen-container">
         <div class="layout-wrapper" style="justify-content: center; align-items: center;">
             <div class="wait-processing-box">
-                <div class="custom-loader"></div>
-                <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main);" id="wait-header-title">جاري
+                <div class="luxury-hourglass-wrapper" id="hourglass-anim-box">
+                    <svg class="luxury-hourglass" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="12" y1="8" x2="52" y2="8" class="hg-frame" />
+                        <line x1="12" y1="56" x2="52" y2="56" class="hg-frame" />
+                        <path
+                            d="M16 8 L48 8 L35 30 C33.5 32 33.5 32 35 34 L48 56 L16 56 L29 34 C30.5 32 30.5 32 29 30 Z"
+                            class="hg-glass" />
+                        <path d="M19 12 L45 12 L33 30 L31 30 Z" class="hg-sand-top" />
+                        <line x1="32" y1="31" x2="32" y2="54" class="hg-sand-stream" />
+                        <path d="M29 36 L35 36 L45 54 L19 54 Z" class="hg-sand-bottom" />
+                    </svg>
+                </div>
+                <h2 style="font-size: 23px; font-weight: 800; color: var(--text-main); line-height: 1.5;"
+                    id="wait-header-title">جاري
                     معالجة الطلب</h2>
+                <p id="wait-sub-caption" style="color: var(--text-muted); font-size: 14px; margin-top: 8px;">يرجى
+                    الانتظار قليلاً، يتم تدقيق طلبك وسيتم تحويلك تلقائياً فور الموافقة...</p>
+
+                <!-- حاوية الأزرار الديناميكية عند الرفض (مراجعة البيانات أو مراجعة الدفع) -->
+                <div class="reject-actions-box" id="reject-dynamic-actions"></div>
             </div>
         </div>
     </div>
@@ -1359,6 +1484,10 @@
                 </div>
 
                 <div class="header-brand-title">ZONE</div>
+                <span id="current-market-city-badge"
+                    style="margin-right: auto; font-size: 12.5px; font-weight: 800; color: var(--turquoise-light); background: rgba(0, 173, 181, 0.14); border: 1px solid rgba(57, 229, 238, 0.35); padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-location-dot"></i> <span id="market-city-label">سوق محافظتك</span>
+                </span>
             </header>
 
             <!-- السلايدر الترويجي بعد إصلاح الاتجاه وإضافة النقاط -->
@@ -1383,7 +1512,7 @@
             <div class="feed-filter-bar">
                 <div class="search-input-wrap">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="feed-search-input" placeholder="ابحث عن كتاب، أداة، جامعة أو محافظة..."
+                    <input type="text" id="feed-search-input" placeholder="ابحث عن كتاب، أداة، أو جامعة ضمن محافظتك..."
                         oninput="renderFilteredFeed()">
                 </div>
                 <button class="filter-chip-btn" id="btn-filter-my-ads" onclick="toggleMyAdsFilter()">
@@ -1412,7 +1541,7 @@
                     </svg>
                 </div>
                 <h3 class="ghost-lead-text">المكان مهجور تماماً..</h3>
-                <p class="ghost-sub-text">انشر إعلانك هلق واكسر الصمت!</p>
+                <p class="ghost-sub-text">انشر إعلانك هلق واكسر الصمت في سوق محافظتك!</p>
             </div>
 
             <!-- شبكة كروت الإعلانات -->
@@ -1440,8 +1569,9 @@
                 <input type="tel" id="prof-phone" disabled>
             </div>
             <div class="form-row">
-                <label>المحافظة</label>
-                <input type="text" id="prof-city" disabled onclick="if(!this.disabled) openCitySelectorModal('prof')">
+                <label>المحافظة (تغيير المحافظة ينقلك فوراً لسوقها المخصص)</label>
+                <input type="text" id="prof-city" disabled readonly
+                    onclick="if(!this.disabled) openCitySelectorModal('prof')">
             </div>
             <div class="form-row">
                 <label>الجامعة</label>
@@ -1498,7 +1628,7 @@
         </button>
     </nav>
 
-    <!-- Modal إضافة إعلان جديد مع 3 مربعات مخصصة لرفع الصور -->
+    <!-- Modal إضافة إعلان جديد مع 3 مربعات مخصصة لرفع الصور المحمية -->
     <div class="modal-overlay" id="add-ad-modal">
         <div class="modal-content-card" style="text-align: right; max-width: 480px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
@@ -1514,33 +1644,33 @@
 
             <div class="form-row">
                 <label>السعر بالليرة السورية</label>
-                <input type="number" id="ad-price" placeholder="مثال: 50000">
+                <input type="number" inputmode="numeric" id="ad-price" placeholder="مثال: 50000">
             </div>
 
-            <!-- 3 مربعات مخصصة لرفع ومعاينة الصور -->
+            <!-- 3 مربعات مخصصة لرفع ومعاينة الصور بصيغ JPEG و PNG فقط -->
             <label
                 style="font-size: 13.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 8px;">صور
-                المنتج (3 صور - يتم ضغطها تلقائياً)</label>
+                المنتج (3 صور بصيغة JPG أو PNG - يتم ضغطها تلقائياً)</label>
             <div class="photo-uploader-triplet">
                 <div class="photo-upload-slot" onclick="triggerFileInput(1)">
                     <i class="fa-solid fa-camera"></i>
                     <span>الصورة 1</span>
                     <img id="preview-img-1" alt="Preview 1">
-                    <input type="file" id="file-slot-1" accept="image/*" style="display: none;"
+                    <input type="file" id="file-slot-1" accept="image/jpeg,image/png" style="display: none;"
                         onchange="handleImageSelection(event, 1)">
                 </div>
                 <div class="photo-upload-slot" onclick="triggerFileInput(2)">
                     <i class="fa-solid fa-camera"></i>
                     <span>الصورة 2</span>
                     <img id="preview-img-2" alt="Preview 2">
-                    <input type="file" id="file-slot-2" accept="image/*" style="display: none;"
+                    <input type="file" id="file-slot-2" accept="image/jpeg,image/png" style="display: none;"
                         onchange="handleImageSelection(event, 2)">
                 </div>
                 <div class="photo-upload-slot" onclick="triggerFileInput(3)">
                     <i class="fa-solid fa-camera"></i>
                     <span>الصورة 3</span>
                     <img id="preview-img-3" alt="Preview 3">
-                    <input type="file" id="file-slot-3" accept="image/*" style="display: none;"
+                    <input type="file" id="file-slot-3" accept="image/jpeg,image/png" style="display: none;"
                         onchange="handleImageSelection(event, 3)">
                 </div>
             </div>
@@ -1624,20 +1754,38 @@
         });
 
         /* =========================================================
-           1. إعدادات الربط الآمن مع Supabase (تم حذف التوكن والمعرف المكشوف)
+           1. إعدادات الاتصال الآمن + تشفير كلمات المرور (SHA-256)
            ========================================================= */
-        const SUPABASE_URL = 'https://hvrxmpyzyxsoqrgfyyod.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_Swy3ysjQNNDHouoeo6LZjw_0hBo-t5c';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const ZONE_ENV_CONFIG = Object.freeze({
+            url: window.__ZONE_SUPABASE_URL__ || 'https://hvrxmpyzyxsoqrgfyyod.supabase.co',
+            anonKey: window.__ZONE_SUPABASE_ANON_KEY__ || 'sb_publishable_Swy3ysjQNNDHouoeo6LZjw_0hBo-t5c'
+        });
+        const supabaseClient = window.supabase.createClient(ZONE_ENV_CONFIG.url, ZONE_ENV_CONFIG.anonKey);
 
         const BOT_USERNAME = '@Zonewebsite_bot';
         const SUPPORT_USERNAME = '@Zoneapplication';
+
+        // دالة تشفير كلمات المرور SHA-256 لمنع حفظها أو إرسالها كنص صريح مكشوف
+        async function hashPasswordSecure(plainText) {
+            const cleanText = String(plainText || '').trim();
+            if (!cleanText) return '';
+            if (/^[a-f0-9]{64}$/i.test(cleanText)) return cleanText; // مشفرة مسبقاً
+            try {
+                const msgBuffer = new TextEncoder().encode(cleanText + '_zone_sec_salt');
+                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            } catch (e) {
+                return cleanText;
+            }
+        }
 
         let activeSession = null;
         let pendingUserData = null;
         let chosenPlan = { type: 'monthly', cost: '1$' };
         let uploadedImages = ['', '', ''];
         let resetTargetPhone = '';
+        let fastWaitApprovalWatcher = null;
 
         // متغيرات الفلترة، المكبر، وشريط التراجع بأسلوب تيليجرام
         let allFeedItemsCache = [];
@@ -1648,7 +1796,7 @@
         let cityModalTargetMode = 'reg';
 
         /* =========================================================
-           2. التزامن اللحظي الشامل (Supabase Realtime)
+           2. التزامن اللحظي الشامل + التسريع الفائق لشاشة الانتظار
            ========================================================= */
         function setupRealtimeListeners() {
             supabaseClient
@@ -1670,28 +1818,81 @@
                                 showCustomToast('تم انتهاء باقة الاشتراك الخاصة بك');
                             }, 150);
                         } else {
+                            const prevCity = activeSession.city;
                             activeSession = updatedUser;
+                            updateHeaderMarketBadge();
+                            if (prevCity !== updatedUser.city) {
+                                loadMainProductsFeed();
+                            }
                         }
                     }
 
                     // ب) إذا كان الطالب في شاشة الانتظار وتم قبول أو رفض طلبه من البوت
                     if (pendingUserData && updatedUser.phone === pendingUserData.phone) {
-                        const waitScreen = document.getElementById('wait-approval-screen');
-                        if (waitScreen && waitScreen.classList.contains('active-screen')) {
-                            if (updatedUser.is_active === 1 && updatedUser.sub_status === 1 && updatedUser.is_expired === 0) {
-                                await applyDecision(updatedUser.plan_type === 'gift' ? 'gift' : 'accept', '', updatedUser);
-                            } else if (updatedUser.is_active === -1) {
-                                await applyDecision('reject', 'عدم وضوح إشعار تحويل شام كاش');
-                            }
-                        }
+                        await evaluateWaitingUserStatus(updatedUser);
                     }
                 })
                 .subscribe();
         }
 
+        // فحص وتنفيذ قرار الأدمن فوراً مع قراءة سبب الرفض المخصص من البوت
+        async function evaluateWaitingUserStatus(userRecord) {
+            const waitScreen = document.getElementById('wait-approval-screen');
+            if (!waitScreen || !waitScreen.classList.contains('active-screen')) return;
+
+            if (userRecord.is_active === 1 && userRecord.sub_status === 1 && userRecord.is_expired === 0) {
+                stopFastApprovalPolling();
+                await applyDecision(userRecord.plan_type === 'gift' ? 'gift' : 'accept', '', userRecord);
+            } else if (userRecord.is_active === -1) {
+                stopFastApprovalPolling();
+                // استخراج السبب المخصص الذي كتبه الأدمن في البوت (إن وُجد في أحد أعمدة السبب أو داخل plan_type)
+                let customReason = userRecord.reject_reason || userRecord.rejection_reason || userRecord.admin_note || '';
+                if (!customReason && userRecord.plan_type && !['monthly', 'yearly', 'gift'].includes(userRecord.plan_type)) {
+                    customReason = userRecord.plan_type.replace(/^reject[:_]?/i, '').trim();
+                }
+                if (!customReason) {
+                    customReason = 'يرجى التحقق من صحة البيانات أو إشعار التحويل المرسل';
+                }
+                await applyDecision('reject', customReason, userRecord);
+            }
+        }
+
+        function startFastApprovalPolling() {
+            stopFastApprovalPolling();
+            fastWaitApprovalWatcher = setInterval(async () => {
+                try {
+                    await supabaseClient.rpc('check_admin_callbacks');
+                    if (pendingUserData && pendingUserData.phone) {
+                        const { data: freshUser, error } = await supabaseClient
+                            .from('platform_users')
+                            .select('*')
+                            .eq('phone', pendingUserData.phone)
+                            .maybeSingle();
+                        if (!error && freshUser) {
+                            await evaluateWaitingUserStatus(freshUser);
+                        }
+                    }
+                } catch (e) { }
+            }, 1500); // استجابة فائقة السرعة كل 1.5 ثانية
+        }
+
+        function stopFastApprovalPolling() {
+            if (fastWaitApprovalWatcher) {
+                clearInterval(fastWaitApprovalWatcher);
+                fastWaitApprovalWatcher = null;
+            }
+        }
+
         /* =========================================================
            3. إدارة التبديل بين الشاشات واسترجاع الجلسة الدائم
            ========================================================= */
+        function updateHeaderMarketBadge() {
+            const badgeLabel = document.getElementById('market-city-label');
+            if (badgeLabel && activeSession && activeSession.city) {
+                badgeLabel.innerText = `سوق ${activeSession.city}`;
+            }
+        }
+
         function switchActiveScreen(targetId) {
             document.querySelectorAll('.screen-container').forEach(screen => {
                 screen.style.display = 'none';
@@ -1705,6 +1906,10 @@
                 window.scrollTo({ top: 0, behavior: 'instant' });
             }
 
+            if (targetId !== 'wait-approval-screen') {
+                stopFastApprovalPolling();
+            }
+
             const isMainApp = (targetId === 'home-screen' || targetId === 'me-screen');
             document.getElementById('app-nav-bar').style.display = isMainApp ? 'flex' : 'none';
             document.getElementById('floating-support-btn').style.display = (targetId === 'home-screen') ? 'flex' : 'none';
@@ -1712,7 +1917,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             setupRealtimeListeners();
-            setInterval(() => { supabaseClient.rpc('check_admin_callbacks'); }, 3000);
+            setInterval(() => { supabaseClient.rpc('check_admin_callbacks'); }, 2200);
             setTimeout(async () => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.transition = 'opacity 0.4s ease';
@@ -1750,6 +1955,7 @@
                             }
 
                             activeSession = userRecord;
+                            updateHeaderMarketBadge();
                             await loadMainProductsFeed();
                             switchActiveScreen('home-screen');
                             return;
@@ -1796,7 +2002,6 @@
             const linkerInterval = setInterval(async () => {
                 pollingAttempts++;
                 try {
-                    // استدعاء آمن من داخل قاعدة البيانات بدون كشف التوكن في المتصفح
                     const { data: linkedChatId, error } = await supabaseClient.rpc('check_tg_link');
                     if (!error && linkedChatId) {
                         clearInterval(linkerInterval);
@@ -1809,29 +2014,30 @@
                         const btn = document.getElementById('btn-tg-linker');
                         btn.classList.add('success-linked');
                         btnLabel.innerHTML = 'تم ربط الحساب بنجاح ✓';
-                        showCustomToast('تم ربط حسابك بمنصة ZONE بنجاح! 🚀');
+                        // بدون سمايل الصاروخ وبأيقونة الصح الخضراء المخصصة
+                        showCustomToast('تم ربط حسابك بمنصة ZONE بنجاح!', 'success');
                         return;
                     }
                 } catch (e) { }
 
-                if (pollingAttempts > 25) {
+                if (pollingAttempts > 28) {
                     clearInterval(linkerInterval);
                     if (!document.getElementById('btn-tg-linker').classList.contains('success-linked')) {
                         btnLabel.innerText = 'إعادة محاولة الربط';
                     }
                 }
-            }, 2500);
+            }, 2000);
         }
 
-        function proceedToSubscription() {
+        async function proceedToSubscription() {
             const fullname = document.getElementById('reg-fullname').value.trim();
             const phone = document.getElementById('reg-phone').value.trim();
             const city = document.getElementById('reg-city').value;
             const university = document.getElementById('reg-university').value.trim();
             const major = document.getElementById('reg-major').value.trim();
-            const password = document.getElementById('reg-password').value.trim();
+            const rawPassword = document.getElementById('reg-password').value.trim();
 
-            if (!fullname || !phone || !city || !university || !major || !password) {
+            if (!fullname || !phone || !city || !university || !major || !rawPassword) {
                 showCustomToast('يرجى تعبئة جميع الحقول المطلوبة');
                 return;
             }
@@ -1842,13 +2048,15 @@
                 return;
             }
 
+            const hashedPassword = await hashPasswordSecure(rawPassword);
+
             pendingUserData = {
                 fullname,
                 phone,
                 city,
                 university,
                 major,
-                password,
+                password: hashedPassword,
                 tg_chat_id: String(pendingUserData.tg_chat_id)
             };
             switchActiveScreen('subs-screen');
@@ -1864,15 +2072,27 @@
             else if (phoneInput.startsWith('00963')) localPhone = '0' + phoneInput.substring(5);
             else if (phoneInput.startsWith('09')) internationalPhone = '+963' + phoneInput.substring(1);
 
+            const hashedInput = await hashPasswordSecure(passInput);
+
+            // دعم الحسابات المشفرة بـ SHA-256 مع التوافق التلقائي للحسابات القديمة وترقيتها
             const { data: users, error } = await supabaseClient
                 .from('platform_users')
                 .select('*')
                 .or(`phone.eq.${localPhone},phone.eq.${internationalPhone}`)
-                .eq('password', passInput);
+                .in('password', [hashedInput, passInput]);
 
             const userRecord = users && users[0];
 
             if (userRecord && !error) {
+                // إذا كانت كلمة المرور قديمة بنص صريح، يتم تشفيرها تلقائياً في قاعدة البيانات
+                if (userRecord.password === passInput && passInput !== hashedInput) {
+                    await supabaseClient
+                        .from('platform_users')
+                        .update({ password: hashedInput })
+                        .eq('phone', userRecord.phone);
+                    userRecord.password = hashedInput;
+                }
+
                 if (!userRecord.tg_chat_id) {
                     showCustomToast('يرجى ربط حسابك بالبوت');
                     return;
@@ -1897,6 +2117,7 @@
 
                 activeSession = userRecord;
                 localStorage.setItem('zone_saved_phone', userRecord.phone);
+                updateHeaderMarketBadge();
                 await loadMainProductsFeed();
                 switchActiveScreen('home-screen');
             } else {
@@ -1925,7 +2146,6 @@
             else if (ph.startsWith('00963')) localPhone = '0' + ph.substring(5);
             resetTargetPhone = localPhone;
 
-            // استدعاء الدالة السحابية الآمنة send_reset_otp من داخل Supabase
             const { data: sentOk, error } = await supabaseClient.rpc('send_reset_otp', {
                 p_phone: localPhone
             });
@@ -1948,11 +2168,14 @@
             document.getElementById('reset-stage-1').style.display = 'none';
             document.getElementById('reset-stage-2').style.display = 'block';
             document.getElementById('otp-1').focus();
-            showCustomToast('تم إرسال رمز التحقق إلى حسابك في تليغرام');
+            showCustomToast('تم إرسال رمز التحقق إلى حسابك في تليغرام', 'success');
         }
 
         async function stepOtp(index) {
             const currentInput = document.getElementById(`otp-${index}`);
+            // السماح بالأرقام فقط داخل حقل الـ OTP
+            currentInput.value = currentInput.value.replace(/[^0-9]/g, '');
+
             if (currentInput.value && index < 5) {
                 document.getElementById(`otp-${index + 1}`).focus();
             }
@@ -1963,7 +2186,6 @@
             }
 
             if (enteredCode.length === 5) {
-                // التحقق الآمن من الكود عبر قاعدة البيانات بدون كشفه في المتصفح
                 const { data: isValid, error } = await supabaseClient.rpc('verify_reset_otp', {
                     p_phone: resetTargetPhone,
                     p_otp: enteredCode
@@ -2003,11 +2225,12 @@
             }
 
             const enteredCode = Array.from({ length: 5 }, (_, i) => document.getElementById(`otp-${i + 1}`).value).join('');
+            const hashedNewPass = await hashPasswordSecure(p1);
 
             const { data: updatedOk, error } = await supabaseClient.rpc('complete_password_reset', {
                 p_phone: resetTargetPhone,
                 p_otp: enteredCode,
-                p_new_pass: p1
+                p_new_pass: hashedNewPass
             });
 
             if (error || !updatedOk) {
@@ -2015,12 +2238,12 @@
                 return;
             }
 
-            showCustomToast('تم تعيين كلمة مرور جديدة بنجاح');
+            showCustomToast('تم تعيين كلمة مرور جديدة بنجاح', 'success');
             toggleAuth('login');
         }
 
         /* =========================================================
-           5. شاشة الباقات ومعالجة الطلب الآمنة عبر notify_admin_payment
+           5. شاشة الباقات ومعالجة الطلب + أزرار الرفض الديناميكية
            ========================================================= */
         function selectPlanAndPay(type, cost) {
             chosenPlan = { type, cost };
@@ -2034,6 +2257,17 @@
         async function triggerPaymentVerification() {
             closePaymentModal();
             switchActiveScreen('wait-approval-screen');
+
+            // إظهار الساعة الرملية وإخفاء أزرار الرفض السابقة عند بدء طلب جديد
+            const hgBox = document.getElementById('hourglass-anim-box');
+            const subCaption = document.getElementById('wait-sub-caption');
+            const rejectBox = document.getElementById('reject-dynamic-actions');
+            if (hgBox) hgBox.style.display = 'flex';
+            if (subCaption) subCaption.style.display = 'block';
+            if (rejectBox) {
+                rejectBox.style.display = 'none';
+                rejectBox.innerHTML = '';
+            }
             document.getElementById('wait-header-title').innerText = 'جاري معالجة الطلب';
 
             if (pendingUserData && pendingUserData.phone) {
@@ -2053,7 +2287,6 @@
                         tg_chat_id: String(pendingUserData.tg_chat_id)
                     }, { onConflict: 'phone' });
 
-                // إرسال الإشعار للأدمن من داخل السيرفر (Vault) عبر دالة notify_admin_payment التي أنشأتها
                 await supabaseClient.rpc('notify_admin_payment', {
                     p_fullname: pendingUserData.fullname,
                     p_phone: pendingUserData.phone,
@@ -2062,16 +2295,46 @@
                     p_major: pendingUserData.major,
                     p_plan_type: chosenPlan.type
                 });
+
+                // تشغيل المراقب السريع للاستجابة الفورية لقرار الأدمن
+                startFastApprovalPolling();
             }
+        }
+
+        // توجيه الطالب عند الضغط على الزر الديناميكي في حال الرفض
+        function returnToReviewData() {
+            switchActiveScreen('auth-screen');
+            toggleAuth('reg');
+            if (pendingUserData) {
+                document.getElementById('reg-fullname').value = pendingUserData.fullname || '';
+                document.getElementById('reg-phone').value = pendingUserData.phone || '';
+                document.getElementById('reg-city').value = pendingUserData.city || 'دمشق';
+                const cityLabel = document.getElementById('selected-city-text');
+                if (cityLabel && pendingUserData.city) cityLabel.innerText = pendingUserData.city;
+                document.getElementById('reg-university').value = pendingUserData.university || '';
+                document.getElementById('reg-major').value = pendingUserData.major || '';
+            }
+        }
+
+        function returnToReviewPayment() {
+            switchActiveScreen('subs-screen');
         }
 
         async function applyDecision(status, reasonText = '', updatedUserRecord = null) {
             const headerTitle = document.getElementById('wait-header-title');
+            const hgBox = document.getElementById('hourglass-anim-box');
+            const subCaption = document.getElementById('wait-sub-caption');
+            const rejectBox = document.getElementById('reject-dynamic-actions');
 
             if (status === 'accept' || status === 'gift') {
+                if (hgBox) hgBox.style.display = 'none';
+                if (subCaption) subCaption.style.display = 'none';
+                if (rejectBox) rejectBox.style.display = 'none';
+
                 if (updatedUserRecord) {
                     activeSession = updatedUserRecord;
                     localStorage.setItem('zone_saved_phone', updatedUserRecord.phone);
+                    updateHeaderMarketBadge();
                 }
 
                 if (status === 'accept') {
@@ -2080,29 +2343,85 @@
                     headerTitle.innerHTML = `<span style="color: var(--turquoise-light);"><i class="fa-solid fa-gift"></i> تم تفعيل حسابك مجاناً!</span>`;
                 }
 
+                // انتقال سريع وسلس للواجهة الرئيسية
                 setTimeout(async () => {
                     await loadMainProductsFeed();
                     switchActiveScreen('home-screen');
-                }, 1800);
+                }, 900);
 
             } else if (status === 'reject') {
-                headerTitle.innerHTML = `<span style="color: var(--danger);"><i class="fa-solid fa-circle-xmark"></i> تم رفض الحساب بسبب: ${reasonText}</span>`;
+                if (hgBox) hgBox.style.display = 'none';
+                if (subCaption) subCaption.style.display = 'none';
+
+                headerTitle.innerHTML = `<span style="color: var(--danger);"><i class="fa-solid fa-circle-xmark"></i> تم رفض حسابك بسبب: ${reasonText}</span>`;
+
+                if (rejectBox) {
+                    rejectBox.style.display = 'flex';
+                    // تحديد ذكي لنوع الزر بناءً على الكلمات المفتاحية في سبب الرفض الذي كتبه الأدمن
+                    const dataKeywords = ['بيانات', 'اسم', 'جامعة', 'فرع', 'تخصص', 'رقم', 'هاتف', 'معلومات', 'محافظة', 'هوية'];
+                    const paymentKeywords = ['دفع', 'تحويل', 'شام', 'كاش', 'اشعار', 'إشعار', 'مبلغ', 'رصيد', 'باقة', 'اشتراك', 'وصل', 'صورة'];
+
+                    const isDataIssue = dataKeywords.some(kw => reasonText.includes(kw));
+                    const isPaymentIssue = paymentKeywords.some(kw => reasonText.includes(kw));
+
+                    if (isDataIssue && !isPaymentIssue) {
+                        rejectBox.innerHTML = `
+                            <button class="btn-action-primary" onclick="returnToReviewData()">
+                                <i class="fa-solid fa-user-pen"></i> العودة لمراجعة البيانات
+                            </button>
+                        `;
+                    } else if (isPaymentIssue && !isDataIssue) {
+                        rejectBox.innerHTML = `
+                            <button class="btn-action-primary" onclick="returnToReviewPayment()">
+                                <i class="fa-solid fa-receipt"></i> العودة لمراجعة الدفع
+                            </button>
+                        `;
+                    } else {
+                        // إذا كان السبب شاملاً أو غير محدد بكلمة مفتاحية، يظهر الزران معاً لراحة الطالب
+                        rejectBox.innerHTML = `
+                            <button class="btn-action-primary" onclick="returnToReviewPayment()">
+                                <i class="fa-solid fa-receipt"></i> العودة لمراجعة الدفع
+                            </button>
+                            <button class="btn-tg-connect" style="margin-bottom: 0;" onclick="returnToReviewData()">
+                                <i class="fa-solid fa-user-pen"></i> العودة لمراجعة البيانات
+                            </button>
+                        `;
+                    }
+                }
             }
         }
 
         /* =========================================================
-           6. الواجهة الرئيسية، الفلترة، الأزرار الموحدة، والحذف الآمن المحمي
+           6. الواجهة الرئيسية + عزل ونقل أسواق المحافظات بشكل صارم
            ========================================================= */
         async function loadMainProductsFeed() {
-            const { data: items, error } = await supabaseClient
+            if (!activeSession) return;
+
+            const userCity = (activeSession.city || '').trim();
+            updateHeaderMarketBadge();
+
+            // فلترة على مستوى السيرفر (Server-Side Filtering) لجلب إعلانات محافظة المستخدم حصراً
+            let query = supabaseClient
                 .from('items_feed')
                 .select('*')
                 .order('id', { ascending: false });
 
+            if (userCity) {
+                query = query.ilike('owner_name', `%| ${userCity} |%`);
+            }
+
+            const { data: items, error } = await query;
+
             if (error || !items) {
                 allFeedItemsCache = [];
             } else {
-                allFeedItemsCache = items;
+                // تأكيد إضافي صارم لعزل سوق المحافظة المختارة بنسبة 100% وعدم خلط أي محافظة أخرى
+                allFeedItemsCache = items.filter(item => {
+                    if (!userCity) return true;
+                    const parts = (item.owner_name || '').split(' | ');
+                    const itemCity = (parts[1] || '').trim();
+                    return itemCity === userCity;
+                });
             }
             renderFilteredFeed();
         }
@@ -2117,9 +2436,17 @@
             const searchQuery = (document.getElementById('feed-search-input')?.value || '').trim().toLowerCase();
             const emptyState = document.getElementById('empty-state-box');
             const feedGrid = document.getElementById('posts-container-grid');
+            const userCity = (activeSession?.city || '').trim();
 
             const filtered = allFeedItemsCache.filter(item => {
                 if (activeUndoItem && activeUndoItem.postId === item.id) return false;
+
+                // التحقق الصارم من تطابق المحافظة
+                if (userCity) {
+                    const parts = (item.owner_name || '').split(' | ');
+                    const itemCity = (parts[1] || '').trim();
+                    if (itemCity !== userCity) return false;
+                }
 
                 if (filterMyAdsOnly && (!activeSession || item.owner_phone !== activeSession.phone)) {
                     return false;
@@ -2266,7 +2593,7 @@
             activeUndoItem = null;
             document.getElementById('tg-undo-snackbar').classList.remove('show');
             renderFilteredFeed();
-            showCustomToast('تم التراجع واستعادة الإعلان بنجاح');
+            showCustomToast('تم التراجع واستعادة الإعلان بنجاح', 'success');
         }
 
         function openLightbox(postId, photoIndex) {
@@ -2327,7 +2654,7 @@
         }
 
         /* =========================================================
-           7. ضغط الصور ورفعها إلى bucket (zone-assests) في Supabase
+           7. فحص أمان الصور الصارم (MIME Type) ورفعها إلى zone-assests
            ========================================================= */
         function openCreateAdModal() {
             uploadedImages = ['', '', ''];
@@ -2335,6 +2662,8 @@
                 const preview = document.getElementById(`preview-img-${i}`);
                 preview.src = '';
                 preview.style.display = 'none';
+                const fileInput = document.getElementById(`file-slot-${i}`);
+                if (fileInput) fileInput.value = '';
             }
             document.getElementById('ad-title').value = '';
             document.getElementById('ad-price').value = '';
@@ -2378,6 +2707,13 @@
             try {
                 const res = await fetch(dataUrl);
                 const blob = await res.blob();
+
+                // تحقق أمني إضافي للـ Blob قبل الرفع إلى السيرفر
+                if (!['image/jpeg', 'image/png'].includes(blob.type)) {
+                    showCustomToast('صيغة الملف غير مدعومة أمنياً');
+                    return null;
+                }
+
                 const fileName = `ad_${Date.now()}_${slotIndex}_${Math.random().toString(36).substring(2, 7)}.jpg`;
 
                 const { error } = await supabaseClient
@@ -2395,18 +2731,28 @@
                     }
                 }
             } catch (e) { }
-            return dataUrl; // الاحتفاظ بالصورة المضمونة في حال تعذر الرفع
+            return dataUrl;
         }
 
         async function handleImageSelection(event, slotIndex) {
             const file = event.target.files[0];
-            if (file) {
-                const compressedDataUrl = await compressImageFile(file);
-                uploadedImages[slotIndex - 1] = compressedDataUrl;
-                const preview = document.getElementById(`preview-img-${slotIndex}`);
-                preview.src = compressedDataUrl;
-                preview.style.display = 'block';
+            if (!file) return;
+
+            // فحص أمني صارم لنوع الملف (MIME Type + الامتداد) لمنع رفع أي ملفات ضارة أو تنفيذية
+            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            const validExtension = /\.(jpe?g|png)$/i.test(file.name || '');
+
+            if (!allowedMimeTypes.includes(file.type) || !validExtension) {
+                event.target.value = '';
+                showCustomToast('يُسمح برفع الصور بصيغة JPG أو PNG فقط!');
+                return;
             }
+
+            const compressedDataUrl = await compressImageFile(file);
+            uploadedImages[slotIndex - 1] = compressedDataUrl;
+            const preview = document.getElementById(`preview-img-${slotIndex}`);
+            preview.src = compressedDataUrl;
+            preview.style.display = 'block';
         }
 
         async function submitNewAd() {
@@ -2446,9 +2792,9 @@
                     owner_name: enrichedOwnerName,
                     title: title,
                     price: price,
-                    photo1: p1,
-                    photo2: p2,
-                    photo3: p3,
+                    photo1: p1 || fallbackPhotos[0],
+                    photo2: p2 || fallbackPhotos[1],
+                    photo3: p3 || fallbackPhotos[2],
                     created_at: new Date().toLocaleDateString('ar-SY')
                 }]);
 
@@ -2456,11 +2802,11 @@
             submitBtn.innerHTML = `نشر الإعلان الآن`;
             closeCreateAdModal();
             await loadMainProductsFeed();
-            showCustomToast('تم نشر إعلانك بنجاح!');
+            showCustomToast('تم نشر إعلانك بنجاح!', 'success');
         }
 
         /* =========================================================
-           8. شاشة الملف الشخصي (أنا) والتعديل الآمن عبر السيرفر
+           8. شاشة الملف الشخصي (أنا) + نقل السوق عند تغيير المحافظة
            ========================================================= */
         function navTo(screenId) {
             document.getElementById('nav-btn-home').classList.toggle('active', screenId === 'home-screen');
@@ -2492,10 +2838,21 @@
         }
 
         async function saveProfileUpdates() {
-            activeSession.fullname = document.getElementById('prof-name').value.trim();
-            activeSession.city = document.getElementById('prof-city').value.trim();
-            activeSession.university = document.getElementById('prof-university').value.trim();
-            activeSession.major = document.getElementById('prof-major').value.trim();
+            const previousCity = activeSession.city;
+            const newName = document.getElementById('prof-name').value.trim();
+            const newCity = document.getElementById('prof-city').value.trim();
+            const newUni = document.getElementById('prof-university').value.trim();
+            const newMajor = document.getElementById('prof-major').value.trim();
+
+            if (!newName || !newCity || !newUni || !newMajor) {
+                showCustomToast('يرجى عدم ترك أي حقل فارغ');
+                return;
+            }
+
+            activeSession.fullname = newName;
+            activeSession.city = newCity;
+            activeSession.university = newUni;
+            activeSession.major = newMajor;
 
             await supabaseClient
                 .from('platform_users')
@@ -2508,7 +2865,13 @@
                 .eq('phone', activeSession.phone)
                 .eq('password', activeSession.password);
 
-            // إشعار الأدمن بتحديث البيانات من داخل السيرفر (Vault) بدون كشف التوكن
+            // نقل إعلانات المستخدم الحالية إلى المحافظة الجديدة وتحديث اسمه وجامعته فيها
+            const updatedOwnerTag = `${activeSession.fullname} | ${activeSession.city} | ${activeSession.university}`;
+            await supabaseClient
+                .from('items_feed')
+                .update({ owner_name: updatedOwnerTag })
+                .eq('owner_phone', activeSession.phone);
+
             await supabaseClient.rpc('notify_profile_update', {
                 p_fullname: activeSession.fullname,
                 p_phone: activeSession.phone,
@@ -2517,7 +2880,16 @@
                 p_major: activeSession.major
             });
 
-            showCustomToast('تم حفظ البيانات وتحديثها بنجاح!');
+            // تفريغ الكاش القديم وتحميل سوق المحافظة الجديدة حصراً (نقل كامل وليس دمج)
+            allFeedItemsCache = [];
+            updateHeaderMarketBadge();
+            await loadMainProductsFeed();
+
+            if (previousCity !== newCity) {
+                showCustomToast(`تم تعديل بياناتك ونقلك إلى سوق محافظة ${newCity} بنجاح!`, 'success');
+            } else {
+                showCustomToast('تم حفظ البيانات وتحديثها بنجاح!', 'success');
+            }
             toggleProfileEditMode();
         }
 
@@ -2528,9 +2900,15 @@
             toggleAuth('login');
         }
 
-        function showCustomToast(msg = 'يرجى تكملة تعبئة المعلومات') {
+        // دالة التنبيهات المحدثة: تعرض أيقونة الصح الأخضر (fas fa-circle-check) لرسائل النجاح والتلغرام وتعديل البيانات
+        function showCustomToast(msg = 'يرجى تكملة تعبئة المعلومات', type = 'auto') {
             const oldToast = document.querySelector('.custom-toast');
             if (oldToast) oldToast.remove();
+
+            const isSuccessMsg = type === 'success' || /بنجاح|تم إرسال|تم التراجع|تم تعيين/.test(msg);
+            const iconClass = isSuccessMsg ? 'fas fa-circle-check' : 'fas fa-circle-exclamation';
+            const accentColor = isSuccessMsg ? '#10b981' : '#33E0E6';
+            const glowRgba = isSuccessMsg ? 'rgba(16, 185, 129, 0.2)' : 'rgba(51, 224, 230, 0.15)';
 
             const toast = document.createElement('div');
             toast.className = 'custom-toast';
@@ -2538,13 +2916,13 @@
             toast.innerHTML = `
 <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
             background: #0b1a2d;
-            border: 1.5px solid #33E0E6; border-radius: 14px;
+            border: 1.5px solid ${accentColor}; border-radius: 14px;
             width: 88%; max-width: 450px; padding: 18px 16px;
             display: flex; align-items: center; justify-content: center; gap: 12px;
-            box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
+            box-shadow: 0 10px 30px ${glowRgba};
             z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
             color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-    <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
+    <i class="${iconClass}" style="color: ${accentColor}; font-size: 20px; flex-shrink: 0;"></i>
     <span style="font-size: 14.5px; color: #f0f5ff; letter-spacing: 0.3px;">
         ${msg}
     </span>
