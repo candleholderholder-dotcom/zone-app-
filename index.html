@@ -30,6 +30,8 @@
             --text-main: #f8fafc;
             --text-muted: #8fa0b5;
             --success: #10b981;
+            --emerald-bright: #34d399;
+            --emerald-glow: rgba(16, 185, 129, 0.35);
             --danger: #ef4444;
             --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -456,32 +458,35 @@
             border-radius: 24px;
             width: 100%;
             max-width: 440px;
-            padding: 28px;
+            padding: 26px 22px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
             text-align: center;
             position: relative;
+            max-height: 92vh;
+            overflow-y: auto;
         }
 
+        /* إطار الـ QR كود المعدل ليمتلئ بالكامل على الجوانب بدون مساحات بيضاء مزعجة وبدون قص الكود */
         .qr-wrapper {
-            margin: 18px auto;
-            width: 230px;
-            height: 230px;
-            background: #ffffff;
+            margin: 16px auto;
+            width: 268px;
+            height: 295px;
+            background: #000000;
             border-radius: 22px;
-            padding: 8px;
+            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 30px rgba(0, 173, 181, 0.3);
-            border: 2px solid var(--accent-turquoise);
+            box-shadow: 0 10px 32px rgba(0, 173, 181, 0.35);
+            border: 2.5px solid var(--accent-turquoise);
             overflow: hidden;
         }
 
         .qr-wrapper img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            border-radius: 14px;
+            object-fit: fill;
+            display: block;
         }
 
         .verified-holder-info {
@@ -701,48 +706,92 @@
             display: none;
         }
 
-        /* شريط البحث والفلترة */
-        .feed-filter-bar {
+        /* =========================================================
+           شريط البحث الذكي المتحرك + التصنيفات الأفقية وإعلاناتي بنفس السطر
+           ========================================================= */
+        .unified-scroll-bar {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            align-items: center;
+            gap: 9px;
             margin-bottom: 22px;
-        }
-
-        .search-input-wrap {
-            flex: 1;
-            min-width: 200px;
-            position: relative;
-        }
-
-        .search-input-wrap input {
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
             width: 100%;
-            padding: 11px 40px 11px 14px;
+        }
+
+        .unified-scroll-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* البحث الذكي: عدسة فقط عند الابتعاد، ويتوسع عند الاقتراب/الضغط */
+        .smart-search-pill {
+            height: 44px;
+            width: 44px;
+            border-radius: 14px;
             background-color: var(--surface-navy);
             border: 1.5px solid var(--border-navy);
-            border-radius: 14px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+            transition: width 0.38s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
         }
 
-        .search-input-wrap input:focus {
+        .smart-search-pill.expanded {
+            width: 245px;
+            justify-content: flex-start;
             border-color: var(--accent-turquoise);
             box-shadow: 0 0 12px var(--turquoise-glow);
+            cursor: text;
         }
 
-        .search-input-wrap i {
+        .smart-search-pill i {
+            color: var(--turquoise-light);
+            font-size: 15px;
+            transition: var(--transition-smooth);
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .smart-search-pill.expanded i {
             position: absolute;
             right: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13.5px;
+            color: var(--accent-turquoise);
+        }
+
+        .smart-search-pill input {
+            width: 0;
+            opacity: 0;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 13.5px;
+            font-weight: 700;
+            outline: none;
+            padding: 0;
+            transition: opacity 0.25s ease, width 0.3s ease;
+            pointer-events: none;
+        }
+
+        .smart-search-pill.expanded input {
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+            padding: 0 38px 0 14px;
+            pointer-events: auto;
         }
 
         .filter-chip-btn {
-            padding: 10px 16px;
+            height: 44px;
+            padding: 0 15px;
             background-color: var(--surface-navy);
             border: 1.5px solid var(--border-navy);
             border-radius: 14px;
@@ -750,16 +799,46 @@
             font-size: 13.5px;
             font-weight: 700;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 7px;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
             transition: var(--transition-smooth);
+        }
+
+        .filter-chip-btn i {
+            color: var(--accent-turquoise);
+            font-size: 14px;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-chip-btn:hover {
+            border-color: var(--accent-turquoise);
         }
 
         .filter-chip-btn.active {
             background-color: rgba(0, 173, 181, 0.16);
             border-color: var(--accent-turquoise);
             color: var(--turquoise-light);
+            box-shadow: 0 4px 14px rgba(0, 173, 181, 0.18);
+        }
+
+        .filter-chip-btn.active i {
+            color: var(--turquoise-light);
+        }
+
+        /* تمييز زر فلتر الإعارة المجانية عند تفعيله */
+        .filter-chip-btn.free-loan-chip i {
+            color: var(--emerald-bright);
+        }
+
+        .filter-chip-btn.free-loan-chip.active {
+            background-color: rgba(16, 185, 129, 0.16);
+            border-color: var(--success);
+            color: var(--emerald-bright);
+            box-shadow: 0 4px 14px var(--emerald-glow);
         }
 
         /* شاشة الفراغ (الشبح اللطيف) */
@@ -881,14 +960,23 @@
         }
 
         .product-price {
-            font-size: 17px;
+            font-size: 15.5px;
             font-weight: 900;
             color: var(--turquoise-light);
             white-space: nowrap;
             background: rgba(0, 173, 181, 0.12);
-            padding: 3px 10px;
+            padding: 4px 10px;
             border-radius: 10px;
             border: 1px solid rgba(57, 229, 238, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-price.free-loan-badge {
+            color: var(--emerald-bright);
+            background: rgba(16, 185, 129, 0.14);
+            border-color: rgba(52, 211, 153, 0.35);
         }
 
         .product-meta-badges {
@@ -1057,6 +1145,33 @@
         .chat-back-btn:hover {
             border-color: var(--accent-turquoise);
             color: var(--turquoise-light);
+        }
+
+        .chat-block-top-btn {
+            height: 38px;
+            padding: 0 12px;
+            border-radius: 11px;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+            font-size: 12.5px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition-smooth);
+        }
+
+        .chat-block-top-btn:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .chat-block-top-btn.is-blocked {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--success);
+            color: var(--emerald-bright);
         }
 
         .chat-avatar-circle {
@@ -1242,7 +1357,7 @@
             transform: translateY(-2px);
         }
 
-        /* قائمة المحادثات الواردة (Inbox) داخل الشاشة الكاملة */
+        /* قائمة المحادثات الواردة (Inbox) مع إمكانية حذف المحادثة من الخارج */
         .inbox-list-container {
             flex: 1;
             overflow-y: auto;
@@ -1268,6 +1383,194 @@
         .inbox-conv-item:hover {
             border-color: var(--accent-turquoise);
             background-color: var(--card-navy);
+        }
+
+        .inbox-delete-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #f87171;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            flex-shrink: 0;
+        }
+
+        .inbox-delete-btn:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        /* =========================================================
+           إشعار الرسائل العلوي بأسلوب الواتساب (WhatsApp Banner)
+           ========================================================= */
+        .wa-top-notification {
+            position: fixed;
+            top: -130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 440px;
+            background: rgba(14, 29, 48, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1.5px solid var(--accent-turquoise);
+            border-radius: 18px;
+            padding: 13px 16px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+            z-index: 999999;
+            cursor: pointer;
+            transition: top 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+            direction: rtl;
+        }
+
+        .wa-top-notification.show {
+            top: 22px;
+        }
+
+        .wa-notif-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: rgba(0, 173, 181, 0.16);
+            border: 1.5px solid var(--accent-turquoise);
+            color: var(--turquoise-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            flex-shrink: 0;
+        }
+
+        .wa-notif-content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .wa-notif-sender {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .wa-notif-preview {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* =========================================================
+           تنسيق الزرين داخل نافذة نشر الإعلان (للبيع $ vs إعارة مجانية هدية بلون مميز)
+           ========================================================= */
+        .ad-deal-type-switcher {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .deal-mode-btn {
+            height: 46px;
+            border-radius: 13px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition-smooth);
+            background-color: var(--card-navy);
+            border: 1.5px solid var(--border-navy);
+            color: var(--text-muted);
+        }
+
+        /* زر البيع بأيقونة الدولار ولون التركواز */
+        .deal-mode-btn.sale-mode.active {
+            background: rgba(0, 173, 181, 0.16);
+            border-color: var(--accent-turquoise);
+            color: var(--turquoise-light);
+            box-shadow: 0 4px 15px var(--turquoise-glow);
+        }
+
+        /* زر الإعارة المجانية بأيقونة الهدية ولون زمردي مميز متناسق مع التطبيق */
+        .deal-mode-btn.loan-mode.active {
+            background: rgba(16, 185, 129, 0.16);
+            border-color: var(--success);
+            color: var(--emerald-bright);
+            box-shadow: 0 4px 15px var(--emerald-glow);
+        }
+
+        /* اختيار القسم داخل نافذة نشر الإعلان */
+        .ad-cat-pills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .ad-cat-select-btn {
+            padding: 10px 12px;
+            border-radius: 11px;
+            background-color: var(--card-navy);
+            border: 1.5px solid var(--border-navy);
+            color: var(--text-muted);
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: var(--transition-smooth);
+        }
+
+        .ad-cat-select-btn i {
+            color: var(--accent-turquoise);
+            font-size: 13px;
+        }
+
+        .ad-cat-select-btn.active {
+            background-color: rgba(0, 173, 181, 0.14);
+            border-color: var(--accent-turquoise);
+            color: var(--text-main);
+        }
+
+        /* خيار قائمة المحظورين في صفحة أنا */
+        .profile-blocked-btn {
+            width: 100%;
+            padding: 13px 16px;
+            background-color: var(--surface-navy);
+            border: 1.5px solid var(--border-navy);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            transition: var(--transition-smooth);
+        }
+
+        .profile-blocked-btn:hover {
+            border-color: var(--accent-turquoise);
         }
 
         /* شريط التراجع العائم بأسلوب تيليجرام */
@@ -1578,6 +1881,17 @@
 
 <body>
 
+    <!-- إشعار الرسائل العلوي بأسلوب الواتساب -->
+    <div class="wa-top-notification" id="wa-top-notif-banner">
+        <div class="wa-notif-icon">
+            <i class="fa-solid fa-comments"></i>
+        </div>
+        <div class="wa-notif-content">
+            <div class="wa-notif-sender" id="wa-notif-sender-name">اسم المرسل</div>
+            <div class="wa-notif-preview" id="wa-notif-msg-preview">محتوى الرسالة...</div>
+        </div>
+    </div>
+
     <!-- 1. الشاشة الترحيبية Splash Screen -->
     <div id="splash-screen">
         <div class="splash-logo-wrapper"
@@ -1809,7 +2123,7 @@
         </div>
     </div>
 
-    <!-- نافذة منبثقة Modal للدفع عبر شام كاش (مع رفع صورة الـ QR الثابتة مثل اللوجو) -->
+    <!-- نافذة منبثقة Modal للدفع عبر شام كاش (مع ملء إطار الـ QR بالكامل على الجوانب) -->
     <div class="modal-overlay" id="payment-modal">
         <div class="modal-content-card">
             <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">دفع الاشتراك - شام كاش</h3>
@@ -1922,13 +2236,32 @@
                 </div>
             </div>
 
-            <!-- شريط البحث والفلترة اللحظي -->
-            <div class="feed-filter-bar">
-                <div class="search-input-wrap">
+            <!-- شريط البحث الذكي المتحرك + التصنيفات الأفقية وإعلاناتي بنفس الخط والسطر -->
+            <div class="unified-scroll-bar" id="unified-filter-scroll">
+                <div class="smart-search-pill expanded" id="smart-search-pill" onclick="expandSmartSearch()">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="feed-search-input" placeholder="ابحث عن كتاب، أداة، أو جامعة ضمن محافظتك..."
-                        oninput="renderFilteredFeed()">
+                    <input type="text" id="feed-search-input" placeholder="ابحث هنا ...." onfocus="expandSmartSearch()"
+                        onblur="handleSearchBlur()" oninput="renderFilteredFeed()">
                 </div>
+
+                <button class="filter-chip-btn active" id="cat-btn-all" onclick="selectCategoryFilter('all')">
+                    <i class="fa-solid fa-border-all"></i> الكل
+                </button>
+                <button class="filter-chip-btn" id="cat-btn-books" onclick="selectCategoryFilter('books')">
+                    <i class="fa-solid fa-book-open"></i> ملخصات وكتب
+                </button>
+                <button class="filter-chip-btn" id="cat-btn-tech" onclick="selectCategoryFilter('tech')">
+                    <i class="fa-solid fa-microchip"></i> لابتوبات وأردوينو
+                </button>
+                <button class="filter-chip-btn" id="cat-btn-eng" onclick="selectCategoryFilter('eng')">
+                    <i class="fa-solid fa-compass-drafting"></i> أدوات هندسية
+                </button>
+                <button class="filter-chip-btn" id="cat-btn-med" onclick="selectCategoryFilter('med')">
+                    <i class="fa-solid fa-stethoscope"></i> أدوات طبية
+                </button>
+                <button class="filter-chip-btn free-loan-chip" id="cat-btn-loan" onclick="selectCategoryFilter('loan')">
+                    <i class="fa-solid fa-gift"></i> إعارة مجانية
+                </button>
                 <button class="filter-chip-btn" id="btn-filter-my-ads" onclick="toggleMyAdsFilter()">
                     <i class="fa-solid fa-layer-group"></i> إعلاناتي
                 </button>
@@ -2015,6 +2348,15 @@
                 <input type="text" id="prof-major" disabled>
             </div>
 
+            <!-- خيار إدارة قائمة المحظورين وفك الحظر داخل صفحة أنا -->
+            <button type="button" class="profile-blocked-btn" onclick="openBlockedUsersModal()">
+                <span style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-user-slash" style="color: var(--accent-turquoise);"></i>
+                    <span>قائمة المحظورين وإدارة الحظر</span>
+                </span>
+                <i class="fa-solid fa-chevron-left" style="color: var(--text-muted); font-size: 13px;"></i>
+            </button>
+
             <button class="btn-action-primary" id="save-prof-btn" style="display: none; margin-top: 15px;"
                 onclick="saveProfileUpdates()">حفظ التعديلات</button>
             <button onclick="logoutSession()"
@@ -2042,9 +2384,16 @@
                     </span>
                 </div>
             </div>
-            <button class="chat-back-btn" onclick="openInboxScreen()" id="btn-switch-inbox" title="كافة المحادثات">
-                <i class="fa-solid fa-list-ul"></i>
-            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button class="chat-block-top-btn" id="btn-chat-block-toggle" onclick="toggleBlockCurrentPartner()"
+                    style="display: none;">
+                    <i class="fa-solid fa-ban"></i>
+                    <span id="chat-block-btn-text">حظر</span>
+                </button>
+                <button class="chat-back-btn" onclick="openInboxScreen()" id="btn-switch-inbox" title="كافة المحادثات">
+                    <i class="fa-solid fa-list-ul"></i>
+                </button>
+            </div>
         </div>
 
         <!-- شريط معلومات الإعلان المرتبط بالمحادثة -->
@@ -2109,28 +2458,73 @@
             <span>انا</span>
         </button>
     </nav>
-    <!-- Modal إضافة إعلان جديد مع 3 مربعات مخصصة لرفع الصور المحمية -->
+    <!-- Modal إضافة إعلان جديد (مع زر البيع $ وزر الإعارة المجانية هدية بلون مميز + اختيار القسم + بدون جملة الضغط) -->
     <div class="modal-overlay" id="add-ad-modal">
         <div class="modal-content-card" style="text-align: right; max-width: 480px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <h3 style="font-size: 18px; font-weight: 800;">إضافة إعلان جديد</h3>
                 <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;"
                     onclick="closeCreateAdModal()"></i>
             </div>
 
-            <div class="form-row">
-                <label>اسم المادة / الشيء المعلن عنه</label>
-                <input type="text" id="ad-title" placeholder="كتاب، مسطرة، آلة حاسبة...">
+            <!-- التبديل بين زر البيع ($) وزر الإعارة المجانية (هدية بلون مميز) -->
+            <label
+                style="font-size: 13px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px;">نوع
+                الإعلان</label>
+            <div class="ad-deal-type-switcher">
+                <button type="button" class="deal-mode-btn sale-mode active" id="deal-btn-sale"
+                    onclick="setAdDealMode('sale')">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                    <span>للبيع</span>
+                </button>
+                <button type="button" class="deal-mode-btn loan-mode" id="deal-btn-loan"
+                    onclick="setAdDealMode('loan')">
+                    <i class="fa-solid fa-gift"></i>
+                    <span>إعارة مجانية</span>
+                </button>
+            </div>
+
+            <!-- اختيار قسم وتصنيف الإعلان بأيقونات رسمية -->
+            <label
+                style="font-size: 13px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px;">القسم
+                والتصنيف</label>
+            <div class="ad-cat-pills-grid">
+                <button type="button" class="ad-cat-select-btn active" data-cat="books"
+                    onclick="selectNewAdCategory('books', this)">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>ملخصات وكتب</span>
+                </button>
+                <button type="button" class="ad-cat-select-btn" data-cat="tech"
+                    onclick="selectNewAdCategory('tech', this)">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span>لابتوبات وأردوينو</span>
+                </button>
+                <button type="button" class="ad-cat-select-btn" data-cat="eng"
+                    onclick="selectNewAdCategory('eng', this)">
+                    <i class="fa-solid fa-compass-drafting"></i>
+                    <span>أدوات هندسية</span>
+                </button>
+                <button type="button" class="ad-cat-select-btn" data-cat="med"
+                    onclick="selectNewAdCategory('med', this)">
+                    <i class="fa-solid fa-stethoscope"></i>
+                    <span>أدوات طبية</span>
+                </button>
             </div>
 
             <div class="form-row">
+                <label>اسم المادة / الشيء المعلن عنه</label>
+                <input type="text" id="ad-title" placeholder="كتاب، مسطرة، آلة حاسبة، أردوينو...">
+            </div>
+
+            <div class="form-row" id="ad-price-row-box">
                 <label>السعر بالليرة السورية</label>
                 <input type="number" inputmode="numeric" id="ad-price" placeholder="مثال: 50000">
             </div>
 
+            <!-- تم إزالة عبارة (PNG/JPG يتم ضغطها تلقائياً) نهائياً كما طلبت -->
             <label
                 style="font-size: 13.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 8px;">صور
-                المنتج (3 صور بصيغة JPG أو PNG - يتم ضغطها تلقائياً)</label>
+                المنتج (3 صور)</label>
             <div class="photo-uploader-triplet">
                 <div class="photo-upload-slot" onclick="triggerFileInput(1)">
                     <i class="fa-solid fa-camera"></i>
@@ -2156,6 +2550,24 @@
             </div>
 
             <button class="btn-action-primary" id="btn-submit-ad" onclick="submitNewAd()">نشر الإعلان الآن</button>
+        </div>
+    </div>
+
+    <!-- Modal إدارة قائمة المحظورين وفك الحظر داخل صفحة (أنا) -->
+    <div class="modal-overlay" id="blocked-users-modal" onclick="if(event.target === this) closeBlockedUsersModal()">
+        <div class="modal-content-card" style="text-align: right; max-width: 420px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-user-slash" style="color: var(--accent-turquoise);"></i>
+                    <span>قائمة المحظورين</span>
+                </h3>
+                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;"
+                    onclick="closeBlockedUsersModal()"></i>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">يمكنك فك الحظر عن أي مستخدم في أي
+                وقت للتراجع واستئناف المراسلة:</p>
+            <div id="blocked-users-list-box"
+                style="display: flex; flex-direction: column; gap: 10px; max-height: 55vh; overflow-y: auto;"></div>
         </div>
     </div>
 
@@ -2203,7 +2615,7 @@
 
     <script>
         /* =========================================================
-           0. تشغيل شريط الإعلانات المتحرك (Slider)
+           0. تشغيل شريط الإعلانات المتحرك (Slider) + تفاعل شريط البحث الذكي
            ========================================================= */
         let currentSlideIndex = 0;
         let sliderInterval = null;
@@ -2230,8 +2642,39 @@
             }, 3500);
         }
 
+        // التحكم الذكي بتوسيع وانكماش شريط البحث عند الاقتراب والابتعاد أو سحب الشريط
+        function expandSmartSearch() {
+            const pill = document.getElementById('smart-search-pill');
+            const inp = document.getElementById('feed-search-input');
+            if (pill && !pill.classList.contains('expanded')) {
+                pill.classList.add('expanded');
+                setTimeout(() => inp && inp.focus(), 80);
+            }
+        }
+
+        function handleSearchBlur() {
+            const pill = document.getElementById('smart-search-pill');
+            const inp = document.getElementById('feed-search-input');
+            if (pill && inp && !inp.value.trim()) {
+                pill.classList.remove('expanded');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             resetPromoSliderTimer();
+
+            const scrollBar = document.getElementById('unified-filter-scroll');
+            if (scrollBar) {
+                scrollBar.addEventListener('scroll', () => {
+                    const pill = document.getElementById('smart-search-pill');
+                    const inp = document.getElementById('feed-search-input');
+                    if (scrollBar.scrollLeft < -15 || scrollBar.scrollLeft > 15) {
+                        if (pill && inp && document.activeElement !== inp && !inp.value.trim()) {
+                            pill.classList.remove('expanded');
+                        }
+                    }
+                }, { passive: true });
+            }
         });
 
         /* =========================================================
@@ -2246,7 +2689,6 @@
         const BOT_USERNAME = '@Zonewebsite_bot';
         const SUPPORT_USERNAME = '@Zoneapplication';
 
-        // قاموس الأسماء النسائية الشائعة للتعرف الذكي التلقائي وتفعيل الخصوصية
         const FEMALE_NAMES_LIST = [
             'سارة', 'ساره', 'فاطمة', 'فاطمه', 'مريم', 'نور', 'آية', 'ايه', 'آيه', 'لين', 'لينا', 'رغد', 'شام',
             'هدى', 'هبة', 'هبه', 'بتول', 'زينب', 'رقية', 'رقيه', 'حلا', 'غزل', 'جود', 'لمى', 'لما', 'رنا', 'رشا',
@@ -2260,6 +2702,14 @@
             'غفران', 'غيداء', 'فاتن', 'فريال', 'فيحاء', 'كوثر', 'كارمن', 'كندا', 'كندة', 'ليال', 'ليلى', 'ليان', 'لوليا',
             'ماريا', 'روعة', 'سيدرا', 'سيلين', 'ميرا', 'ميرنا', 'نانسي', 'نسمة', 'نسمه', 'نيرمين', 'بيسان', 'رنيم', 'سالي', 'تولين'
         ];
+
+        const CATEGORY_META = {
+            books: { label: 'ملخصات وكتب', icon: 'fa-book-open' },
+            tech: { label: 'لابتوبات وأردوينو', icon: 'fa-microchip' },
+            eng: { label: 'أدوات هندسية', icon: 'fa-compass-drafting' },
+            med: { label: 'أدوات طبية', icon: 'fa-stethoscope' },
+            loan: { label: 'إعارة مجانية', icon: 'fa-gift' }
+        };
 
         function normalizeArabicName(nameStr) {
             return String(nameStr || '')
@@ -2287,12 +2737,7 @@
             const boxId = mode === 'reg' ? 'reg-female-privacy-box' : 'prof-female-privacy-box';
             const boxEl = document.getElementById(boxId);
             if (!boxEl) return;
-
-            if (isFemale) {
-                boxEl.style.display = 'block';
-            } else {
-                boxEl.style.display = 'none';
-            }
+            boxEl.style.display = isFemale ? 'block' : 'none';
         }
 
         function getUserPrivacyMap() {
@@ -2344,17 +2789,104 @@
 
         let allFeedItemsCache = [];
         let filterMyAdsOnly = false;
+        let currentCategoryFilter = 'all';
+        let newAdDealMode = 'sale';
+        let newAdSelectedCategory = 'books';
         let activeUndoItem = null;
         let lightboxPhotos = [];
         let lightboxCurrentIndex = 0;
         let cityModalTargetMode = 'reg';
 
-        // متغيرات نظام المحادثة الداخلي الكامل
         let activeChatContext = null;
         let chatChannelSub = null;
+        let waNotifTimeout = null;
 
         /* =========================================================
-           2. التزامن اللحظي الشامل + التقاط قرار البوت والرسائل الفورية
+           إشعار الرسائل العلوي بأسلوب الواتساب + نظام الحظر وفك الحظر
+           ========================================================= */
+        function showWhatsAppMessageBanner(msgObj) {
+            const banner = document.getElementById('wa-top-notif-banner');
+            const senderEl = document.getElementById('wa-notif-sender-name');
+            const previewEl = document.getElementById('wa-notif-msg-preview');
+            if (!banner || !senderEl || !previewEl) return;
+
+            const senderName = msgObj.sender_name || 'رسالة واردة';
+            const rawText = String(msgObj.text || '').trim();
+            const truncatedText = rawText.length > 42 ? rawText.substring(0, 42) + '...' : rawText;
+
+            senderEl.innerText = senderName;
+            previewEl.innerText = truncatedText;
+
+            banner.onclick = () => {
+                banner.classList.remove('show');
+                openDirectChatForAd(
+                    msgObj.ad_id || 0,
+                    msgObj.sender_phone,
+                    senderName,
+                    msgObj.ad_title || 'استفسار عن إعلان',
+                    msgObj.ad_price || '0'
+                );
+            };
+
+            banner.classList.add('show');
+            if (waNotifTimeout) clearTimeout(waNotifTimeout);
+            waNotifTimeout = setTimeout(() => {
+                banner.classList.remove('show');
+            }, 4200);
+        }
+
+        // إدارة الحظر المحلي والمتزامن بين المستخدمين
+        function getBlockedByMeMap() {
+            if (!activeSession) return {};
+            const myPh = normalizeSyrianPhone(activeSession.phone);
+            try {
+                return JSON.parse(localStorage.getItem(`zone_blocked_by_${myPh}`) || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveBlockedByMeMap(mapObj) {
+            if (!activeSession) return;
+            const myPh = normalizeSyrianPhone(activeSession.phone);
+            localStorage.setItem(`zone_blocked_by_${myPh}`, JSON.stringify(mapObj));
+        }
+
+        function getWhoBlockedMeMap() {
+            if (!activeSession) return {};
+            const myPh = normalizeSyrianPhone(activeSession.phone);
+            try {
+                return JSON.parse(localStorage.getItem(`zone_who_blocked_${myPh}`) || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function markWhoBlockedMe(blockerPhone, isBlockedBool) {
+            if (!activeSession) return;
+            const myPh = normalizeSyrianPhone(activeSession.phone);
+            const cleanBlocker = normalizeSyrianPhone(blockerPhone);
+            const map = getWhoBlockedMeMap();
+            if (isBlockedBool) {
+                map[cleanBlocker] = true;
+            } else {
+                delete map[cleanBlocker];
+            }
+            localStorage.setItem(`zone_who_blocked_${myPh}`, JSON.stringify(map));
+        }
+
+        function isPartnerBlockedByMe(partnerPhone) {
+            const map = getBlockedByMeMap();
+            return Boolean(map[normalizeSyrianPhone(partnerPhone)]);
+        }
+
+        function amIBlockedByPartner(partnerPhone) {
+            const map = getWhoBlockedMeMap();
+            return Boolean(map[normalizeSyrianPhone(partnerPhone)]);
+        }
+
+        /* =========================================================
+           2. التزامن اللحظي الشامل + التقاط قرار البوت والرسائل الفورية والحظر
            ========================================================= */
         function setupRealtimeListeners() {
             supabaseClient
@@ -2393,25 +2925,53 @@
                 })
                 .subscribe();
 
-            // قناة البث الفوري للمحادثات الداخلية المباشرة (Supabase Broadcast + DB Sync)
+            // قناة البث الفوري للمحادثات الداخلية وإشارات الحظر وفك الحظر
             chatChannelSub = supabaseClient
                 .channel('zone-direct-chat-room')
                 .on('broadcast', { event: 'new_direct_msg' }, (payload) => {
                     const msgObj = payload.payload;
                     if (!msgObj || !activeSession) return;
                     const myPh = normalizeSyrianPhone(activeSession.phone);
-                    if (normalizeSyrianPhone(msgObj.receiver_phone) === myPh || normalizeSyrianPhone(msgObj.sender_phone) === myPh) {
+                    const senderPh = normalizeSyrianPhone(msgObj.sender_phone);
+                    const receiverPh = normalizeSyrianPhone(msgObj.receiver_phone);
+
+                    // إذا كان المرسل محظوراً من قِبلي، نتجاهل رسالته تماماً ونرسل له إشارة أنه محظور
+                    if (receiverPh === myPh && isPartnerBlockedByMe(senderPh)) {
+                        if (chatChannelSub) {
+                            chatChannelSub.send({
+                                type: 'broadcast',
+                                event: 'block_status_signal',
+                                payload: { blocker_phone: myPh, blocked_phone: senderPh, action: 'block' }
+                            }).catch(() => { });
+                        }
+                        return;
+                    }
+
+                    if (receiverPh === myPh || senderPh === myPh) {
                         saveChatMessageLocally(msgObj);
                         const chatOverlay = document.getElementById('full-chat-screen');
                         if (chatOverlay && chatOverlay.classList.contains('active') && activeChatContext) {
-                            if (normalizeSyrianPhone(activeChatContext.partnerPhone) === normalizeSyrianPhone(msgObj.sender_phone) ||
-                                normalizeSyrianPhone(activeChatContext.partnerPhone) === normalizeSyrianPhone(msgObj.receiver_phone)) {
+                            if (normalizeSyrianPhone(activeChatContext.partnerPhone) === senderPh ||
+                                normalizeSyrianPhone(activeChatContext.partnerPhone) === receiverPh) {
                                 renderActiveChatMessages();
+                            } else if (receiverPh === myPh) {
+                                showWhatsAppMessageBanner(msgObj);
                             }
-                        } else if (normalizeSyrianPhone(msgObj.receiver_phone) === myPh) {
+                        } else if (receiverPh === myPh) {
                             const dot = document.getElementById('header-unread-dot');
                             if (dot) dot.style.display = 'block';
-                            showCustomToast(`رسالة جديدة من ${msgObj.sender_name || 'مستخدم'}`, 'success');
+                            showWhatsAppMessageBanner(msgObj);
+                        }
+                    }
+                })
+                .on('broadcast', { event: 'block_status_signal' }, (payload) => {
+                    const sig = payload.payload;
+                    if (!sig || !activeSession) return;
+                    const myPh = normalizeSyrianPhone(activeSession.phone);
+                    if (normalizeSyrianPhone(sig.blocked_phone) === myPh) {
+                        markWhoBlockedMe(sig.blocker_phone, sig.action === 'block');
+                        if (activeChatContext && normalizeSyrianPhone(activeChatContext.partnerPhone) === normalizeSyrianPhone(sig.blocker_phone)) {
+                            updateChatBlockUI();
                         }
                     }
                 })
@@ -2689,7 +3249,6 @@
                 return;
             }
 
-            // حفظ خيار الخصوصية إذا كان الاسم لطالبة
             const isFemale = isDetectedFemaleName(fullname);
             let hideContactChoice = false;
             if (isFemale) {
@@ -3103,7 +3662,7 @@
         }
 
         /* =========================================================
-           6. الواجهة الرئيسية + منطق الأزرار الأربعة الذكي (تواصل / راسلني / مشاركة / تم البيع)
+           6. الواجهة الرئيسية + التصنيفات والأقسام + الإعارة المجانية
            ========================================================= */
         function isAdOwnerPrivate(item) {
             const parts = (item.owner_name || '').split(' | ');
@@ -3117,6 +3676,28 @@
                 return privMap[cleanOwnerPhone];
             }
             return false;
+        }
+
+        function extractAdCategoryCode(item) {
+            const parts = (item.owner_name || '').split(' | ');
+            const catFlag = (parts[4] || '').trim();
+            if (catFlag && CATEGORY_META[catFlag]) return catFlag;
+            if (Number(item.price) === 0 || String(item.price).trim() === '0') return 'loan';
+
+            const t = String(item.title || '').toLowerCase();
+            if (/لابتوب|أردوينو|اردوينو|حاسوب|كهربا|حساس|كبل|شاحن|معالج|رام/.test(t)) return 'tech';
+            if (/مسطرة|هندس|تي|فرجار|رسم|مرسمة|كالك/.test(t)) return 'eng';
+            if (/طب|سماعة|مشرط|مريول|سنية|أسنان|اسنان|تشريح|ضغط/.test(t)) return 'med';
+            return 'books';
+        }
+
+        function selectCategoryFilter(catCode) {
+            currentCategoryFilter = catCode;
+            ['all', 'books', 'tech', 'eng', 'med', 'loan'].forEach(c => {
+                const btn = document.getElementById(`cat-btn-${c}`);
+                if (btn) btn.classList.toggle('active', c === catCode);
+            });
+            renderFilteredFeed();
         }
 
         async function loadMainProductsFeed() {
@@ -3170,12 +3751,24 @@
                     if (itemCity !== userCity) return false;
                 }
 
-                if (filterMyAdsOnly && (!activeSession || item.owner_phone !== activeSession.phone)) {
+                if (filterMyAdsOnly && (!activeSession || normalizeSyrianPhone(item.owner_phone) !== normalizeSyrianPhone(activeSession.phone))) {
                     return false;
                 }
 
+                const itemCat = extractAdCategoryCode(item);
+                const isFreeLoan = Number(item.price) === 0 || itemCat === 'loan';
+
+                if (currentCategoryFilter !== 'all') {
+                    if (currentCategoryFilter === 'loan') {
+                        if (!isFreeLoan) return false;
+                    } else if (itemCat !== currentCategoryFilter) {
+                        return false;
+                    }
+                }
+
                 if (searchQuery) {
-                    const combinedText = `${item.title} ${item.owner_name} ${item.created_at || ''}`.toLowerCase();
+                    const catTitle = CATEGORY_META[itemCat]?.label || '';
+                    const combinedText = `${item.title} ${item.owner_name} ${catTitle} ${item.created_at || ''}`.toLowerCase();
                     return combinedText.includes(searchQuery);
                 }
                 return true;
@@ -3201,11 +3794,18 @@
                     const ownerCity = parts[1] || '';
                     const ownerUni = parts[2] || '';
 
-                    // فحص هل صاحبة الإعلان مفعلة لوضع الخصوصية (إخفاء الرقم والتلغرام)
+                    const itemCatCode = extractAdCategoryCode(item);
+                    const catObj = CATEGORY_META[itemCatCode] || CATEGORY_META.books;
+                    const isFreeLoan = Number(item.price) === 0 || itemCatCode === 'loan';
+
                     const hideExternalContact = isAdOwnerPrivate(item);
 
                     const safeTitle = String(item.title).replace(/'/g, "\\'");
                     const safeOwnerName = String(cleanOwnerName).replace(/'/g, "\\'");
+
+                    const priceBadgeHtml = isFreeLoan
+                        ? `<div class="product-price free-loan-badge"><i class="fa-solid fa-gift"></i> إعارة مجانية</div>`
+                        : `<div class="product-price">${Number(item.price).toLocaleString()} ل.س</div>`;
 
                     cardContainer.innerHTML = `
                     <div class="product-card" id="card-inner-${item.id}">
@@ -3217,10 +3817,11 @@
                         <div class="product-details">
                             <div class="product-header-row">
                                 <div class="product-title">${item.title}</div>
-                                <div class="product-price">${Number(item.price).toLocaleString()} ل.س</div>
+                                ${priceBadgeHtml}
                             </div>
 
                             <div class="product-meta-badges">
+                                <span class="meta-badge"><i class="fa-solid ${catObj.icon}"></i> ${catObj.label}</span>
                                 <span class="meta-badge"><i class="fa-solid fa-user-graduate"></i> ${cleanOwnerName}</span>
                                 ${ownerCity ? `<span class="meta-badge"><i class="fa-solid fa-location-dot"></i> ${ownerCity}</span>` : ''}
                                 ${ownerUni ? `<span class="meta-badge"><i class="fa-solid fa-building-columns"></i> ${ownerUni}</span>` : ''}
@@ -3247,7 +3848,7 @@
                                 ${isOwner ? `
                                     <button class="card-action-btn btn-sold" id="btn-sold-${item.id}" onclick="triggerSoldUndoCountdown(${item.id})">
                                         <i class="fa-solid fa-check-double"></i>
-                                        <span>تم البيع</span>
+                                        <span>${isFreeLoan ? 'تمت الإعارة' : 'تم البيع'}</span>
                                     </button>
                                 ` : ''}
                             </div>
@@ -3260,7 +3861,7 @@
         }
 
         /* =========================================================
-           6.5 نظام المحادثة الرسمي الكامل (يملأ الشاشة 100%)
+           6.5 نظام المحادثة الرسمي الكامل + الحظر وفك الحظر + حذف المحادثة
            ========================================================= */
         function getLocalChatStore() {
             try {
@@ -3276,6 +3877,162 @@
                 store.push(msgObj);
                 localStorage.setItem('zone_direct_messages_v1', JSON.stringify(store));
             }
+        }
+
+        function updateChatBlockUI() {
+            const blockBtn = document.getElementById('btn-chat-block-toggle');
+            const blockText = document.getElementById('chat-block-btn-text');
+            const inputField = document.getElementById('chat-msg-input');
+            if (!blockBtn || !activeChatContext) return;
+
+            blockBtn.style.display = 'inline-flex';
+            const blockedByMe = isPartnerBlockedByMe(activeChatContext.partnerPhone);
+            const blockedByThem = amIBlockedByPartner(activeChatContext.partnerPhone);
+
+            if (blockedByMe) {
+                blockBtn.classList.add('is-blocked');
+                blockBtn.innerHTML = `<i class="fa-solid fa-unlock"></i> <span>فك الحظر</span>`;
+                if (inputField) {
+                    inputField.disabled = true;
+                    inputField.placeholder = 'لقد قمت بحظر هذا المستخدم (فك الحظر للمراسلة)';
+                }
+            } else {
+                blockBtn.classList.remove('is-blocked');
+                blockBtn.innerHTML = `<i class="fa-solid fa-ban"></i> <span>حظر</span>`;
+                if (inputField) {
+                    if (blockedByThem) {
+                        inputField.disabled = true;
+                        inputField.placeholder = 'هذا المستخدم قام بحظرك، لا يمكنك مراسلته';
+                    } else {
+                        inputField.disabled = false;
+                        inputField.placeholder = 'اكتب رسالتك هنا...';
+                    }
+                }
+            }
+        }
+
+        async function toggleBlockCurrentPartner() {
+            if (!activeChatContext || !activeSession) return;
+            const partnerPh = normalizeSyrianPhone(activeChatContext.partnerPhone);
+            const partnerNm = activeChatContext.partnerName || 'مستخدم المنصة';
+            const myPh = normalizeSyrianPhone(activeSession.phone);
+            const map = getBlockedByMeMap();
+
+            if (map[partnerPh]) {
+                delete map[partnerPh];
+                saveBlockedByMeMap(map);
+                showCustomToast(`تم فك الحظر عن ${partnerNm}`, 'success');
+                if (chatChannelSub) {
+                    chatChannelSub.send({
+                        type: 'broadcast',
+                        event: 'block_status_signal',
+                        payload: { blocker_phone: myPh, blocked_phone: partnerPh, action: 'unblock' }
+                    }).catch(() => { });
+                }
+            } else {
+                map[partnerPh] = {
+                    name: partnerNm,
+                    phone: partnerPh,
+                    date: new Date().toLocaleDateString('ar-SY')
+                };
+                saveBlockedByMeMap(map);
+                showCustomToast(`تم حظر ${partnerNm} بنجاح`);
+                if (chatChannelSub) {
+                    chatChannelSub.send({
+                        type: 'broadcast',
+                        event: 'block_status_signal',
+                        payload: { blocker_phone: myPh, blocked_phone: partnerPh, action: 'block' }
+                    }).catch(() => { });
+                }
+            }
+            updateChatBlockUI();
+        }
+
+        function deleteConversationFromInbox(partnerPhone, event) {
+            if (event) event.stopPropagation();
+            if (!activeSession) return;
+            const myPh = normalizeSyrianPhone(activeSession.phone);
+            const targetPh = normalizeSyrianPhone(partnerPhone);
+
+            const remaining = getLocalChatStore().filter(m => {
+                const s = normalizeSyrianPhone(m.sender_phone);
+                const r = normalizeSyrianPhone(m.receiver_phone);
+                const isThisConv = (s === myPh && r === targetPh) || (s === targetPh && r === myPh);
+                return !isThisConv;
+            });
+
+            localStorage.setItem('zone_direct_messages_v1', JSON.stringify(remaining));
+            openInboxScreen();
+            showCustomToast('تم حذف المحادثة من قائمتك بنجاح', 'success');
+        }
+
+        function openBlockedUsersModal() {
+            const modal = document.getElementById('blocked-users-modal');
+            const listBox = document.getElementById('blocked-users-list-box');
+            if (!modal || !listBox) return;
+
+            const map = getBlockedByMeMap();
+            const entries = Object.values(map);
+            listBox.innerHTML = '';
+
+            if (entries.length === 0) {
+                listBox.innerHTML = `
+                    <div style="text-align: center; padding: 28px 14px; color: var(--text-muted);">
+                        <i class="fa-solid fa-shield-heart" style="font-size: 36px; color: var(--accent-turquoise); margin-bottom: 10px; opacity: 0.8;"></i>
+                        <div style="font-weight: 800; color: var(--text-main); font-size: 14.5px;">قائمة المحظورين فارغة</div>
+                        <div style="font-size: 12.5px; margin-top: 4px;">لم تقم بحظر أي مستخدم حتى الآن</div>
+                    </div>
+                `;
+            } else {
+                entries.forEach(item => {
+                    const row = document.createElement('div');
+                    row.style.cssText = `
+                        background: var(--card-navy); border: 1px solid var(--border-navy);
+                        border-radius: 14px; padding: 12px 14px; display: flex;
+                        align-items: center; justify-content: space-between; gap: 10px;
+                    `;
+                    row.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(239,68,68,0.12); color: #f87171; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-user-slash"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 800; color: var(--text-main);">${item.name}</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">تاريخ الحظر: ${item.date || ''}</div>
+                            </div>
+                        </div>
+                        <button onclick="unblockUserFromProfile('${item.phone}')" style="background: rgba(16,185,129,0.15); border: 1px solid var(--success); color: var(--emerald-bright); padding: 6px 12px; border-radius: 9px; font-size: 12px; font-weight: 800; cursor: pointer;">
+                            <i class="fa-solid fa-unlock"></i> فك الحظر
+                        </button>
+                    `;
+                    listBox.appendChild(row);
+                });
+            }
+
+            modal.classList.add('active');
+        }
+
+        function unblockUserFromProfile(targetPhone) {
+            const cleanPh = normalizeSyrianPhone(targetPhone);
+            const map = getBlockedByMeMap();
+            const unblockedName = map[cleanPh]?.name || 'المستخدم';
+            delete map[cleanPh];
+            saveBlockedByMeMap(map);
+
+            if (chatChannelSub && activeSession) {
+                chatChannelSub.send({
+                    type: 'broadcast',
+                    event: 'block_status_signal',
+                    payload: { blocker_phone: normalizeSyrianPhone(activeSession.phone), blocked_phone: cleanPh, action: 'unblock' }
+                }).catch(() => { });
+            }
+
+            openBlockedUsersModal();
+            showCustomToast(`تم فك الحظر عن ${unblockedName} بنجاح`, 'success');
+        }
+
+        function closeBlockedUsersModal() {
+            document.getElementById('blocked-users-modal')?.classList.remove('active');
         }
 
         function openDirectChatForAd(adId, ownerPhone, ownerName, adTitle, adPrice) {
@@ -3304,13 +4061,15 @@
             document.getElementById('chat-partner-sub').innerText = 'محادثة رسمية محمية داخل المنصة';
             document.getElementById('chat-ad-banner').style.display = 'flex';
             document.getElementById('chat-ad-title-text').innerText = adTitle;
-            document.getElementById('chat-ad-price-text').innerText = `${Number(adPrice).toLocaleString()} ل.س`;
+            const isFree = Number(adPrice) === 0;
+            document.getElementById('chat-ad-price-text').innerText = isFree ? 'إعارة مجانية' : `${Number(adPrice).toLocaleString()} ل.س`;
 
             document.getElementById('chat-inbox-list').style.display = 'none';
             document.getElementById('chat-messages-box').style.display = 'flex';
             document.getElementById('chat-input-form').style.display = 'flex';
             document.getElementById('header-unread-dot').style.display = 'none';
 
+            updateChatBlockUI();
             renderActiveChatMessages();
             document.getElementById('full-chat-screen').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -3322,6 +4081,9 @@
         function openInboxScreen() {
             if (!activeSession) return;
             activeChatContext = null;
+
+            const blockBtn = document.getElementById('btn-chat-block-toggle');
+            if (blockBtn) blockBtn.style.display = 'none';
 
             document.getElementById('chat-partner-name').innerText = 'صندوق المحادثات الرسمية';
             document.getElementById('chat-partner-sub').innerText = 'جميع المراسلات المحمية الخاصة بك';
@@ -3344,10 +4106,13 @@
                 if (sPh === myPhone || rPh === myPhone) {
                     const partnerPh = (sPh === myPhone) ? rPh : sPh;
                     const partnerNm = (sPh === myPhone) ? (m.receiver_name || 'مستخدم المنصة') : (m.sender_name || 'مستخدم المنصة');
+                    const rawText = String(m.text || '').trim();
+                    const shortMsg = rawText.length > 38 ? rawText.substring(0, 38) + '...' : rawText;
+
                     convMap.set(partnerPh, {
                         partnerPhone: partnerPh,
                         partnerName: partnerNm,
-                        lastMsg: m.text,
+                        lastMsg: shortMsg,
                         lastTime: m.time,
                         adTitle: m.ad_title || 'استفسار عن إعلان',
                         adPrice: m.ad_price || '0',
@@ -3370,18 +4135,20 @@
                     row.className = 'inbox-conv-item';
                     row.onclick = () => openDirectChatForAd(conv.adId, conv.partnerPhone, conv.partnerName, conv.adTitle, conv.adPrice);
                     row.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
+                        <div style="display: flex; align-items: center; gap: 12px; overflow: hidden; flex: 1;">
                             <div class="chat-avatar-circle">
                                 <i class="fa-solid fa-user-graduate"></i>
                             </div>
-                            <div style="display: flex; flex-direction: column; overflow: hidden;">
+                            <div style="display: flex; flex-direction: column; overflow: hidden; flex: 1;">
                                 <span style="font-size: 15px; font-weight: 800; color: var(--text-main);">${conv.partnerName}</span>
                                 <span style="font-size: 12.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${conv.lastMsg}</span>
                             </div>
                         </div>
-                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;">
+                        <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
                             <span style="font-size: 11px; color: var(--turquoise-light); font-weight: 700;">${conv.lastTime}</span>
-                            <i class="fa-solid fa-chevron-left" style="font-size: 12px; color: var(--text-muted);"></i>
+                            <button class="inbox-delete-btn" title="حذف المحادثة" onclick="deleteConversationFromInbox('${conv.partnerPhone}', event)">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
                         </div>
                     `;
                     inboxList.appendChild(row);
@@ -3444,6 +4211,16 @@
             const input = document.getElementById('chat-msg-input');
             const text = (input?.value || '').trim();
             if (!text || !activeChatContext || !activeSession) return;
+
+            if (isPartnerBlockedByMe(activeChatContext.partnerPhone)) {
+                showCustomToast('لقد قمت بحظر هذا المستخدم، قم بفك الحظر أولاً للمراسلة');
+                return;
+            }
+
+            if (amIBlockedByPartner(activeChatContext.partnerPhone)) {
+                showCustomToast('عذراً، هذا المستخدم قام بحظرك ولا يمكن إرسال الرسائل إليه');
+                return;
+            }
 
             input.value = '';
             const nowTime = new Date().toLocaleTimeString('ar-SY', { hour: '2-digit', minute: '2-digit' });
@@ -3609,8 +4386,9 @@
         }
 
         async function shareAdItem(title, price, ownerContactInfo) {
-            const formattedPrice = Number(price).toLocaleString();
-            const shareText = `شاهد هذا العرض على منصة ZONE:\nالمادة: ${title}\nالسعر: ${formattedPrice} ل.س\nالتواصل: ${ownerContactInfo}`;
+            const isFree = Number(price) === 0;
+            const formattedPrice = isFree ? 'إعارة مجانية' : `${Number(price).toLocaleString()} ل.س`;
+            const shareText = `شاهد هذا العرض على منصة ZONE:\nالمادة: ${title}\nالسعر: ${formattedPrice}\nالتواصل: ${ownerContactInfo}`;
             if (navigator.share) {
                 try {
                     await navigator.share({
@@ -3626,8 +4404,25 @@
         }
 
         /* =========================================================
-           7. فحص أمان الصور الصارم ورفعها مع حفظ حالة الخصوصية في الإعلان
+           7. نشر الإعلانات (بيع $ / إعارة مجانية هدية) + التصنيفات + رفع الصور
            ========================================================= */
+        function setAdDealMode(mode) {
+            newAdDealMode = mode;
+            const saleBtn = document.getElementById('deal-btn-sale');
+            const loanBtn = document.getElementById('deal-btn-loan');
+            const priceBox = document.getElementById('ad-price-row-box');
+
+            if (saleBtn) saleBtn.classList.toggle('active', mode === 'sale');
+            if (loanBtn) loanBtn.classList.toggle('active', mode === 'loan');
+            if (priceBox) priceBox.style.display = (mode === 'loan') ? 'none' : 'block';
+        }
+
+        function selectNewAdCategory(catCode, btnEl) {
+            newAdSelectedCategory = catCode;
+            document.querySelectorAll('.ad-cat-select-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+        }
+
         function openCreateAdModal() {
             uploadedImages = ['', '', ''];
             for (let i = 1; i <= 3; i++) {
@@ -3639,6 +4434,9 @@
             }
             document.getElementById('ad-title').value = '';
             document.getElementById('ad-price').value = '';
+            setAdDealMode('sale');
+            const defaultCatBtn = document.querySelector('.ad-cat-select-btn[data-cat="books"]');
+            selectNewAdCategory('books', defaultCatBtn);
             document.getElementById('add-ad-modal').classList.add('active');
         }
 
@@ -3727,10 +4525,11 @@
 
         async function submitNewAd() {
             const title = document.getElementById('ad-title').value.trim();
-            const price = document.getElementById('ad-price').value.trim();
+            const rawPrice = document.getElementById('ad-price').value.trim();
+            const finalPrice = (newAdDealMode === 'loan') ? '0' : rawPrice;
 
-            if (!title || !price) {
-                showCustomToast('يرجى كتابة اسم المادة والسعر بالليرة السورية');
+            if (!title || (newAdDealMode === 'sale' && !rawPrice)) {
+                showCustomToast(newAdDealMode === 'loan' ? 'يرجى كتابة اسم المادة المعارة' : 'يرجى كتابة اسم المادة والسعر بالليرة السورية');
                 return;
             }
 
@@ -3757,8 +4556,9 @@
             const cleanPh = normalizeSyrianPhone(activeSession.phone);
             const isPriv = Boolean(privMap[cleanPh]);
             const privacyTag = isPriv ? 'PRIVATE' : 'PUBLIC';
+            const finalCategoryCode = (newAdDealMode === 'loan') ? 'loan' : newAdSelectedCategory;
 
-            const enrichedOwnerName = `${activeSession.fullname} | ${activeSession.city || ''} | ${activeSession.university || ''} | ${privacyTag}`;
+            const enrichedOwnerName = `${activeSession.fullname} | ${activeSession.city || ''} | ${activeSession.university || ''} | ${privacyTag} | ${finalCategoryCode}`;
 
             await supabaseClient
                 .from('items_feed')
@@ -3766,7 +4566,7 @@
                     owner_phone: activeSession.phone,
                     owner_name: enrichedOwnerName,
                     title: title,
-                    price: price,
+                    price: finalPrice,
                     photo1: p1 || fallbackPhotos[0],
                     photo2: p2 || fallbackPhotos[1],
                     photo3: p3 || fallbackPhotos[2],
@@ -3777,7 +4577,7 @@
             submitBtn.innerHTML = `نشر الإعلان الآن`;
             closeCreateAdModal();
             await loadMainProductsFeed();
-            showCustomToast('تم نشر إعلانك بنجاح!', 'success');
+            showCustomToast(newAdDealMode === 'loan' ? 'تم نشر إعلان الإعارة المجانية بنجاح!' : 'تم نشر إعلانك بنجاح!', 'success');
         }
 
         /* =========================================================
@@ -3877,11 +4677,22 @@
 
             activeSession = updatedRows[0];
 
-            const updatedOwnerTag = `${activeSession.fullname} | ${activeSession.city} | ${activeSession.university} | ${privacyTag}`;
-            await supabaseClient
+            // تحديث بيانات صاحب الإعلان مع الحفاظ على تصنيف كل إعلان
+            const { data: myOldAds } = await supabaseClient
                 .from('items_feed')
-                .update({ owner_name: updatedOwnerTag })
+                .select('id, owner_name, price')
                 .eq('owner_phone', savedPhone);
+
+            if (myOldAds && myOldAds.length > 0) {
+                for (const ad of myOldAds) {
+                    const catCode = extractAdCategoryCode(ad);
+                    const updatedOwnerTag = `${activeSession.fullname} | ${activeSession.city} | ${activeSession.university} | ${privacyTag} | ${catCode}`;
+                    await supabaseClient
+                        .from('items_feed')
+                        .update({ owner_name: updatedOwnerTag })
+                        .eq('id', ad.id);
+                }
+            }
 
             await supabaseClient.rpc('notify_profile_update', {
                 p_fullname: activeSession.fullname,
@@ -3915,7 +4726,7 @@
             const oldToast = document.querySelector('.custom-toast');
             if (oldToast) oldToast.remove();
 
-            const isSuccessMsg = type === 'success' || /بنجاح|تم إرسال|تم التراجع|تم تعيين|رسالة جديدة/.test(msg);
+            const isSuccessMsg = type === 'success' || /بنجاح|تم إرسال|تم التراجع|تم تعيين|تم فك|تم حذف/.test(msg);
             const iconClass = isSuccessMsg ? 'fas fa-circle-check' : 'fas fa-circle-exclamation';
             const accentColor = isSuccessMsg ? '#10b981' : '#33E0E6';
             const glowRgba = isSuccessMsg ? 'rgba(16, 185, 129, 0.2)' : 'rgba(51, 224, 230, 0.15)';
