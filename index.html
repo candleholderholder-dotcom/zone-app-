@@ -260,6 +260,68 @@
             color: var(--accent-turquoise);
         }
 
+        /* صندوق الخصوصية الذكي التلقائي للطالبات */
+        .female-privacy-box {
+            display: none;
+            background-color: rgba(0, 173, 181, 0.07);
+            border: 1.5px solid var(--accent-turquoise);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            animation: fadeInPage 0.3s ease-out forwards;
+        }
+
+        .female-privacy-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--turquoise-light);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .female-privacy-header i {
+            font-size: 16px;
+        }
+
+        .privacy-options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .privacy-radio-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--card-navy);
+            border: 1px solid var(--border-navy);
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .privacy-radio-item:hover {
+            border-color: var(--accent-turquoise);
+        }
+
+        .privacy-radio-item input[type="radio"] {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--accent-turquoise);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .privacy-radio-item span {
+            font-size: 12.5px;
+            color: var(--text-main);
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
         .btn-action-primary {
             width: 100%;
             padding: 14px;
@@ -402,22 +464,24 @@
 
         .qr-wrapper {
             margin: 18px auto;
-            width: 210px;
-            height: 210px;
+            width: 230px;
+            height: 230px;
             background: #ffffff;
-            border-radius: 20px;
-            padding: 10px;
+            border-radius: 22px;
+            padding: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 8px 30px rgba(0, 173, 181, 0.3);
             border: 2px solid var(--accent-turquoise);
+            overflow: hidden;
         }
 
         .qr-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            border-radius: 14px;
         }
 
         .verified-holder-info {
@@ -431,12 +495,10 @@
         }
 
         .verified-holder-info i {
-            color: #38bdf8;
+            color: var(--turquoise-light);
         }
 
-        /* =========================================================
-           شاشة معالجة الطلب + الساعة الرملية المطابقة للتصميم المرفق 100%
-           ========================================================= */
+        /* شاشة معالجة الطلب + الساعة الرملية */
         .wait-processing-box {
             display: flex;
             flex-direction: column;
@@ -597,6 +659,46 @@
             color: var(--accent-turquoise);
             letter-spacing: 1px;
             line-height: 1;
+        }
+
+        .header-actions-group {
+            margin-right: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-inbox-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--surface-navy);
+            border: 1.5px solid var(--border-navy);
+            color: var(--turquoise-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .header-inbox-btn:hover {
+            border-color: var(--accent-turquoise);
+            background: rgba(0, 173, 181, 0.12);
+        }
+
+        .unread-dot-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--accent-turquoise);
+            border: 2px solid var(--primary-navy);
+            display: none;
         }
 
         /* شريط البحث والفلترة */
@@ -814,26 +916,28 @@
             font-size: 11px;
         }
 
-        /* الأزرار الثلاثة الموحدة والمتناظرة (تواصل - مشاركة - تم البيع) */
+        /* الأزرار الأربعة الموحدة والمتناظرة تحت كل إعلان */
         .product-card-actions {
             display: flex;
+            flex-wrap: wrap;
             align-items: stretch;
-            gap: 8px;
+            gap: 6px;
             margin-top: auto;
             padding-top: 6px;
         }
 
         .card-action-btn {
-            flex: 1;
-            height: 42px;
-            border-radius: 12px;
-            font-size: 13px;
+            flex: 1 1 auto;
+            min-width: 72px;
+            height: 40px;
+            border-radius: 11px;
+            font-size: 12.5px;
             font-weight: 800;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
             transition: var(--transition-smooth);
             border: 1.5px solid transparent;
             white-space: nowrap;
@@ -841,20 +945,36 @@
         }
 
         .card-action-btn i {
-            font-size: 14px;
+            font-size: 13px;
         }
 
+        /* 1. زر التواصل الخارجي */
         .card-action-btn.btn-contact {
             background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
             color: var(--primary-navy);
-            box-shadow: 0 4px 14px rgba(0, 173, 181, 0.28);
+            box-shadow: 0 4px 12px rgba(0, 173, 181, 0.25);
         }
 
         .card-action-btn.btn-contact:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(57, 229, 238, 0.45);
+            box-shadow: 0 6px 16px rgba(57, 229, 238, 0.4);
         }
 
+        /* 2. زر راسلني (المحادثة الداخلية الآمنة) */
+        .card-action-btn.btn-direct-chat {
+            background-color: rgba(0, 173, 181, 0.14);
+            border-color: var(--accent-turquoise);
+            color: var(--turquoise-light);
+        }
+
+        .card-action-btn.btn-direct-chat:hover {
+            background-color: var(--accent-turquoise);
+            color: var(--primary-navy);
+            box-shadow: 0 4px 14px var(--turquoise-glow);
+            transform: translateY(-2px);
+        }
+
+        /* 3. زر مشاركة */
         .card-action-btn.btn-share {
             background-color: var(--card-navy);
             border-color: var(--border-navy);
@@ -868,6 +988,7 @@
             transform: translateY(-2px);
         }
 
+        /* 4. زر تم البيع */
         .card-action-btn.btn-sold {
             background-color: rgba(239, 68, 68, 0.1);
             border-color: rgba(239, 68, 68, 0.45);
@@ -882,7 +1003,274 @@
             transform: translateY(-2px);
         }
 
-        /* شريط التراجع العائم بأسلوب تيليجرام (Telegram Undo Snackbar) */
+        /* =========================================================
+           شاشة المحادثة الرسمية الكاملة التي تملأ الشاشة 100%
+           ========================================================= */
+        .full-chat-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--primary-navy);
+            z-index: 20000;
+            display: none;
+            flex-direction: column;
+            animation: fadeInPage 0.25s ease-out forwards;
+        }
+
+        .full-chat-overlay.active {
+            display: flex;
+        }
+
+        .chat-top-bar {
+            height: 68px;
+            background-color: var(--surface-navy);
+            border-bottom: 1.5px solid var(--border-navy);
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .chat-partner-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--card-navy);
+            border: 1px solid var(--border-navy);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .chat-back-btn:hover {
+            border-color: var(--accent-turquoise);
+            color: var(--turquoise-light);
+        }
+
+        .chat-avatar-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(0, 173, 181, 0.14);
+            border: 1.5px solid var(--accent-turquoise);
+            color: var(--turquoise-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .chat-partner-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-partner-name {
+            font-size: 15.5px;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.25;
+        }
+
+        .chat-partner-status {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--turquoise-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 2px;
+        }
+
+        .chat-ad-context-banner {
+            background-color: var(--card-navy);
+            border-bottom: 1px solid var(--border-navy);
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .chat-ad-context-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .chat-ad-context-title i {
+            color: var(--accent-turquoise);
+        }
+
+        .chat-ad-context-price {
+            font-size: 12.5px;
+            font-weight: 800;
+            color: var(--turquoise-light);
+            background: rgba(0, 173, 181, 0.12);
+            padding: 3px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(57, 229, 238, 0.25);
+            white-space: nowrap;
+        }
+
+        .chat-messages-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: radial-gradient(circle at center, rgba(14, 29, 48, 0.5) 0%, var(--primary-navy) 100%);
+        }
+
+        .chat-msg-row {
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
+        }
+
+        .chat-msg-row.msg-mine {
+            align-self: flex-start;
+        }
+
+        .chat-msg-row.msg-theirs {
+            align-self: flex-end;
+        }
+
+        .chat-bubble {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .chat-msg-row.msg-mine .chat-bubble {
+            background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
+            color: var(--primary-navy);
+            font-weight: 700;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 173, 181, 0.2);
+        }
+
+        .chat-msg-row.msg-theirs .chat-bubble {
+            background-color: var(--surface-navy);
+            border: 1px solid var(--border-navy);
+            color: var(--text-main);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-msg-time {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            padding: 0 4px;
+            font-weight: 600;
+        }
+
+        .chat-msg-row.msg-theirs .chat-msg-time {
+            text-align: left;
+        }
+
+        .chat-input-bar {
+            background-color: var(--surface-navy);
+            border-top: 1.5px solid var(--border-navy);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .chat-text-field {
+            flex: 1;
+            background-color: var(--card-navy);
+            border: 1.5px solid var(--border-navy);
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 14.5px;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .chat-text-field:focus {
+            border-color: var(--accent-turquoise);
+            box-shadow: 0 0 12px var(--turquoise-glow);
+        }
+
+        .chat-send-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
+            border: none;
+            color: var(--primary-navy);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px var(--turquoise-glow);
+            transition: var(--transition-smooth);
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* قائمة المحادثات الواردة (Inbox) داخل الشاشة الكاملة */
+        .inbox-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .inbox-conv-item {
+            background-color: var(--surface-navy);
+            border: 1px solid var(--border-navy);
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .inbox-conv-item:hover {
+            border-color: var(--accent-turquoise);
+            background-color: var(--card-navy);
+        }
+
+        /* شريط التراجع العائم بأسلوب تيليجرام */
         .tg-undo-snackbar {
             position: fixed;
             bottom: 84px;
@@ -928,27 +1316,6 @@
             align-items: center;
             justify-content: center;
             font-size: 16px;
-            position: relative;
-        }
-
-        .tg-trash-badge i {
-            animation: trashShake 0.5s ease;
-        }
-
-        @keyframes trashShake {
-
-            0%,
-            100% {
-                transform: rotate(0deg);
-            }
-
-            25% {
-                transform: rotate(-12deg) scale(1.1);
-            }
-
-            75% {
-                transform: rotate(12deg) scale(1.1);
-            }
         }
 
         .tg-undo-text-wrap {
@@ -1108,7 +1475,7 @@
             transform: scale(1.1);
         }
 
-        /* الشريط السفلي: خياران نصيان + زر (+) */
+        /* الشريط السفلي */
         .bottom-app-bar {
             position: fixed;
             bottom: 0;
@@ -1188,16 +1555,23 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            color: #fff;
             transition: var(--transition-smooth);
         }
 
         .contact-choice-btn.wa {
-            background: linear-gradient(135deg, #25D366, #128C7E);
+            background: var(--card-navy);
+            border: 1.5px solid var(--accent-turquoise);
+            color: var(--turquoise-light);
+        }
+
+        .contact-choice-btn.wa:hover {
+            background: var(--accent-turquoise);
+            color: var(--primary-navy);
         }
 
         .contact-choice-btn.tg {
-            background: linear-gradient(135deg, #00ADB5, #00838F);
+            background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
+            color: var(--primary-navy);
         }
     </style>
 </head>
@@ -1237,7 +1611,7 @@
         </div>
     </div>
 
-    <!-- 2. شاشة تسجيل الدخول وإنشاء الحساب (الـ 14 محافظة سورية) -->
+    <!-- 2. شاشة تسجيل الدخول وإنشاء الحساب -->
     <div id="auth-screen" class="screen-container">
         <div class="layout-wrapper" style="justify-content: center;">
             <div class="auth-card-box">
@@ -1253,10 +1627,31 @@
 
                     <div class="form-row">
                         <label>الاسم الكامل</label>
-                        <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي" required>
+                        <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي" required
+                            oninput="checkFemaleNamePrivacy(this.value, 'reg')">
                     </div>
+
+                    <!-- خيار الخصوصية التلقائي الذكي للطالبات عند كتابة الاسم -->
+                    <div class="female-privacy-box" id="reg-female-privacy-box">
+                        <div class="female-privacy-header">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <span>إعدادات الخصوصية وحماية البيانات</span>
+                        </div>
+                        <div class="privacy-options-group">
+                            <label class="privacy-radio-item">
+                                <input type="radio" name="reg_privacy_choice" value="hide" checked>
+                                <span>إخفاء رقم الهاتف ومعرف التلغرام عن الجميع (التواصل عبر زر "راسلني" داخل التطبيق
+                                    فقط)</span>
+                            </label>
+                            <label class="privacy-radio-item">
+                                <input type="radio" name="reg_privacy_choice" value="show">
+                                <span>السماح بإظهار رقم الهاتف ومعرف التلغرام للتواصل الخارجي العادي</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="form-row">
-                        <label>رقم الهاتف</label>
+                        <label>رقم الهاتف (للتوثيق الإداري)</label>
                         <input type="tel" inputmode="numeric" id="reg-phone" placeholder="09xxxxxxxx" required>
                     </div>
                     <div class="form-row">
@@ -1414,14 +1809,15 @@
         </div>
     </div>
 
-    <!-- نافذة منبثقة Modal للدفع عبر شام كاش -->
+    <!-- نافذة منبثقة Modal للدفع عبر شام كاش (مع رفع صورة الـ QR الثابتة مثل اللوجو) -->
     <div class="modal-overlay" id="payment-modal">
         <div class="modal-content-card">
             <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">دفع الاشتراك - شام كاش</h3>
             <p style="font-size: 13.5px; color: var(--text-muted);">امسح رمز الاستجابة السريع للتحويل المالي</p>
 
             <div class="qr-wrapper">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=26ee871407869d05ad94223e7b4f1402&color=07111e"
+                <img src="./qr/sham-cash-qr.jpg"
+                    onerror="this.onerror=null; this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=26ee871407869d05ad94223e7b4f1402&color=07111e';"
                     alt="شام كاش QR" id="cham-cash-qr">
             </div>
 
@@ -1434,14 +1830,13 @@
                 26ee871407869d05ad94223e7b4f1402</p>
 
             <button class="btn-action-primary" id="btn-verify-pay" style="margin-top: 20px;"
-                onclick="triggerPaymentVerification()">التحقق
-                من الدفع</button>
+                onclick="triggerPaymentVerification()">التحقق من الدفع</button>
             <button onclick="closePaymentModal()"
                 style="background: none; border: none; color: var(--text-muted); margin-top: 10px; cursor: pointer; font-size: 13px;">إلغاء</button>
         </div>
     </div>
 
-    <!-- شاشة معالجة الطلب مع الساعة الرملية المطابقة للصورة وأزرار الرفض الموجهة بدقة -->
+    <!-- شاشة معالجة الطلب مع الساعة الرملية وأزرار الرفض الموجهة -->
     <div id="wait-approval-screen" class="screen-container">
         <div class="layout-wrapper" style="justify-content: center; align-items: center;">
             <div class="wait-processing-box">
@@ -1449,16 +1844,11 @@
                     <svg class="luxury-hourglass" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="20" y="10" width="60" height="5.5" rx="1.5" class="hg-cap-outer" />
                         <rect x="25" y="15.5" width="50" height="5" rx="1" class="hg-cap-inner" />
-
                         <rect x="25" y="79.5" width="50" height="5" rx="1" class="hg-cap-inner" />
                         <rect x="20" y="84.5" width="60" height="5.5" rx="1.5" class="hg-cap-outer" />
-
                         <path d="M 33 38 H 67 C 66 45, 58 48, 50 48 C 42 48, 34 45, 33 38 Z" class="hg-sand-top-dome" />
-
                         <rect x="47.2" y="45" width="5.6" height="28" rx="2.5" class="hg-sand-pillar" />
-
                         <path d="M 35 77 C 35 64, 65 64, 65 77 Z" class="hg-sand-bottom-mound" />
-
                         <path d="M 29 20.5 C 29 37, 36 45, 45 48.5 L 45 51.5 C 36 55, 29 63, 29 79.5"
                             class="hg-bulb-outline" />
                         <path d="M 71 20.5 C 71 37, 64 45, 55 48.5 L 55 51.5 C 64 55, 71 63, 71 79.5"
@@ -1466,12 +1856,9 @@
                     </svg>
                 </div>
                 <h2 style="font-size: 23px; font-weight: 800; color: var(--text-main); line-height: 1.5;"
-                    id="wait-header-title">جاري
-                    معالجة الطلب</h2>
+                    id="wait-header-title">جاري معالجة الطلب</h2>
                 <p id="wait-sub-caption" style="color: var(--text-muted); font-size: 14px; margin-top: 8px;">يرجى
                     الانتظار قليلاً، يتم تدقيق طلبك وسيتم تحويلك تلقائياً فور الموافقة...</p>
-
-                <!-- حاوية الزر الذكي الموجه حسب سبب الرفض -->
                 <div class="reject-actions-box" id="reject-dynamic-actions"></div>
             </div>
         </div>
@@ -1504,10 +1891,17 @@
                 </div>
 
                 <div class="header-brand-title">ZONE</div>
-                <span id="current-market-city-badge"
-                    style="margin-right: auto; font-size: 12.5px; font-weight: 800; color: var(--turquoise-light); background: rgba(0, 173, 181, 0.14); border: 1px solid rgba(57, 229, 238, 0.35); padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                    <i class="fa-solid fa-location-dot"></i> <span id="market-city-label">سوق محافظتك</span>
-                </span>
+
+                <div class="header-actions-group">
+                    <span id="current-market-city-badge"
+                        style="font-size: 12.5px; font-weight: 800; color: var(--turquoise-light); background: rgba(0, 173, 181, 0.14); border: 1px solid rgba(57, 229, 238, 0.35); padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-location-dot"></i> <span id="market-city-label">سوق محافظتك</span>
+                    </span>
+                    <button class="header-inbox-btn" onclick="openInboxScreen()" title="المحادثات">
+                        <i class="fa-solid fa-comments"></i>
+                        <span class="unread-dot-badge" id="header-unread-dot"></span>
+                    </button>
+                </div>
             </header>
 
             <!-- السلايدر الترويجي -->
@@ -1582,8 +1976,27 @@
 
             <div class="form-row">
                 <label>الاسم الكامل</label>
-                <input type="text" id="prof-name" disabled>
+                <input type="text" id="prof-name" disabled oninput="checkFemaleNamePrivacy(this.value, 'prof')">
             </div>
+
+            <!-- خيار الخصوصية داخل الملف الشخصي للطالبات -->
+            <div class="female-privacy-box" id="prof-female-privacy-box">
+                <div class="female-privacy-header">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>إعدادات الخصوصية وحماية البيانات</span>
+                </div>
+                <div class="privacy-options-group">
+                    <label class="privacy-radio-item">
+                        <input type="radio" name="prof_privacy_choice" value="hide" id="prof-priv-hide" disabled>
+                        <span>إخفاء رقم الهاتف ومعرف التلغرام (التواصل عبر زر "راسلني" فقط)</span>
+                    </label>
+                    <label class="privacy-radio-item">
+                        <input type="radio" name="prof_privacy_choice" value="show" id="prof-priv-show" disabled>
+                        <span>السماح بإظهار رقم الهاتف ومعرف التلغرام للتواصل الخارجي</span>
+                    </label>
+                </div>
+            </div>
+
             <div class="form-row">
                 <label>رقم الهاتف</label>
                 <input type="tel" id="prof-phone" disabled>
@@ -1610,7 +2023,56 @@
         </div>
     </div>
 
-    <!-- شريط التراجع العائم بأسلوب تيليجرام (Telegram Undo Snackbar) -->
+    <!-- شاشة المحادثة الرسمية الكاملة التي تملأ الشاشة بالكامل (100% Full Screen) -->
+    <div class="full-chat-overlay" id="full-chat-screen">
+        <!-- الهيدر الرسمي للمحادثة -->
+        <div class="chat-top-bar">
+            <div class="chat-partner-info">
+                <button class="chat-back-btn" onclick="closeFullChatScreen()">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+                <div class="chat-avatar-circle">
+                    <i class="fa-solid fa-user-shield" id="chat-header-icon"></i>
+                </div>
+                <div class="chat-partner-text">
+                    <span class="chat-partner-name" id="chat-partner-name">اسم المعلن</span>
+                    <span class="chat-partner-status">
+                        <i class="fa-solid fa-lock" style="font-size: 10px;"></i>
+                        <span id="chat-partner-sub">محادثة رسمية محمية داخل المنصة</span>
+                    </span>
+                </div>
+            </div>
+            <button class="chat-back-btn" onclick="openInboxScreen()" id="btn-switch-inbox" title="كافة المحادثات">
+                <i class="fa-solid fa-list-ul"></i>
+            </button>
+        </div>
+
+        <!-- شريط معلومات الإعلان المرتبط بالمحادثة -->
+        <div class="chat-ad-context-banner" id="chat-ad-banner">
+            <div class="chat-ad-context-title">
+                <i class="fa-solid fa-tag"></i>
+                <span id="chat-ad-title-text">بخصوص الإعلان</span>
+            </div>
+            <div class="chat-ad-context-price" id="chat-ad-price-text">0 ل.س</div>
+        </div>
+
+        <!-- قائمة صندوق الوارد (عند فتح قائمة المحادثات) -->
+        <div class="inbox-list-container" id="chat-inbox-list"></div>
+
+        <!-- منطقة الرسائل الفورية -->
+        <div class="chat-messages-scroll" id="chat-messages-box"></div>
+
+        <!-- شريط كتابة وإرسال الرسالة -->
+        <form class="chat-input-bar" id="chat-input-form" onsubmit="event.preventDefault(); sendDirectChatMessage();">
+            <input type="text" class="chat-text-field" id="chat-msg-input" placeholder="اكتب رسالتك هنا..."
+                autocomplete="off">
+            <button type="submit" class="chat-send-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- شريط التراجع العائم بأسلوب تيليجرام -->
     <div class="tg-undo-snackbar" id="tg-undo-snackbar">
         <div class="tg-undo-info">
             <div class="tg-trash-badge">
@@ -1633,7 +2095,7 @@
         <i class="fa-brands fa-telegram"></i>
     </a>
 
-    <!-- الشريط السفلي: الرئيسية و انا فقط + زر (+) في المنتصف -->
+    <!-- الشريط السفلي -->
     <nav class="bottom-app-bar" id="app-nav-bar" style="display: none;">
         <button class="nav-link-btn active" id="nav-btn-home" onclick="navTo('home-screen')">
             <i class="fa-solid fa-store"></i>
@@ -1647,7 +2109,6 @@
             <span>انا</span>
         </button>
     </nav>
-
     <!-- Modal إضافة إعلان جديد مع 3 مربعات مخصصة لرفع الصور المحمية -->
     <div class="modal-overlay" id="add-ad-modal">
         <div class="modal-content-card" style="text-align: right; max-width: 480px;">
@@ -1698,14 +2159,14 @@
         </div>
     </div>
 
-    <!-- Modal خيارات التواصل (واتساب أو تليغرام) -->
+    <!-- Modal خيارات التواصل الخارجي (واتساب أو تليغرام) -->
     <div class="modal-overlay" id="contact-choice-modal">
         <div class="modal-content-card" style="max-width: 380px;">
             <div
                 style="width: 50px; height: 50px; background: rgba(0, 173, 181, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; color: var(--accent-turquoise); font-size: 22px;">
                 <i class="fa-solid fa-phone"></i>
             </div>
-            <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">طريقة التواصل</h3>
+            <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">طريقة التواصل الخارجي</h3>
             <p style="font-size: 13.5px; color: var(--text-muted);">اختر التطبيق المفضل لديك للتواصل مع المعلن:</p>
 
             <div class="contact-modal-choices">
@@ -1739,6 +2200,7 @@
             </div>
         </div>
     </div>
+
     <script>
         /* =========================================================
            0. تشغيل شريط الإعلانات المتحرك (Slider)
@@ -1773,7 +2235,7 @@
         });
 
         /* =========================================================
-           1. إعدادات الاتصال الآمن + تشفير كلمات المرور (SHA-256)
+           1. إعدادات الاتصال الآمن + تشفير كلمات المرور + كشف أسماء الطالبات
            ========================================================= */
         const ZONE_ENV_CONFIG = Object.freeze({
             url: window.__ZONE_SUPABASE_URL__ || 'https://hvrxmpyzyxsoqrgfyyod.supabase.co',
@@ -1784,7 +2246,70 @@
         const BOT_USERNAME = '@Zonewebsite_bot';
         const SUPPORT_USERNAME = '@Zoneapplication';
 
-        // دالة توحيد صيغة رقم الهاتف السوري لمنع تكرار الحسابات بصيغ مختلفة
+        // قاموس الأسماء النسائية الشائعة للتعرف الذكي التلقائي وتفعيل الخصوصية
+        const FEMALE_NAMES_LIST = [
+            'سارة', 'ساره', 'فاطمة', 'فاطمه', 'مريم', 'نور', 'آية', 'ايه', 'آيه', 'لين', 'لينا', 'رغد', 'شام',
+            'هدى', 'هبة', 'هبه', 'بتول', 'زينب', 'رقية', 'رقيه', 'حلا', 'غزل', 'جود', 'لمى', 'لما', 'رنا', 'رشا',
+            'سلمى', 'سمر', 'سوسن', 'شهد', 'غنى', 'فرح', 'قمر', 'لجين', 'مايا', 'مرام', 'منى', 'مها', 'مي', 'ميس',
+            'ملاك', 'ملك', 'نادين', 'نايا', 'ندى', 'نسرين', 'نغم', 'نهى', 'نورا', 'نوران', 'هاجر', 'هلا', 'هند',
+            'وداد', 'ورد', 'وفاء', 'وئام', 'يارا', 'ياسمين', 'يسرى', 'يمامة', 'يمنى', 'أمل', 'امل', 'أماني', 'اماني',
+            'أميرة', 'اميرة', 'اميره', 'إسراء', 'اسراء', 'إيمان', 'ايمان', 'إيناس', 'ايناس', 'بيان', 'بشرى', 'بانا',
+            'تالا', 'تسنيم', 'تيماء', 'جنى', 'جمانة', 'جمانه', 'جوري', 'حنين', 'خلود', 'دانا', 'دانة', 'دعاء', 'دلال',
+            'ديما', 'ديمة', 'وعد', 'رهف', 'روان', 'ريم', 'ريما', 'ريماس', 'زهراء', 'زينة', 'زينه', 'سجى', 'سدرة', 'سما',
+            'سمية', 'سميه', 'سندس', 'سلاف', 'سلسبيل', 'ربى', 'ربا', 'صبا', 'صفاء', 'ضحى', 'عبير', 'علا', 'علياء', 'عنود',
+            'غفران', 'غيداء', 'فاتن', 'فريال', 'فيحاء', 'كوثر', 'كارمن', 'كندا', 'كندة', 'ليال', 'ليلى', 'ليان', 'لوليا',
+            'ماريا', 'روعة', 'سيدرا', 'سيلين', 'ميرا', 'ميرنا', 'نانسي', 'نسمة', 'نسمه', 'نيرمين', 'بيسان', 'رنيم', 'سالي', 'تولين'
+        ];
+
+        function normalizeArabicName(nameStr) {
+            return String(nameStr || '')
+                .trim()
+                .split(/\s+/)[0]
+                .replace(/[أإآ]/g, 'ا')
+                .replace(/ة$/g, 'ه');
+        }
+
+        function isDetectedFemaleName(fullName) {
+            const firstWord = String(fullName || '').trim().split(/\s+/)[0];
+            if (!firstWord || firstWord.length < 2) return false;
+            const normFirst = normalizeArabicName(firstWord);
+
+            for (const fName of FEMALE_NAMES_LIST) {
+                if (firstWord === fName || normFirst === normalizeArabicName(fName)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function checkFemaleNamePrivacy(val, mode = 'reg') {
+            const isFemale = isDetectedFemaleName(val);
+            const boxId = mode === 'reg' ? 'reg-female-privacy-box' : 'prof-female-privacy-box';
+            const boxEl = document.getElementById(boxId);
+            if (!boxEl) return;
+
+            if (isFemale) {
+                boxEl.style.display = 'block';
+            } else {
+                boxEl.style.display = 'none';
+            }
+        }
+
+        function getUserPrivacyMap() {
+            try {
+                return JSON.parse(localStorage.getItem('zone_privacy_map') || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function setUserPrivacySetting(phone, isPrivateBool) {
+            const cleanPh = normalizeSyrianPhone(phone);
+            const map = getUserPrivacyMap();
+            map[cleanPh] = Boolean(isPrivateBool);
+            localStorage.setItem('zone_privacy_map', JSON.stringify(map));
+        }
+
         function normalizeSyrianPhone(rawPhone) {
             let ph = String(rawPhone || '').trim().replace(/\s+/g, '');
             if (ph.startsWith('+963')) ph = '0' + ph.substring(4);
@@ -1792,7 +2317,6 @@
             return ph;
         }
 
-        // دالة تشفير كلمات المرور SHA-256 لمنع حفظها أو إرسالها كنص صريح مكشوف
         async function hashPasswordSecure(plainText) {
             const cleanText = String(plainText || '').trim();
             if (!cleanText) return '';
@@ -1814,12 +2338,10 @@
         let resetTargetPhone = '';
         let fastWaitApprovalWatcher = null;
 
-        // أقفال الحماية لمنع سباق البيانات (Race Conditions) وتكرار الطلبات الشبكية
         let isAuthBusy = false;
         let isPaymentNotifiedLock = false;
         let isCheckingDecisionLock = false;
 
-        // متغيرات الفلترة، المكبر، وشريط التراجع بأسلوب تيليجرام
         let allFeedItemsCache = [];
         let filterMyAdsOnly = false;
         let activeUndoItem = null;
@@ -1827,8 +2349,12 @@
         let lightboxCurrentIndex = 0;
         let cityModalTargetMode = 'reg';
 
+        // متغيرات نظام المحادثة الداخلي الكامل
+        let activeChatContext = null;
+        let chatChannelSub = null;
+
         /* =========================================================
-           2. التزامن اللحظي الشامل + التقاط قرار البوت وسبب الرفض فوراً
+           2. التزامن اللحظي الشامل + التقاط قرار البوت والرسائل الفورية
            ========================================================= */
         function setupRealtimeListeners() {
             supabaseClient
@@ -1844,7 +2370,6 @@
 
                     const normalizedUpdatedPhone = normalizeSyrianPhone(updatedUser.phone);
 
-                    // أ) إذا كان المستخدم مسجلاً للدخول حالياً وتم طرده أو انتهاء باقته من البوت
                     if (activeSession && normalizeSyrianPhone(activeSession.phone) === normalizedUpdatedPhone) {
                         if (Number(updatedUser.is_expired) === 1 || Number(updatedUser.sub_status) === 0 || Number(updatedUser.is_active) === -1) {
                             logoutSession();
@@ -1862,15 +2387,37 @@
                         }
                     }
 
-                    // ب) إذا كان الطالب في شاشة الانتظار وتم قبول أو رفض طلبه من البوت
                     if (pendingUserData && normalizeSyrianPhone(pendingUserData.phone) === normalizedUpdatedPhone) {
                         await evaluateWaitingUserStatus(updatedUser);
                     }
                 })
                 .subscribe();
+
+            // قناة البث الفوري للمحادثات الداخلية المباشرة (Supabase Broadcast + DB Sync)
+            chatChannelSub = supabaseClient
+                .channel('zone-direct-chat-room')
+                .on('broadcast', { event: 'new_direct_msg' }, (payload) => {
+                    const msgObj = payload.payload;
+                    if (!msgObj || !activeSession) return;
+                    const myPh = normalizeSyrianPhone(activeSession.phone);
+                    if (normalizeSyrianPhone(msgObj.receiver_phone) === myPh || normalizeSyrianPhone(msgObj.sender_phone) === myPh) {
+                        saveChatMessageLocally(msgObj);
+                        const chatOverlay = document.getElementById('full-chat-screen');
+                        if (chatOverlay && chatOverlay.classList.contains('active') && activeChatContext) {
+                            if (normalizeSyrianPhone(activeChatContext.partnerPhone) === normalizeSyrianPhone(msgObj.sender_phone) ||
+                                normalizeSyrianPhone(activeChatContext.partnerPhone) === normalizeSyrianPhone(msgObj.receiver_phone)) {
+                                renderActiveChatMessages();
+                            }
+                        } else if (normalizeSyrianPhone(msgObj.receiver_phone) === myPh) {
+                            const dot = document.getElementById('header-unread-dot');
+                            if (dot) dot.style.display = 'block';
+                            showCustomToast(`رسالة جديدة من ${msgObj.sender_name || 'مستخدم'}`, 'success');
+                        }
+                    }
+                })
+                .subscribe();
         }
 
-        // استخراج سبب الرفض الفعلي فقط بعد أن يكتبه الأدمن في البوت ويرسله
         function extractAdminRejectionReason(userRecord) {
             const possibleFields = [
                 userRecord.reject_reason,
@@ -1897,7 +2444,6 @@
             return '';
         }
 
-        // فحص وتنفيذ قرار الأدمن فوراً فور جهوزية السبب أو التفعيل
         async function evaluateWaitingUserStatus(userRecord) {
             const waitScreen = document.getElementById('wait-approval-screen');
             if (!waitScreen || !waitScreen.classList.contains('active-screen')) return;
@@ -1906,17 +2452,14 @@
             const subStatus = Number(userRecord.sub_status);
             const isExpired = Number(userRecord.is_expired);
 
-            // 1) حالة القبول العادي أو التفعيل المجاني
             if (isActive === 1 && subStatus === 1 && isExpired === 0) {
                 stopFastApprovalPolling();
                 await applyDecision(userRecord.plan_type === 'gift' ? 'gift' : 'accept', '', userRecord);
                 return;
             }
 
-            // 2) حالة الرفض (سواء تم تغيير is_active إلى -1 أو كتابة سبب الرفض في الحقل المخصص)
             const customReason = extractAdminRejectionReason(userRecord);
             if (isActive === -1 || customReason.length > 0) {
-                // إذا ضغط الأدمن "رفض" في البوت ولم يكتب السبب بعد، تبقى الساعة الرملية بانتظار كتابة السبب
                 if (customReason.length > 0) {
                     stopFastApprovalPolling();
                     await applyDecision('reject', customReason, userRecord);
@@ -1924,7 +2467,6 @@
             }
         }
 
-        // دالة مراقبة سريعة ومنظمة بدون تداخل (Non-overlapping Polling) لضمان استجابة لحظية خلال 1 ثانية
         async function checkAdminDecisionNow() {
             if (isCheckingDecisionLock || !pendingUserData || !pendingUserData.phone) return;
             const waitScreen = document.getElementById('wait-approval-screen');
@@ -1932,7 +2474,6 @@
 
             isCheckingDecisionLock = true;
             try {
-                // سحب التحديثات من البوت أولاً
                 await supabaseClient.rpc('check_admin_callbacks');
 
                 const localPhone = normalizeSyrianPhone(pendingUserData.phone);
@@ -1949,7 +2490,6 @@
                     await evaluateWaitingUserStatus(freshUser);
                 }
             } catch (e) {
-                // تجاهل أخطاء الشبكة المؤقتة لضمان استمرار الفحص بسلاسة
             } finally {
                 isCheckingDecisionLock = false;
             }
@@ -1972,7 +2512,7 @@
         }
 
         /* =========================================================
-           3. إدارة الشاشات + حماية الجلسة المخزنة (Local Storage Security)
+           3. إدارة الشاشات + حماية الجلسة المخزنة
            ========================================================= */
         function updateHeaderMarketBadge() {
             const badgeLabel = document.getElementById('market-city-label');
@@ -2006,7 +2546,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             setupRealtimeListeners();
 
-            // فحص خلفي هادئ فقط عندما لا نكون في شاشة الانتظار السريعة لمنع تضارب الطلبات
             setInterval(() => {
                 if (!fastWaitApprovalWatcher && !isCheckingDecisionLock) {
                     supabaseClient.rpc('check_admin_callbacks').then(() => { }).catch(() => { });
@@ -2070,7 +2609,7 @@
         });
 
         /* =========================================================
-           4. المصادقة الذكية (منع تكرار الأرقام + تمييز المطرود من الفعّال)
+           4. المصادقة الذكية + حفظ خيار الخصوصية للطالبات
            ========================================================= */
         function toggleAuth(type) {
             document.getElementById('tab-login-btn').classList.toggle('active', type === 'login');
@@ -2150,6 +2689,15 @@
                 return;
             }
 
+            // حفظ خيار الخصوصية إذا كان الاسم لطالبة
+            const isFemale = isDetectedFemaleName(fullname);
+            let hideContactChoice = false;
+            if (isFemale) {
+                const selectedRadio = document.querySelector('input[name="reg_privacy_choice"]:checked');
+                hideContactChoice = selectedRadio ? (selectedRadio.value === 'hide') : true;
+            }
+            setUserPrivacySetting(phone, hideContactChoice);
+
             isAuthBusy = true;
             const regBtn = document.getElementById('btn-reg-next');
             if (regBtn) regBtn.disabled = true;
@@ -2178,6 +2726,7 @@
                     major,
                     password: hashedPassword,
                     tg_chat_id: String(pendingUserData.tg_chat_id),
+                    hide_contact: hideContactChoice,
                     isReviewingData: false
                 };
 
@@ -2390,7 +2939,7 @@
         }
 
         /* =========================================================
-           5. شاشة الباقات ومعالجة الطلب + إظهار زر واحد فقط حسب سبب الرفض
+           5. شاشة الباقات ومعالجة الطلب
            ========================================================= */
         function selectPlanAndPay(type, cost) {
             chosenPlan = { type, cost };
@@ -2412,7 +2961,6 @@
             closePaymentModal();
             switchActiveScreen('wait-approval-screen');
 
-            // إظهار الساعة الرملية وإخفاء أي حالة رفض سابقة
             const hgBox = document.getElementById('hourglass-anim-box');
             const subCaption = document.getElementById('wait-sub-caption');
             const rejectBox = document.getElementById('reject-dynamic-actions');
@@ -2429,7 +2977,6 @@
                     const cleanPhone = normalizeSyrianPhone(pendingUserData.phone);
                     pendingUserData.phone = cleanPhone;
 
-                    // حفظ الطلب وتصفير أي سبب رفض قديم بشكل متوافق مع بنية الجدول
                     const basePayload = {
                         fullname: pendingUserData.fullname,
                         phone: cleanPhone,
@@ -2452,7 +2999,6 @@
                             admin_note: null
                         }, { onConflict: 'phone' });
 
-                    // حماية إضافية في حال كان الجدول لا يحتوي على أعمدة reject_reason أو admin_note
                     if (upsertErr) {
                         await supabaseClient
                             .from('platform_users')
@@ -2475,7 +3021,6 @@
             }
         }
 
-        // توجيه الطالب عند الضغط على زر مراجعة البيانات
         function returnToReviewData() {
             if (pendingUserData) {
                 pendingUserData.isReviewingData = true;
@@ -2485,6 +3030,7 @@
             toggleAuth('reg');
             if (pendingUserData) {
                 document.getElementById('reg-fullname').value = pendingUserData.fullname || '';
+                checkFemaleNamePrivacy(pendingUserData.fullname || '', 'reg');
                 document.getElementById('reg-phone').value = pendingUserData.phone || '';
                 document.getElementById('reg-city').value = pendingUserData.city || 'دمشق';
                 const cityLabel = document.getElementById('selected-city-text');
@@ -2494,7 +3040,6 @@
             }
         }
 
-        // توجيه الطالب عند الضغط على زر مراجعة الدفع
         function returnToReviewPayment() {
             isPaymentNotifiedLock = false;
             switchActiveScreen('subs-screen');
@@ -2537,7 +3082,6 @@
 
                 if (rejectBox) {
                     rejectBox.style.display = 'flex';
-                    // إظهار زر واحد فقط بدقة بناءً على سبب الرفض الذي كتبه الأدمن في البوت
                     const dataKeywords = ['بيانات', 'اسم', 'جامعة', 'فرع', 'تخصص', 'رقم', 'هاتف', 'معلومات', 'محافظة', 'هوية', 'حساب', 'ثلاثي', 'كلية', 'وهمي', 'خطأ في'];
                     const isDataIssue = dataKeywords.some(kw => reasonText.includes(kw));
 
@@ -2559,8 +3103,22 @@
         }
 
         /* =========================================================
-           6. الواجهة الرئيسية + عزل ونقل أسواق المحافظات بشكل صارم
+           6. الواجهة الرئيسية + منطق الأزرار الأربعة الذكي (تواصل / راسلني / مشاركة / تم البيع)
            ========================================================= */
+        function isAdOwnerPrivate(item) {
+            const parts = (item.owner_name || '').split(' | ');
+            const privFlag = (parts[3] || '').trim();
+            if (privFlag === 'PRIVATE') return true;
+            if (privFlag === 'PUBLIC') return false;
+
+            const cleanOwnerPhone = normalizeSyrianPhone(item.owner_phone);
+            const privMap = getUserPrivacyMap();
+            if (typeof privMap[cleanOwnerPhone] === 'boolean') {
+                return privMap[cleanOwnerPhone];
+            }
+            return false;
+        }
+
         async function loadMainProductsFeed() {
             if (!activeSession) return;
 
@@ -2633,7 +3191,7 @@
                 feedGrid.innerHTML = '';
 
                 filtered.forEach(item => {
-                    const isOwner = activeSession && (activeSession.phone === item.owner_phone);
+                    const isOwner = activeSession && (normalizeSyrianPhone(activeSession.phone) === normalizeSyrianPhone(item.owner_phone));
                     const cardContainer = document.createElement('div');
                     cardContainer.id = `ad-container-${item.id}`;
                     cardContainer.className = 'product-card-container';
@@ -2643,7 +3201,11 @@
                     const ownerCity = parts[1] || '';
                     const ownerUni = parts[2] || '';
 
+                    // فحص هل صاحبة الإعلان مفعلة لوضع الخصوصية (إخفاء الرقم والتلغرام)
+                    const hideExternalContact = isAdOwnerPrivate(item);
+
                     const safeTitle = String(item.title).replace(/'/g, "\\'");
+                    const safeOwnerName = String(cleanOwnerName).replace(/'/g, "\\'");
 
                     cardContainer.innerHTML = `
                     <div class="product-card" id="card-inner-${item.id}">
@@ -2665,14 +3227,23 @@
                             </div>
 
                             <div class="product-card-actions">
-                                <button class="card-action-btn btn-contact" onclick="openContactOptions('${item.owner_phone}')">
-                                    <i class="fa-solid fa-phone"></i>
-                                    <span>تواصل</span>
+                                ${!hideExternalContact ? `
+                                    <button class="card-action-btn btn-contact" onclick="openContactOptions('${item.owner_phone}')">
+                                        <i class="fa-solid fa-phone"></i>
+                                        <span>تواصل</span>
+                                    </button>
+                                ` : ''}
+
+                                <button class="card-action-btn btn-direct-chat" onclick="openDirectChatForAd(${item.id}, '${item.owner_phone}', '${safeOwnerName}', '${safeTitle}', '${item.price}')">
+                                    <i class="fa-solid fa-comments"></i>
+                                    <span>راسلني</span>
                                 </button>
-                                <button class="card-action-btn btn-share" onclick="shareAdItem('${safeTitle}', '${item.price}', '${item.owner_phone}')">
+
+                                <button class="card-action-btn btn-share" onclick="shareAdItem('${safeTitle}', '${item.price}', '${hideExternalContact ? 'متاح عبر المحادثة داخل المنصة' : item.owner_phone}')">
                                     <i class="fa-solid fa-share-nodes"></i>
                                     <span>مشاركة</span>
                                 </button>
+
                                 ${isOwner ? `
                                     <button class="card-action-btn btn-sold" id="btn-sold-${item.id}" onclick="triggerSoldUndoCountdown(${item.id})">
                                         <i class="fa-solid fa-check-double"></i>
@@ -2685,6 +3256,222 @@
                     `;
                     feedGrid.appendChild(cardContainer);
                 });
+            }
+        }
+
+        /* =========================================================
+           6.5 نظام المحادثة الرسمي الكامل (يملأ الشاشة 100%)
+           ========================================================= */
+        function getLocalChatStore() {
+            try {
+                return JSON.parse(localStorage.getItem('zone_direct_messages_v1') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveChatMessageLocally(msgObj) {
+            const store = getLocalChatStore();
+            if (!store.some(m => m.id === msgObj.id)) {
+                store.push(msgObj);
+                localStorage.setItem('zone_direct_messages_v1', JSON.stringify(store));
+            }
+        }
+
+        function openDirectChatForAd(adId, ownerPhone, ownerName, adTitle, adPrice) {
+            if (!activeSession) {
+                showCustomToast('يرجى تسجيل الدخول أولاً للمراسلة');
+                return;
+            }
+
+            const myPhone = normalizeSyrianPhone(activeSession.phone);
+            const targetPhone = normalizeSyrianPhone(ownerPhone);
+
+            if (myPhone === targetPhone) {
+                openInboxScreen();
+                return;
+            }
+
+            activeChatContext = {
+                adId: adId,
+                partnerPhone: targetPhone,
+                partnerName: ownerName,
+                adTitle: adTitle,
+                adPrice: adPrice
+            };
+
+            document.getElementById('chat-partner-name').innerText = ownerName;
+            document.getElementById('chat-partner-sub').innerText = 'محادثة رسمية محمية داخل المنصة';
+            document.getElementById('chat-ad-banner').style.display = 'flex';
+            document.getElementById('chat-ad-title-text').innerText = adTitle;
+            document.getElementById('chat-ad-price-text').innerText = `${Number(adPrice).toLocaleString()} ل.س`;
+
+            document.getElementById('chat-inbox-list').style.display = 'none';
+            document.getElementById('chat-messages-box').style.display = 'flex';
+            document.getElementById('chat-input-form').style.display = 'flex';
+            document.getElementById('header-unread-dot').style.display = 'none';
+
+            renderActiveChatMessages();
+            document.getElementById('full-chat-screen').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                document.getElementById('chat-msg-input')?.focus();
+            }, 150);
+        }
+
+        function openInboxScreen() {
+            if (!activeSession) return;
+            activeChatContext = null;
+
+            document.getElementById('chat-partner-name').innerText = 'صندوق المحادثات الرسمية';
+            document.getElementById('chat-partner-sub').innerText = 'جميع المراسلات المحمية الخاصة بك';
+            document.getElementById('chat-ad-banner').style.display = 'none';
+            document.getElementById('chat-messages-box').style.display = 'none';
+            document.getElementById('chat-input-form').style.display = 'none';
+            document.getElementById('header-unread-dot').style.display = 'none';
+
+            const inboxList = document.getElementById('chat-inbox-list');
+            inboxList.style.display = 'flex';
+            inboxList.innerHTML = '';
+
+            const myPhone = normalizeSyrianPhone(activeSession.phone);
+            const allMsgs = getLocalChatStore();
+            const convMap = new Map();
+
+            allMsgs.forEach(m => {
+                const sPh = normalizeSyrianPhone(m.sender_phone);
+                const rPh = normalizeSyrianPhone(m.receiver_phone);
+                if (sPh === myPhone || rPh === myPhone) {
+                    const partnerPh = (sPh === myPhone) ? rPh : sPh;
+                    const partnerNm = (sPh === myPhone) ? (m.receiver_name || 'مستخدم المنصة') : (m.sender_name || 'مستخدم المنصة');
+                    convMap.set(partnerPh, {
+                        partnerPhone: partnerPh,
+                        partnerName: partnerNm,
+                        lastMsg: m.text,
+                        lastTime: m.time,
+                        adTitle: m.ad_title || 'استفسار عن إعلان',
+                        adPrice: m.ad_price || '0',
+                        adId: m.ad_id || 0
+                    });
+                }
+            });
+
+            if (convMap.size === 0) {
+                inboxList.innerHTML = `
+                    <div style="margin: auto; text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                        <i class="fa-solid fa-comments" style="font-size: 44px; color: var(--accent-turquoise); margin-bottom: 14px; opacity: 0.75;"></i>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">لا توجد محادثات نشطة بعد</div>
+                        <div style="font-size: 13px;">اضغط على زر "راسلني" تحت أي إعلان لبدء محادثة فورية ومحمية</div>
+                    </div>
+                `;
+            } else {
+                Array.from(convMap.values()).reverse().forEach(conv => {
+                    const row = document.createElement('div');
+                    row.className = 'inbox-conv-item';
+                    row.onclick = () => openDirectChatForAd(conv.adId, conv.partnerPhone, conv.partnerName, conv.adTitle, conv.adPrice);
+                    row.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
+                            <div class="chat-avatar-circle">
+                                <i class="fa-solid fa-user-graduate"></i>
+                            </div>
+                            <div style="display: flex; flex-direction: column; overflow: hidden;">
+                                <span style="font-size: 15px; font-weight: 800; color: var(--text-main);">${conv.partnerName}</span>
+                                <span style="font-size: 12.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${conv.lastMsg}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;">
+                            <span style="font-size: 11px; color: var(--turquoise-light); font-weight: 700;">${conv.lastTime}</span>
+                            <i class="fa-solid fa-chevron-left" style="font-size: 12px; color: var(--text-muted);"></i>
+                        </div>
+                    `;
+                    inboxList.appendChild(row);
+                });
+            }
+
+            document.getElementById('full-chat-screen').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFullChatScreen() {
+            document.getElementById('full-chat-screen').classList.remove('active');
+            document.body.style.overflow = '';
+            activeChatContext = null;
+        }
+
+        function renderActiveChatMessages() {
+            const box = document.getElementById('chat-messages-box');
+            if (!box || !activeChatContext || !activeSession) return;
+
+            const myPhone = normalizeSyrianPhone(activeSession.phone);
+            const partnerPhone = normalizeSyrianPhone(activeChatContext.partnerPhone);
+
+            const allMsgs = getLocalChatStore().filter(m => {
+                const s = normalizeSyrianPhone(m.sender_phone);
+                const r = normalizeSyrianPhone(m.receiver_phone);
+                return (s === myPhone && r === partnerPhone) || (s === partnerPhone && r === myPhone);
+            });
+
+            box.innerHTML = '';
+
+            if (allMsgs.length === 0) {
+                box.innerHTML = `
+                    <div style="margin: auto; text-align: center; padding: 30px 20px; max-width: 320px;">
+                        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(0, 173, 181, 0.12); border: 1.5px solid var(--accent-turquoise); color: var(--turquoise-light); display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 12px auto;">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div style="font-size: 15px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">محادثة مباشرة ومحمية</div>
+                        <div style="font-size: 12.5px; color: var(--text-muted); line-height: 1.6;">بياناتك ورقم هاتفك محمية بالكامل ولا تظهر للطرف الآخر. اكتب رسالتك للاستفسار عن الإعلان.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            allMsgs.forEach(m => {
+                const isMine = normalizeSyrianPhone(m.sender_phone) === myPhone;
+                const row = document.createElement('div');
+                row.className = `chat-msg-row ${isMine ? 'msg-mine' : 'msg-theirs'}`;
+                row.innerHTML = `
+                    <div class="chat-bubble">${m.text}</div>
+                    <div class="chat-msg-time">${m.time}</div>
+                `;
+                box.appendChild(row);
+            });
+
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function sendDirectChatMessage() {
+            const input = document.getElementById('chat-msg-input');
+            const text = (input?.value || '').trim();
+            if (!text || !activeChatContext || !activeSession) return;
+
+            input.value = '';
+            const nowTime = new Date().toLocaleTimeString('ar-SY', { hour: '2-digit', minute: '2-digit' });
+
+            const newMsg = {
+                id: `msg_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+                ad_id: activeChatContext.adId,
+                ad_title: activeChatContext.adTitle,
+                ad_price: activeChatContext.adPrice,
+                sender_phone: normalizeSyrianPhone(activeSession.phone),
+                sender_name: activeSession.fullname,
+                receiver_phone: normalizeSyrianPhone(activeChatContext.partnerPhone),
+                receiver_name: activeChatContext.partnerName,
+                text: text,
+                time: nowTime
+            };
+
+            saveChatMessageLocally(newMsg);
+            renderActiveChatMessages();
+
+            if (chatChannelSub) {
+                try {
+                    await chatChannelSub.send({
+                        type: 'broadcast',
+                        event: 'new_direct_msg',
+                        payload: newMsg
+                    });
+                } catch (e) { }
             }
         }
 
@@ -2729,7 +3516,7 @@
 
         function triggerSoldUndoCountdown(postId) {
             const targetItem = allFeedItemsCache.find(i => i.id === postId);
-            if (!activeSession || !targetItem || targetItem.owner_phone !== activeSession.phone) {
+            if (!activeSession || !targetItem || normalizeSyrianPhone(targetItem.owner_phone) !== normalizeSyrianPhone(activeSession.phone)) {
                 showCustomToast('لا يمكنك حذف إعلان لا تملكه!');
                 return;
             }
@@ -2821,9 +3608,9 @@
             document.getElementById('contact-choice-modal').classList.remove('active');
         }
 
-        async function shareAdItem(title, price, ownerPhone) {
+        async function shareAdItem(title, price, ownerContactInfo) {
             const formattedPrice = Number(price).toLocaleString();
-            const shareText = `📢 شاهد هذا العرض على منصة ZONE:\n📦 ${title}\n💰 السعر: ${formattedPrice} ل.س\n📞 للتواصل: ${ownerPhone}`;
+            const shareText = `شاهد هذا العرض على منصة ZONE:\nالمادة: ${title}\nالسعر: ${formattedPrice} ل.س\nالتواصل: ${ownerContactInfo}`;
             if (navigator.share) {
                 try {
                     await navigator.share({
@@ -2839,7 +3626,7 @@
         }
 
         /* =========================================================
-           7. فحص أمان الصور الصارم (MIME Type) ورفعها إلى zone-assests
+           7. فحص أمان الصور الصارم ورفعها مع حفظ حالة الخصوصية في الإعلان
            ========================================================= */
         function openCreateAdModal() {
             uploadedImages = ['', '', ''];
@@ -2966,7 +3753,12 @@
             const p2 = uploadedImages[1] ? await uploadBase64ToBucket(uploadedImages[1], 2) : fallbackPhotos[1];
             const p3 = uploadedImages[2] ? await uploadBase64ToBucket(uploadedImages[2], 3) : fallbackPhotos[2];
 
-            const enrichedOwnerName = `${activeSession.fullname} | ${activeSession.city || ''} | ${activeSession.university || ''}`;
+            const privMap = getUserPrivacyMap();
+            const cleanPh = normalizeSyrianPhone(activeSession.phone);
+            const isPriv = Boolean(privMap[cleanPh]);
+            const privacyTag = isPriv ? 'PRIVATE' : 'PUBLIC';
+
+            const enrichedOwnerName = `${activeSession.fullname} | ${activeSession.city || ''} | ${activeSession.university || ''} | ${privacyTag}`;
 
             await supabaseClient
                 .from('items_feed')
@@ -2989,7 +3781,7 @@
         }
 
         /* =========================================================
-           8. شاشة الملف الشخصي (أنا) + توثيق أمني صارم عند تعديل البيانات
+           8. شاشة الملف الشخصي (أنا) + التحكم بإعدادات الخصوصية للطالبات
            ========================================================= */
         function navTo(screenId) {
             document.getElementById('nav-btn-home').classList.toggle('active', screenId === 'home-screen');
@@ -3008,6 +3800,16 @@
             document.getElementById('prof-city').value = activeSession.city;
             document.getElementById('prof-university').value = activeSession.university;
             document.getElementById('prof-major').value = activeSession.major;
+
+            checkFemaleNamePrivacy(activeSession.fullname, 'prof');
+            const privMap = getUserPrivacyMap();
+            const isPriv = Boolean(privMap[normalizeSyrianPhone(activeSession.phone)]);
+            const hideRadio = document.getElementById('prof-priv-hide');
+            const showRadio = document.getElementById('prof-priv-show');
+            if (hideRadio && showRadio) {
+                hideRadio.checked = isPriv;
+                showRadio.checked = !isPriv;
+            }
         }
 
         function toggleProfileEditMode() {
@@ -3017,6 +3819,12 @@
             document.getElementById('prof-city').style.cursor = isCurrentlyDisabled ? 'pointer' : 'default';
             document.getElementById('prof-university').disabled = !isCurrentlyDisabled;
             document.getElementById('prof-major').disabled = !isCurrentlyDisabled;
+
+            const hideRadio = document.getElementById('prof-priv-hide');
+            const showRadio = document.getElementById('prof-priv-show');
+            if (hideRadio) hideRadio.disabled = !isCurrentlyDisabled;
+            if (showRadio) showRadio.disabled = !isCurrentlyDisabled;
+
             document.getElementById('save-prof-btn').style.display = isCurrentlyDisabled ? 'block' : 'none';
         }
 
@@ -3042,7 +3850,14 @@
                 return;
             }
 
-            // التحقق من صحة الجلسة والتوكن المشفر في السيرفر قبل السماح بتعديل الملف الشخصي أو الإعلانات
+            let isPriv = false;
+            if (isDetectedFemaleName(newName)) {
+                const hideRadio = document.getElementById('prof-priv-hide');
+                isPriv = hideRadio ? hideRadio.checked : false;
+            }
+            setUserPrivacySetting(savedPhone, isPriv);
+            const privacyTag = isPriv ? 'PRIVATE' : 'PUBLIC';
+
             const { data: updatedRows, error: updateErr } = await supabaseClient
                 .from('platform_users')
                 .update({
@@ -3062,7 +3877,7 @@
 
             activeSession = updatedRows[0];
 
-            const updatedOwnerTag = `${activeSession.fullname} | ${activeSession.city} | ${activeSession.university}`;
+            const updatedOwnerTag = `${activeSession.fullname} | ${activeSession.city} | ${activeSession.university} | ${privacyTag}`;
             await supabaseClient
                 .from('items_feed')
                 .update({ owner_name: updatedOwnerTag })
@@ -3100,7 +3915,7 @@
             const oldToast = document.querySelector('.custom-toast');
             if (oldToast) oldToast.remove();
 
-            const isSuccessMsg = type === 'success' || /بنجاح|تم إرسال|تم التراجع|تم تعيين/.test(msg);
+            const isSuccessMsg = type === 'success' || /بنجاح|تم إرسال|تم التراجع|تم تعيين|رسالة جديدة/.test(msg);
             const iconClass = isSuccessMsg ? 'fas fa-circle-check' : 'fas fa-circle-exclamation';
             const accentColor = isSuccessMsg ? '#10b981' : '#33E0E6';
             const glowRgba = isSuccessMsg ? 'rgba(16, 185, 129, 0.2)' : 'rgba(51, 224, 230, 0.15)';
