@@ -1311,17 +1311,20 @@
 
         .chat-input-bar {
             background-color: var(--surface-navy);
-            border-top: 1.5px solid var(--border-navy);
-            padding: 14px 16px;
+            border: 1.5px solid var(--accent-turquoise);
+            border-radius: 18px;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
             gap: 10px;
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 99999;
-            box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.5);
+            bottom: 65px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 94%;
+            max-width: 600px;
+            z-index: 999999;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 0 0 15px var(--turquoise-glow);
         }
 
         .chat-text-field {
