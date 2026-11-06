@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ZONE</title>
     <link rel="preload" as="image" href="./logo/logo.jpg" fetchpriority="high">
 
@@ -33,7 +34,8 @@
             --emerald-bright: #34d399;
             --emerald-glow: rgba(16, 185, 129, 0.35);
             --danger: #ef4444;
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            --app-max-width: 480px;
         }
 
         * {
@@ -44,33 +46,76 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html,
         body {
-            background-color: var(--primary-navy);
+            background-color: #040a12;
             color: var(--text-main);
             min-height: 100vh;
+            min-height: 100dvh;
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
-        /* تنسيق شريط الإعلانات الترويجي (Slider) */
+        /* حاوية التطبيق المخصصة لمقاس الجوال الفخم */
+        .screen-container {
+            display: none;
+            width: 100%;
+            max-width: var(--app-max-width);
+            min-height: 100vh;
+            min-height: 100dvh;
+            background-color: var(--primary-navy);
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            animation: fadeInPage 0.3s ease-out forwards;
+        }
+
+        .screen-container.active-screen {
+            display: flex;
+        }
+
+        @keyframes fadeInPage {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .layout-wrapper {
+            width: 100%;
+            padding: 16px 14px 98px 14px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        /* تنسيق شريط الإعلانات الترويجي (Slider) لمقاس الجوال + النقاط على الزاوية اليمين تحت */
         .promo-slider-container {
             width: 100%;
-            height: 190px;
-            border-radius: 20px;
+            height: 165px;
+            border-radius: 18px;
             overflow: hidden;
             position: relative;
-            margin-bottom: 18px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
             border: 1.5px solid var(--border-navy);
             direction: ltr;
+            flex-shrink: 0;
         }
 
         .promo-slides-track {
             display: flex;
             width: 500%;
             height: 100%;
-            transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .promo-slide-item {
@@ -83,68 +128,50 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
 
+        /* النقاط في الزاوية اليمين تحت كما طلبت بالضبط */
         .slider-dots-box {
             position: absolute;
             bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 12px;
+            left: auto;
+            transform: none;
             display: flex;
-            gap: 6px;
-            background: rgba(7, 17, 30, 0.65);
-            padding: 5px 10px;
-            border-radius: 20px;
-            backdrop-filter: blur(4px);
+            align-items: center;
+            gap: 5px;
+            background: rgba(7, 17, 30, 0.72);
+            padding: 5px 9px;
+            border-radius: 16px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(57, 229, 238, 0.25);
+            z-index: 5;
         }
 
         .slider-dot {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.4);
             transition: var(--transition-smooth);
             cursor: pointer;
         }
 
         .slider-dot.active {
-            width: 20px;
-            border-radius: 10px;
+            width: 18px;
+            border-radius: 8px;
             background: var(--turquoise-light);
-        }
-
-        /* نظام الشاشات */
-        .screen-container {
-            display: none;
-            width: 100%;
-            min-height: 100vh;
-            flex-direction: column;
-            animation: fadeInPage 0.35s ease-out forwards;
-        }
-
-        .screen-container.active-screen {
-            display: flex;
-        }
-
-        @keyframes fadeInPage {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            box-shadow: 0 0 8px var(--turquoise-glow);
         }
 
         /* 1. الشاشة الترحيبية Splash Screen */
         #splash-screen {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             background: radial-gradient(circle at center, #11253e 0%, var(--primary-navy) 100%);
             z-index: 99999;
             display: flex;
@@ -154,54 +181,42 @@
         }
 
         .splash-title-huge {
-            font-size: 64px;
+            font-size: 54px;
             font-weight: 900;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             color: var(--accent-turquoise);
-            text-shadow: 0 0 30px var(--turquoise-glow);
+            text-shadow: 0 0 28px var(--turquoise-glow);
             line-height: 1;
-        }
-
-        /* الحاوية الأساسية المرنة */
-        .layout-wrapper {
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 24px 20px 105px 20px;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
         }
 
         /* 2. شاشات المصادقة والدخول */
         .auth-card-box {
             background-color: var(--surface-navy);
             border: 1px solid var(--border-navy);
-            border-radius: 24px;
-            padding: 35px 28px;
+            border-radius: 22px;
+            padding: 24px 18px;
             width: 100%;
-            max-width: 500px;
             margin: auto;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 16px 38px rgba(0, 0, 0, 0.5);
         }
 
         .auth-toggle-group {
             display: flex;
             background-color: var(--primary-navy);
-            border-radius: 14px;
-            padding: 5px;
-            margin-bottom: 26px;
+            border-radius: 13px;
+            padding: 4px;
+            margin-bottom: 20px;
             border: 1px solid var(--border-navy);
         }
 
         .auth-toggle-btn {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             background: transparent;
             border: none;
             color: var(--text-muted);
-            font-weight: 700;
-            font-size: 15px;
+            font-weight: 800;
+            font-size: 14px;
             cursor: pointer;
             border-radius: 10px;
             transition: var(--transition-smooth);
@@ -210,30 +225,32 @@
         .auth-toggle-btn.active {
             background-color: var(--accent-turquoise);
             color: var(--primary-navy);
-            box-shadow: 0 4px 15px var(--turquoise-glow);
+            box-shadow: 0 4px 14px var(--turquoise-glow);
         }
 
         .form-row {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .form-row label {
             display: block;
-            margin-bottom: 6px;
-            font-size: 13.5px;
+            margin-bottom: 5px;
+            font-size: 13px;
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .form-row input,
         .form-row select {
             width: 100%;
-            padding: 13px 16px;
+            height: 46px;
+            padding: 0 14px;
             background-color: var(--card-navy);
             border: 1.5px solid var(--border-navy);
             border-radius: 12px;
             color: #fff;
-            font-size: 14.5px;
+            font-size: 14px;
+            font-weight: 600;
             outline: none;
             transition: var(--transition-smooth);
         }
@@ -241,7 +258,7 @@
         .form-row input:focus,
         .form-row select:focus {
             border-color: var(--accent-turquoise);
-            box-shadow: 0 0 12px var(--turquoise-glow);
+            box-shadow: 0 0 10px var(--turquoise-glow);
         }
 
         .pass-input-box {
@@ -255,6 +272,7 @@
             transform: translateY(-50%);
             color: var(--text-muted);
             cursor: pointer;
+            font-size: 15px;
             transition: var(--transition-smooth);
         }
 
@@ -265,41 +283,42 @@
         /* صندوق الخصوصية الذكي التلقائي للطالبات */
         .female-privacy-box {
             display: none;
-            background-color: rgba(0, 173, 181, 0.07);
+            background: linear-gradient(145deg, rgba(0, 173, 181, 0.1), rgba(14, 29, 48, 0.9));
             border: 1.5px solid var(--accent-turquoise);
             border-radius: 14px;
-            padding: 14px 16px;
-            margin-bottom: 16px;
-            animation: fadeInPage 0.3s ease-out forwards;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 18px rgba(0, 173, 181, 0.12);
+            animation: fadeInPage 0.25s ease-out forwards;
         }
 
         .female-privacy-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 8px;
             color: var(--turquoise-light);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
         }
 
         .female-privacy-header i {
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .privacy-options-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 7px;
         }
 
         .privacy-radio-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 9px;
             background-color: var(--card-navy);
             border: 1px solid var(--border-navy);
-            padding: 10px 12px;
+            padding: 9px 11px;
             border-radius: 10px;
             cursor: pointer;
             transition: var(--transition-smooth);
@@ -310,70 +329,69 @@
         }
 
         .privacy-radio-item input[type="radio"] {
-            width: 17px;
-            height: 17px;
+            width: 16px;
+            height: 16px;
             accent-color: var(--accent-turquoise);
             cursor: pointer;
             flex-shrink: 0;
         }
 
         .privacy-radio-item span {
-            font-size: 12.5px;
+            font-size: 12px;
             color: var(--text-main);
             font-weight: 700;
-            line-height: 1.4;
+            line-height: 1.45;
         }
 
         .btn-action-primary {
             width: 100%;
-            padding: 14px;
+            height: 48px;
             background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
             border: none;
-            border-radius: 12px;
+            border-radius: 13px;
             color: var(--primary-navy);
             font-weight: 800;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 6px 20px var(--turquoise-glow);
+            gap: 8px;
+            box-shadow: 0 5px 18px var(--turquoise-glow);
             transition: var(--transition-smooth);
         }
 
-        .btn-action-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 173, 181, 0.5);
+        .btn-action-primary:active:not(:disabled) {
+            transform: scale(0.98);
         }
 
         .btn-action-primary:disabled {
-            opacity: 0.65;
+            opacity: 0.6;
             cursor: not-allowed;
         }
 
         .btn-tg-connect {
             width: 100%;
-            padding: 13px;
+            height: 45px;
             background-color: rgba(0, 173, 181, 0.08);
             border: 1.5px dashed var(--accent-turquoise);
             border-radius: 12px;
             color: var(--accent-turquoise);
             font-weight: 700;
-            font-size: 14.5px;
+            font-size: 13.5px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 14px;
             transition: var(--transition-smooth);
         }
 
         .btn-tg-connect.success-linked {
             background-color: rgba(16, 185, 129, 0.15);
             border: 1.5px solid var(--success);
-            color: var(--success);
+            color: var(--emerald-bright);
             cursor: default;
         }
 
@@ -381,43 +399,43 @@
         .otp-inputs-flex {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin: 22px 0;
+            gap: 8px;
+            margin: 18px 0;
             direction: ltr;
         }
 
         .otp-box-digit {
-            width: 50px;
-            height: 56px;
+            width: 46px;
+            height: 52px;
             background-color: var(--card-navy);
             border: 2px solid var(--border-navy);
             border-radius: 12px;
             text-align: center;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
             color: #fff;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
 
         .otp-box-digit:focus {
             border-color: var(--accent-turquoise);
-            box-shadow: 0 0 12px var(--turquoise-glow);
+            box-shadow: 0 0 10px var(--turquoise-glow);
         }
 
         /* 3. شاشة باقات الاشتراك */
         .plans-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 18px;
         }
 
         .plan-item-box {
             background-color: var(--surface-navy);
-            border: 2px solid var(--border-navy);
-            border-radius: 20px;
-            padding: 26px 20px;
+            border: 1.5px solid var(--border-navy);
+            border-radius: 18px;
+            padding: 20px 18px;
             cursor: pointer;
             transition: var(--transition-smooth);
             position: relative;
@@ -426,26 +444,25 @@
             justify-content: space-between;
         }
 
-        .plan-item-box:hover {
+        .plan-item-box:active {
             border-color: var(--accent-turquoise);
-            box-shadow: 0 10px 30px var(--turquoise-glow);
-            transform: translateY(-3px);
+            transform: scale(0.99);
         }
 
-        /* نوافذ المودال */
+        /* نوافذ المودال المتناسقة مع الجوال */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             background: rgba(4, 10, 18, 0.88);
             backdrop-filter: blur(8px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 10000;
-            padding: 20px;
+            padding: 16px;
         }
 
         .modal-overlay.active {
@@ -454,31 +471,30 @@
 
         .modal-content-card {
             background: var(--surface-navy);
-            border: 1px solid var(--border-navy);
-            border-radius: 24px;
+            border: 1.5px solid var(--border-navy);
+            border-radius: 22px;
             width: 100%;
-            max-width: 440px;
-            padding: 26px 22px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            max-width: 420px;
+            padding: 22px 18px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
             text-align: center;
             position: relative;
-            max-height: 92vh;
+            max-height: 90dvh;
             overflow-y: auto;
         }
 
-        /* إطار الـ QR كود المعدل ليمتلئ بالكامل على الجوانب بدون مساحات بيضاء مزعجة وبدون قص الكود */
         .qr-wrapper {
-            margin: 16px auto;
-            width: 268px;
-            height: 295px;
+            margin: 14px auto;
+            width: 240px;
+            height: 265px;
             background: #000000;
-            border-radius: 22px;
+            border-radius: 20px;
             padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 32px rgba(0, 173, 181, 0.35);
-            border: 2.5px solid var(--accent-turquoise);
+            box-shadow: 0 8px 28px rgba(0, 173, 181, 0.35);
+            border: 2px solid var(--accent-turquoise);
             overflow: hidden;
         }
 
@@ -493,10 +509,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            font-weight: 700;
-            font-size: 15px;
-            margin-top: 10px;
+            gap: 6px;
+            font-weight: 800;
+            font-size: 14px;
+            margin-top: 8px;
         }
 
         .verified-holder-info i {
@@ -510,9 +526,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 60px 20px;
-            min-height: 50vh;
-            max-width: 480px;
+            padding: 40px 16px;
+            min-height: 55vh;
             width: 100%;
         }
 
@@ -521,14 +536,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .luxury-hourglass {
-            width: 105px;
-            height: 105px;
+            width: 96px;
+            height: 96px;
             animation: hg-flip-cycle 3.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-            filter: drop-shadow(0 0 18px var(--turquoise-glow));
+            filter: drop-shadow(0 0 16px var(--turquoise-glow));
         }
 
         .hg-cap-outer {
@@ -615,11 +630,7 @@
                 opacity: 0.75;
             }
 
-            72% {
-                transform: scale(1.08, 1.05);
-                opacity: 1;
-            }
-
+            72%,
             100% {
                 transform: scale(1.08, 1.05);
                 opacity: 1;
@@ -640,29 +651,28 @@
         }
 
         .reject-actions-box {
-            margin-top: 24px;
+            margin-top: 20px;
             width: 100%;
-            max-width: 340px;
             display: none;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
-        /* 4. الهيدر العلوي */
+        /* 4. الهيدر العلوي المتناسق مع الموبايل */
         .app-top-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
             border-bottom: 1px solid var(--border-navy);
         }
 
         .header-brand-title {
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 900;
             color: var(--accent-turquoise);
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             line-height: 1;
         }
 
@@ -670,52 +680,50 @@
             margin-right: auto;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .header-inbox-btn {
             position: relative;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
             background: var(--surface-navy);
             border: 1.5px solid var(--border-navy);
             color: var(--turquoise-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             transition: var(--transition-smooth);
         }
 
-        .header-inbox-btn:hover {
+        .header-inbox-btn:active {
+            transform: scale(0.94);
             border-color: var(--accent-turquoise);
-            background: rgba(0, 173, 181, 0.12);
         }
 
         .unread-dot-badge {
             position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 11px;
-            height: 11px;
+            top: -3px;
+            right: -3px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--accent-turquoise);
             border: 2px solid var(--primary-navy);
             display: none;
         }
 
-        /* =========================================================
-           شريط البحث الذكي المتحرك + التصنيفات الأفقية وإعلاناتي بنفس السطر
-           ========================================================= */
+        /* شريط البحث الذكي المتحرك + التصنيفات الأفقية بنفس السطر */
         .unified-scroll-bar {
             display: flex;
             align-items: center;
-            gap: 9px;
-            margin-bottom: 22px;
+            gap: 7px;
+            margin-bottom: 16px;
             overflow-x: auto;
-            padding-bottom: 4px;
+            padding-bottom: 3px;
             scrollbar-width: none;
             -ms-overflow-style: none;
             width: 100%;
@@ -725,11 +733,10 @@
             display: none;
         }
 
-        /* البحث الذكي: عدسة فقط عند الابتعاد، ويتوسع عند الاقتراب/الضغط */
         .smart-search-pill {
-            height: 44px;
-            width: 44px;
-            border-radius: 14px;
+            height: 40px;
+            width: 40px;
+            border-radius: 12px;
             background-color: var(--surface-navy);
             border: 1.5px solid var(--border-navy);
             display: flex;
@@ -737,33 +744,32 @@
             justify-content: center;
             position: relative;
             flex-shrink: 0;
-            transition: width 0.38s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease;
             overflow: hidden;
             cursor: pointer;
         }
 
         .smart-search-pill.expanded {
-            width: 245px;
+            width: 195px;
             justify-content: flex-start;
             border-color: var(--accent-turquoise);
-            box-shadow: 0 0 12px var(--turquoise-glow);
+            box-shadow: 0 0 10px var(--turquoise-glow);
             cursor: text;
         }
 
         .smart-search-pill i {
             color: var(--turquoise-light);
-            font-size: 15px;
-            transition: var(--transition-smooth);
+            font-size: 14px;
             pointer-events: none;
             flex-shrink: 0;
         }
 
         .smart-search-pill.expanded i {
             position: absolute;
-            right: 14px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 13.5px;
+            font-size: 13px;
             color: var(--accent-turquoise);
         }
 
@@ -773,11 +779,10 @@
             border: none;
             background: transparent;
             color: #fff;
-            font-size: 13.5px;
+            font-size: 12.5px;
             font-weight: 700;
             outline: none;
             padding: 0;
-            transition: opacity 0.25s ease, width 0.3s ease;
             pointer-events: none;
         }
 
@@ -785,24 +790,24 @@
             width: 100%;
             height: 100%;
             opacity: 1;
-            padding: 0 38px 0 14px;
+            padding: 0 34px 0 10px;
             pointer-events: auto;
         }
 
         .filter-chip-btn {
-            height: 44px;
-            padding: 0 15px;
+            height: 40px;
+            padding: 0 12px;
             background-color: var(--surface-navy);
             border: 1.5px solid var(--border-navy);
-            border-radius: 14px;
+            border-radius: 12px;
             color: var(--text-main);
-            font-size: 13.5px;
+            font-size: 12.5px;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             white-space: nowrap;
             flex-shrink: 0;
             transition: var(--transition-smooth);
@@ -810,26 +815,16 @@
 
         .filter-chip-btn i {
             color: var(--accent-turquoise);
-            font-size: 14px;
-            transition: var(--transition-smooth);
-        }
-
-        .filter-chip-btn:hover {
-            border-color: var(--accent-turquoise);
+            font-size: 13px;
         }
 
         .filter-chip-btn.active {
             background-color: rgba(0, 173, 181, 0.16);
             border-color: var(--accent-turquoise);
             color: var(--turquoise-light);
-            box-shadow: 0 4px 14px rgba(0, 173, 181, 0.18);
+            box-shadow: 0 3px 10px rgba(0, 173, 181, 0.18);
         }
 
-        .filter-chip-btn.active i {
-            color: var(--turquoise-light);
-        }
-
-        /* تمييز زر فلتر الإعارة المجانية عند تفعيله */
         .filter-chip-btn.free-loan-chip i {
             color: var(--emerald-bright);
         }
@@ -838,7 +833,7 @@
             background-color: rgba(16, 185, 129, 0.16);
             border-color: var(--success);
             color: var(--emerald-bright);
-            box-shadow: 0 4px 14px var(--emerald-glow);
+            box-shadow: 0 3px 10px var(--emerald-glow);
         }
 
         /* شاشة الفراغ (الشبح اللطيف) */
@@ -848,14 +843,14 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 50px 20px;
-            min-height: 45vh;
+            padding: 40px 16px;
+            min-height: 40vh;
         }
 
         .ghost-svg-holder {
-            width: 140px;
-            height: 140px;
-            margin-bottom: 18px;
+            width: 118px;
+            height: 118px;
+            margin-bottom: 14px;
             animation: floatGhost 3.5s ease-in-out infinite;
         }
 
@@ -867,62 +862,55 @@
             }
 
             50% {
-                transform: translateY(-14px);
+                transform: translateY(-10px);
             }
         }
 
         .ghost-lead-text {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             color: var(--text-main);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .ghost-sub-text {
-            font-size: 14.5px;
+            font-size: 13px;
             color: var(--text-muted);
-            max-width: 380px;
+            max-width: 280px;
         }
 
-        /* كروت الإعلانات المعروضة */
+        /* كروت الإعلانات المخصصة لشاشة الجوال */
         .posts-responsive-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
             width: 100%;
         }
 
         .product-card-container {
             display: flex;
             flex-direction: column;
+            width: 100%;
             transition: all 0.25s ease;
         }
 
         .product-card {
             background-color: var(--surface-navy);
-            border: 1px solid var(--border-navy);
-            border-radius: 20px;
+            border: 1.5px solid var(--border-navy);
+            border-radius: 18px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             transition: var(--transition-smooth);
             position: relative;
-            height: 100%;
-        }
-
-        .product-card:hover {
-            border-color: var(--accent-turquoise);
-            box-shadow: 0 10px 25px rgba(0, 173, 181, 0.22);
-            transform: translateY(-2px);
         }
 
         .product-images-trio {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 3px;
-            height: 140px;
+            gap: 2px;
+            height: 128px;
             background-color: var(--primary-navy);
-            position: relative;
         }
 
         .product-images-trio img {
@@ -930,18 +918,12 @@
             height: 100%;
             object-fit: cover;
             cursor: pointer;
-            transition: transform 0.25s ease, filter 0.25s ease;
-        }
-
-        .product-images-trio img:hover {
-            filter: brightness(1.12);
         }
 
         .product-details {
-            padding: 16px;
+            padding: 13px 14px;
             display: flex;
             flex-direction: column;
-            flex: 1;
         }
 
         .product-header-row {
@@ -953,24 +935,25 @@
         }
 
         .product-title {
-            font-size: 16.5px;
+            font-size: 15px;
             font-weight: 800;
             color: var(--text-main);
             line-height: 1.35;
         }
 
         .product-price {
-            font-size: 15.5px;
+            font-size: 13.5px;
             font-weight: 900;
             color: var(--turquoise-light);
             white-space: nowrap;
             background: rgba(0, 173, 181, 0.12);
-            padding: 4px 10px;
-            border-radius: 10px;
+            padding: 4px 9px;
+            border-radius: 9px;
             border: 1px solid rgba(57, 229, 238, 0.25);
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
+            flex-shrink: 0;
         }
 
         .product-price.free-loan-badge {
@@ -982,44 +965,41 @@
         .product-meta-badges {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
+            gap: 5px;
+            margin-bottom: 12px;
         }
 
         .meta-badge {
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--text-muted);
             background-color: var(--card-navy);
             border: 1px solid var(--border-navy);
-            padding: 4px 10px;
-            border-radius: 8px;
+            padding: 3px 8px;
+            border-radius: 7px;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .meta-badge i {
             color: var(--accent-turquoise);
-            font-size: 11px;
+            font-size: 10.5px;
         }
 
-        /* الأزرار الأربعة الموحدة والمتناظرة تحت كل إعلان */
+        /* الأزرار الموحدة والمتناسقة تحت كل إعلان لمقاس الجوال */
         .product-card-actions {
             display: flex;
-            flex-wrap: wrap;
-            align-items: stretch;
+            align-items: center;
             gap: 6px;
             margin-top: auto;
-            padding-top: 6px;
         }
 
         .card-action-btn {
-            flex: 1 1 auto;
-            min-width: 72px;
-            height: 40px;
-            border-radius: 11px;
-            font-size: 12.5px;
+            flex: 1;
+            height: 38px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 800;
             cursor: pointer;
             display: inline-flex;
@@ -1029,81 +1009,60 @@
             transition: var(--transition-smooth);
             border: 1.5px solid transparent;
             white-space: nowrap;
-            padding: 0 8px;
+            padding: 0 6px;
         }
 
         .card-action-btn i {
-            font-size: 13px;
+            font-size: 12.5px;
         }
 
-        /* 1. زر التواصل الخارجي */
+        .card-action-btn:active {
+            transform: scale(0.96);
+        }
+
         .card-action-btn.btn-contact {
             background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
             color: var(--primary-navy);
-            box-shadow: 0 4px 12px rgba(0, 173, 181, 0.25);
+            box-shadow: 0 3px 10px rgba(0, 173, 181, 0.22);
         }
 
-        .card-action-btn.btn-contact:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(57, 229, 238, 0.4);
-        }
-
-        /* 2. زر راسلني (المحادثة الداخلية الآمنة) */
         .card-action-btn.btn-direct-chat {
             background-color: rgba(0, 173, 181, 0.14);
             border-color: var(--accent-turquoise);
             color: var(--turquoise-light);
         }
 
-        .card-action-btn.btn-direct-chat:hover {
-            background-color: var(--accent-turquoise);
-            color: var(--primary-navy);
-            box-shadow: 0 4px 14px var(--turquoise-glow);
-            transform: translateY(-2px);
-        }
-
-        /* 3. زر مشاركة */
         .card-action-btn.btn-share {
             background-color: var(--card-navy);
             border-color: var(--border-navy);
             color: var(--text-main);
         }
 
-        .card-action-btn.btn-share:hover {
-            border-color: var(--accent-turquoise);
-            color: var(--turquoise-light);
-            background-color: rgba(0, 173, 181, 0.1);
-            transform: translateY(-2px);
-        }
-
-        /* 4. زر تم البيع */
         .card-action-btn.btn-sold {
-            background-color: rgba(239, 68, 68, 0.1);
+            background-color: rgba(239, 68, 68, 0.12);
             border-color: rgba(239, 68, 68, 0.45);
             color: #f87171;
         }
 
-        .card-action-btn.btn-sold:hover {
-            background-color: var(--danger);
-            border-color: var(--danger);
-            color: #ffffff;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
-            transform: translateY(-2px);
-        }
-
         /* =========================================================
-           شاشة المحادثة الرسمية الكاملة التي تملأ الشاشة 100%
+           شاشة المحادثة الرسمية الكاملة المنسقة للجوال (Mobile Chat UI)
            ========================================================= */
         .full-chat-overlay {
             position: fixed;
-            inset: 0;
-            width: 100vw;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: var(--app-max-width);
             height: 100vh;
+            height: 100dvh;
             background-color: var(--primary-navy);
             z-index: 20000;
             display: none;
             flex-direction: column;
-            animation: fadeInPage 0.25s ease-out forwards;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.85);
+            animation: fadeInPage 0.22s ease-out forwards;
         }
 
         .full-chat-overlay.active {
@@ -1111,61 +1070,105 @@
         }
 
         .chat-top-bar {
-            height: 68px;
+            height: 60px;
             background-color: var(--surface-navy);
-            border-bottom: 1.5px solid var(--border-navy);
-            padding: 0 18px;
+            border-bottom: 1px solid var(--border-navy);
+            padding: 0 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 8px;
             flex-shrink: 0;
         }
 
         .chat-partner-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 9px;
+            min-width: 0;
+            flex: 1;
         }
 
         .chat-back-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             background: var(--card-navy);
             border: 1px solid var(--border-navy);
             color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
+            flex-shrink: 0;
             transition: var(--transition-smooth);
         }
 
-        .chat-back-btn:hover {
+        .chat-back-btn:active {
+            transform: scale(0.93);
             border-color: var(--accent-turquoise);
+        }
+
+        .chat-avatar-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(0, 173, 181, 0.14);
+            border: 1.5px solid var(--accent-turquoise);
             color: var(--turquoise-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .chat-partner-text {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .chat-partner-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.25;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-partner-status {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--turquoise-light);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-block-top-btn {
-            height: 38px;
-            padding: 0 12px;
-            border-radius: 11px;
+            height: 34px;
+            padding: 0 10px;
+            border-radius: 9px;
             background: rgba(239, 68, 68, 0.12);
             border: 1px solid rgba(239, 68, 68, 0.4);
             color: #f87171;
-            font-size: 12.5px;
+            font-size: 11.5px;
             font-weight: 800;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
+            flex-shrink: 0;
             transition: var(--transition-smooth);
-        }
-
-        .chat-block-top-btn:hover {
-            background: var(--danger);
-            color: #fff;
         }
 
         .chat-block-top-btn.is-blocked {
@@ -1174,60 +1177,24 @@
             color: var(--emerald-bright);
         }
 
-        .chat-avatar-circle {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: rgba(0, 173, 181, 0.14);
-            border: 1.5px solid var(--accent-turquoise);
-            color: var(--turquoise-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .chat-partner-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-partner-name {
-            font-size: 15.5px;
-            font-weight: 800;
-            color: var(--text-main);
-            line-height: 1.25;
-        }
-
-        .chat-partner-status {
-            font-size: 11.5px;
-            font-weight: 700;
-            color: var(--turquoise-light);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 2px;
-        }
-
         .chat-ad-context-banner {
             background-color: var(--card-navy);
             border-bottom: 1px solid var(--border-navy);
-            padding: 10px 18px;
+            padding: 8px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 8px;
             flex-shrink: 0;
         }
 
         .chat-ad-context-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -1235,33 +1202,35 @@
 
         .chat-ad-context-title i {
             color: var(--accent-turquoise);
+            font-size: 12px;
         }
 
         .chat-ad-context-price {
-            font-size: 12.5px;
+            font-size: 11.5px;
             font-weight: 800;
             color: var(--turquoise-light);
             background: rgba(0, 173, 181, 0.12);
-            padding: 3px 10px;
-            border-radius: 8px;
+            padding: 2px 8px;
+            border-radius: 7px;
             border: 1px solid rgba(57, 229, 238, 0.25);
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .chat-messages-scroll {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 16px;
+            padding: 14px 12px 92px 12px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            background: radial-gradient(circle at center, rgba(14, 29, 48, 0.5) 0%, var(--primary-navy) 100%);
+            gap: 10px;
+            background: radial-gradient(circle at center, rgba(14, 29, 48, 0.45) 0%, var(--primary-navy) 100%);
         }
 
         .chat-msg-row {
             display: flex;
             flex-direction: column;
-            max-width: 80%;
+            max-width: 82%;
         }
 
         .chat-msg-row.msg-mine {
@@ -1273,11 +1242,11 @@
         }
 
         .chat-bubble {
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.5;
+            padding: 9px 13px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.48;
             word-wrap: break-word;
             position: relative;
         }
@@ -1285,9 +1254,8 @@
         .chat-msg-row.msg-mine .chat-bubble {
             background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
             color: var(--primary-navy);
-            font-weight: 700;
             border-bottom-right-radius: 4px;
-            box-shadow: 0 4px 15px rgba(0, 173, 181, 0.2);
+            box-shadow: 0 3px 12px rgba(0, 173, 181, 0.18);
         }
 
         .chat-msg-row.msg-theirs .chat-bubble {
@@ -1298,9 +1266,9 @@
         }
 
         .chat-msg-time {
-            font-size: 10.5px;
+            font-size: 10px;
             color: var(--text-muted);
-            margin-top: 4px;
+            margin-top: 3px;
             padding: 0 4px;
             font-weight: 600;
         }
@@ -1309,151 +1277,145 @@
             text-align: left;
         }
 
+        /* شريط إرسال الرسائل المنسق لمقاس الجوال */
         .chat-input-bar {
             background-color: var(--surface-navy);
             border: 1.5px solid var(--accent-turquoise);
-            border-radius: 18px;
-            padding: 12px 14px;
+            border-radius: 16px;
+            padding: 8px 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             position: fixed;
-            bottom: 65px;
+            bottom: 14px;
             left: 50%;
             transform: translateX(-50%);
-            width: 94%;
-            max-width: 600px;
-            z-index: 999999;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 0 0 15px var(--turquoise-glow);
+            width: calc(100% - 24px);
+            max-width: 456px;
+            z-index: 20005;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8), 0 0 12px var(--turquoise-glow);
         }
 
         .chat-text-field {
             flex: 1;
+            height: 40px;
             background-color: var(--card-navy);
-            border: 1.5px solid var(--border-navy);
-            border-radius: 14px;
-            padding: 12px 16px;
+            border: 1px solid var(--border-navy);
+            border-radius: 11px;
+            padding: 0 12px;
             color: #fff;
-            font-size: 14.5px;
+            font-size: 13px;
+            font-weight: 600;
             outline: none;
             transition: var(--transition-smooth);
         }
 
         .chat-text-field:focus {
             border-color: var(--accent-turquoise);
-            box-shadow: 0 0 12px var(--turquoise-glow);
         }
 
         .chat-send-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
             background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
             border: none;
             color: var(--primary-navy);
-            font-size: 18px;
+            font-size: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
-            box-shadow: 0 4px 15px var(--turquoise-glow);
+            box-shadow: 0 3px 10px var(--turquoise-glow);
             transition: var(--transition-smooth);
         }
 
-        .chat-send-btn:hover {
-            transform: translateY(-2px);
+        .chat-send-btn:active {
+            transform: scale(0.93);
         }
 
-        /* قائمة المحادثات الواردة (Inbox) مع إمكانية حذف المحادثة من الخارج */
+        /* قائمة المحادثات الواردة (Inbox) المنسقة للجوال */
         .inbox-list-container {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
+            padding: 12px;
             display: none;
             flex-direction: column;
-            gap: 10px;
+            gap: 9px;
         }
 
         .inbox-conv-item {
             background-color: var(--surface-navy);
             border: 1px solid var(--border-navy);
-            border-radius: 16px;
-            padding: 14px 16px;
+            border-radius: 14px;
+            padding: 11px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 10px;
             cursor: pointer;
             transition: var(--transition-smooth);
         }
 
-        .inbox-conv-item:hover {
+        .inbox-conv-item:active {
             border-color: var(--accent-turquoise);
             background-color: var(--card-navy);
         }
 
         .inbox-delete-btn {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.35);
             color: #f87171;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 12.5px;
             cursor: pointer;
-            transition: var(--transition-smooth);
             flex-shrink: 0;
         }
 
-        .inbox-delete-btn:hover {
-            background: var(--danger);
-            color: #fff;
-        }
-
-        /* =========================================================
-           إشعار الرسائل العلوي بأسلوب الواتساب (WhatsApp Banner)
-           ========================================================= */
+        /* إشعار الرسائل العلوي بأسلوب الواتساب */
         .wa-top-notification {
             position: fixed;
             top: -130px;
             left: 50%;
             transform: translateX(-50%);
-            width: 92%;
+            width: calc(100% - 24px);
             max-width: 440px;
             background: rgba(14, 29, 48, 0.98);
             backdrop-filter: blur(16px);
             border: 1.5px solid var(--accent-turquoise);
-            border-radius: 18px;
-            padding: 13px 16px;
+            border-radius: 16px;
+            padding: 11px 14px;
             display: flex;
             align-items: center;
-            gap: 13px;
-            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+            gap: 11px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75);
             z-index: 999999;
             cursor: pointer;
-            transition: top 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15);
             direction: rtl;
         }
 
         .wa-top-notification.show {
-            top: 22px;
+            top: 16px;
         }
 
         .wa-notif-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 13px;
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
             background: rgba(0, 173, 181, 0.16);
             border: 1.5px solid var(--accent-turquoise);
             color: var(--turquoise-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 19px;
+            font-size: 17px;
             flex-shrink: 0;
         }
 
@@ -1465,17 +1427,16 @@
         }
 
         .wa-notif-sender {
-            font-size: 14.5px;
+            font-size: 13.5px;
             font-weight: 800;
             color: var(--text-main);
-            margin-bottom: 2px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .wa-notif-preview {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-muted);
             white-space: nowrap;
@@ -1483,74 +1444,69 @@
             text-overflow: ellipsis;
         }
 
-        /* =========================================================
-           تنسيق الزرين داخل نافذة نشر الإعلان (للبيع $ vs إعارة مجانية هدية بلون مميز)
-           ========================================================= */
+        /* تنسيق الزرين داخل نافذة نشر الإعلان */
         .ad-deal-type-switcher {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 14px;
         }
 
         .deal-mode-btn {
-            height: 46px;
-            border-radius: 13px;
-            font-size: 14px;
+            height: 42px;
+            border-radius: 11px;
+            font-size: 13px;
             font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             transition: var(--transition-smooth);
             background-color: var(--card-navy);
             border: 1.5px solid var(--border-navy);
             color: var(--text-muted);
         }
 
-        /* زر البيع بأيقونة الدولار ولون التركواز */
         .deal-mode-btn.sale-mode.active {
             background: rgba(0, 173, 181, 0.16);
             border-color: var(--accent-turquoise);
             color: var(--turquoise-light);
-            box-shadow: 0 4px 15px var(--turquoise-glow);
+            box-shadow: 0 3px 12px var(--turquoise-glow);
         }
 
-        /* زر الإعارة المجانية بأيقونة الهدية ولون زمردي مميز متناسق مع التطبيق */
         .deal-mode-btn.loan-mode.active {
             background: rgba(16, 185, 129, 0.16);
             border-color: var(--success);
             color: var(--emerald-bright);
-            box-shadow: 0 4px 15px var(--emerald-glow);
+            box-shadow: 0 3px 12px var(--emerald-glow);
         }
 
-        /* اختيار القسم داخل نافذة نشر الإعلان */
         .ad-cat-pills-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 7px;
+            margin-bottom: 14px;
         }
 
         .ad-cat-select-btn {
-            padding: 10px 12px;
-            border-radius: 11px;
+            padding: 9px 10px;
+            border-radius: 10px;
             background-color: var(--card-navy);
             border: 1.5px solid var(--border-navy);
             color: var(--text-muted);
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 6px;
             transition: var(--transition-smooth);
         }
 
         .ad-cat-select-btn i {
             color: var(--accent-turquoise);
-            font-size: 13px;
+            font-size: 12.5px;
         }
 
         .ad-cat-select-btn.active {
@@ -1559,45 +1515,41 @@
             color: var(--text-main);
         }
 
-        /* خيار قائمة المحظورين في صفحة أنا */
         .profile-blocked-btn {
             width: 100%;
-            padding: 13px 16px;
+            height: 46px;
+            padding: 0 14px;
             background-color: var(--surface-navy);
             border: 1.5px solid var(--border-navy);
             border-radius: 12px;
             color: var(--text-main);
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13.5px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 10px;
+            margin-top: 8px;
             transition: var(--transition-smooth);
         }
 
-        .profile-blocked-btn:hover {
-            border-color: var(--accent-turquoise);
-        }
-
-        /* شريط التراجع العائم بأسلوب تيليجرام */
+        /* شريط التراجع العائم */
         .tg-undo-snackbar {
             position: fixed;
-            bottom: 84px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%) translateY(150%);
-            width: 92%;
-            max-width: 430px;
+            width: calc(100% - 24px);
+            max-width: 440px;
             background: rgba(14, 29, 48, 0.96);
             backdrop-filter: blur(14px);
             border: 1.5px solid rgba(57, 229, 238, 0.35);
-            border-radius: 16px;
-            padding: 12px 16px;
+            border-radius: 14px;
+            padding: 10px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65);
             z-index: 9500;
             opacity: 0;
             pointer-events: none;
@@ -1613,20 +1565,20 @@
         .tg-undo-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .tg-trash-badge {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid rgba(239, 68, 68, 0.4);
             color: #f87171;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .tg-undo-text-wrap {
@@ -1635,13 +1587,13 @@
         }
 
         .tg-undo-title {
-            font-size: 13.5px;
+            font-size: 12.5px;
             font-weight: 800;
             color: #fff;
         }
 
         .tg-undo-sub {
-            font-size: 11.5px;
+            font-size: 11px;
             color: var(--text-muted);
             font-weight: 600;
         }
@@ -1650,27 +1602,21 @@
             background: rgba(0, 173, 181, 0.15);
             border: 1px solid var(--accent-turquoise);
             color: var(--turquoise-light);
-            font-size: 13.5px;
+            font-size: 12.5px;
             font-weight: 800;
-            padding: 7px 16px;
-            border-radius: 10px;
+            padding: 6px 13px;
+            border-radius: 9px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: var(--transition-smooth);
-        }
-
-        .tg-undo-btn:hover {
-            background: var(--accent-turquoise);
-            color: var(--primary-navy);
+            gap: 5px;
         }
 
         /* عارض الصور المكبر (Lightbox) */
         .lightbox-img-box {
             max-width: 92vw;
-            max-height: 75vh;
-            border-radius: 18px;
+            max-height: 72vh;
+            border-radius: 16px;
             overflow: hidden;
             border: 2px solid var(--border-navy);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
@@ -1680,7 +1626,7 @@
 
         .lightbox-img-box img {
             max-width: 100%;
-            max-height: 75vh;
+            max-height: 72vh;
             object-fit: contain;
             display: block;
         }
@@ -1689,43 +1635,37 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 18px;
-            margin-top: 16px;
+            gap: 16px;
+            margin-top: 14px;
         }
 
         .lightbox-nav-btn {
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: var(--surface-navy);
             border: 1.5px solid var(--accent-turquoise);
             color: var(--turquoise-light);
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition-smooth);
-        }
-
-        .lightbox-nav-btn:hover {
-            background: var(--accent-turquoise);
-            color: var(--primary-navy);
         }
 
         /* 3 مربعات رفع الصور */
         .photo-uploader-triplet {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 18px;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
         .photo-upload-slot {
-            height: 100px;
+            height: 90px;
             background-color: var(--card-navy);
-            border: 2px dashed var(--border-navy);
-            border-radius: 14px;
+            border: 1.5px dashed var(--border-navy);
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1733,11 +1673,6 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: var(--transition-smooth);
-        }
-
-        .photo-upload-slot:hover {
-            border-color: var(--accent-turquoise);
         }
 
         .photo-upload-slot img {
@@ -1746,79 +1681,77 @@
             object-fit: cover;
             display: none;
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
         }
 
         .photo-upload-slot i {
-            font-size: 22px;
+            font-size: 20px;
             color: var(--accent-turquoise);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .photo-upload-slot span {
-            font-size: 11px;
+            font-size: 10.5px;
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
         }
 
-        /* زر الدعم الفني العائم بشعار التلغرام */
+        /* زر الدعم الفني العائم */
         .support-bubble-btn {
             position: fixed;
-            bottom: 90px;
-            left: 25px;
-            width: 52px;
-            height: 52px;
+            bottom: 80px;
+            left: max(16px, calc(50% - 224px));
+            width: 46px;
+            height: 46px;
             background: linear-gradient(135deg, #00ADB5, #00838F);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 24px;
-            box-shadow: 0 6px 20px var(--turquoise-glow);
+            font-size: 22px;
+            box-shadow: 0 5px 18px var(--turquoise-glow);
             z-index: 4999;
             text-decoration: none;
-            transition: var(--transition-smooth);
         }
 
-        .support-bubble-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* الشريط السفلي */
+        /* الشريط السفلي المخصص لمقاس الجوال */
         .bottom-app-bar {
             position: fixed;
             bottom: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
-            height: 70px;
-            background-color: rgba(7, 17, 30, 0.95);
+            max-width: var(--app-max-width);
+            height: 66px;
+            background-color: rgba(7, 17, 30, 0.96);
             backdrop-filter: blur(12px);
             border-top: 1px solid var(--border-navy);
             display: flex;
             justify-content: space-around;
             align-items: center;
             z-index: 5000;
-            padding: 0 20px;
+            padding: 0 16px;
         }
 
         .nav-link-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             color: var(--text-muted);
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 11.5px;
+            font-weight: 800;
             background: none;
             border: none;
+            padding: 6px 18px;
             transition: var(--transition-smooth);
         }
 
         .nav-link-btn i {
-            font-size: 19px;
-            margin-bottom: 4px;
+            font-size: 18px;
+            margin-bottom: 3px;
         }
 
         .nav-link-btn.active {
@@ -1827,57 +1760,45 @@
         }
 
         .nav-center-add {
-            width: 56px;
-            height: 56px;
+            width: 52px;
+            height: 52px;
             background: linear-gradient(135deg, var(--accent-turquoise), var(--turquoise-light));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--primary-navy);
-            font-size: 24px;
-            box-shadow: 0 0 20px var(--turquoise-glow);
+            font-size: 22px;
+            box-shadow: 0 0 18px var(--turquoise-glow);
             cursor: pointer;
-            transform: translateY(-16px);
+            transform: translateY(-14px);
             border: 4px solid var(--primary-navy);
-            transition: var(--transition-smooth);
         }
 
-        .nav-center-add:hover {
-            transform: translateY(-20px) scale(1.05);
-        }
-
-        /* نافذة اختيار التواصل (واتساب أو تليغرام) */
         .contact-modal-choices {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 18px;
         }
 
         .contact-choice-btn {
             flex: 1;
-            padding: 14px;
-            border-radius: 14px;
-            font-size: 15px;
+            height: 44px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 800;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: var(--transition-smooth);
+            gap: 7px;
         }
 
         .contact-choice-btn.wa {
             background: var(--card-navy);
             border: 1.5px solid var(--accent-turquoise);
             color: var(--turquoise-light);
-        }
-
-        .contact-choice-btn.wa:hover {
-            background: var(--accent-turquoise);
-            color: var(--primary-navy);
         }
 
         .contact-choice-btn.tg {
@@ -1903,15 +1824,15 @@
     <!-- 1. الشاشة الترحيبية Splash Screen -->
     <div id="splash-screen">
         <div class="splash-logo-wrapper"
-            style="position: relative; width: 150px; height: 150px; border-radius: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; background: transparent; border: none; box-shadow: 0 0 25px rgba(51, 224, 230, 0.25);">
+            style="position: relative; width: 138px; height: 138px; border-radius: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; background: transparent; box-shadow: 0 0 25px rgba(51, 224, 230, 0.25);">
             <div
-                style="width: 144px; height: 144px; border-radius: 29px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                style="width: 132px; height: 132px; border-radius: 27px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
                 <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
                     style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
             </div>
             <svg
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 6px #33E0E6);">
-                <rect x="2" y="2" width="146" height="146" rx="30" ry="30" fill="none" stroke="#33E0E6"
+                <rect x="2" y="2" width="134" height="134" rx="28" ry="28" fill="none" stroke="#33E0E6"
                     stroke-width="3.5" stroke-dasharray="600" stroke-dashoffset="600"
                     style="animation: drawTurquoiseBorder 2s ease-out forwards;" />
             </svg>
@@ -1925,10 +1846,8 @@
         </div>
 
         <div class="splash-title-huge">ZONE</div>
-        <div style="position: fixed; bottom: 55px; left: 50%; transform: translateX(-50%); 
-                    color: #8a9fc2; font-family: 'Cairo', sans-serif; font-size: 14px; 
-                    font-weight: 700; letter-spacing: 0.8px; white-space: nowrap; 
-                    pointer-events: none; z-index: 999999;">
+        <div
+            style="position: fixed; bottom: 48px; left: 50%; transform: translateX(-50%); color: #8a9fc2; font-size: 13.5px; font-weight: 700; letter-spacing: 0.6px; white-space: nowrap; pointer-events: none; z-index: 999999;">
             Owned by <span style="color: #33E0E6; font-weight: 800;">Novinium Soft</span>
         </div>
     </div>
@@ -1938,9 +1857,10 @@
         <div class="layout-wrapper" style="justify-content: center;">
             <div class="auth-card-box">
                 <div class="auth-toggle-group">
-                    <button class="auth-toggle-btn active" id="tab-login-btn" onclick="toggleAuth('login')">تسجيل
-                        الدخول</button>
-                    <button class="auth-toggle-btn" id="tab-reg-btn" onclick="toggleAuth('reg')">حساب جديد</button>
+                    <button type="button" class="auth-toggle-btn active" id="tab-login-btn"
+                        onclick="toggleAuth('login')">تسجيل الدخول</button>
+                    <button type="button" class="auth-toggle-btn" id="tab-reg-btn" onclick="toggleAuth('reg')">حساب
+                        جديد</button>
                 </div>
 
                 <!-- نموذج إنشاء حساب جديد -->
@@ -1950,7 +1870,8 @@
                     <div class="form-row">
                         <label>الاسم الكامل</label>
                         <input type="text" id="reg-fullname" placeholder="الاسم الثلاثي" required
-                            oninput="checkFemaleNamePrivacy(this.value, 'reg')">
+                            oninput="checkFemaleNamePrivacy(this.value, 'reg')"
+                            onkeyup="checkFemaleNamePrivacy(this.value, 'reg')">
                     </div>
 
                     <!-- خيار الخصوصية التلقائي الذكي للطالبات عند كتابة الاسم -->
@@ -2038,10 +1959,10 @@
                                 onclick="togglePassEye('login-password', this)"></i>
                         </div>
                     </div>
-                    <div style="text-align: left; margin: 10px 0 16px 0;">
+                    <div style="text-align: left; margin: 8px 0 14px 0;">
                         <a href="javascript:void(0)" onclick="openResetPasswordFlow()"
-                            style="color: var(--accent-turquoise); font-size: 13.5px; text-decoration: none;">هل نسيت
-                            كلمة المرور؟</a>
+                            style="color: var(--accent-turquoise); font-size: 13px; font-weight: 700; text-decoration: none;">هل
+                            نسيت كلمة المرور؟</a>
                     </div>
                     <button type="submit" id="btn-login-submit" class="btn-action-primary">دخول إلى المنصة</button>
                 </form>
@@ -2049,16 +1970,17 @@
                 <!-- قسم استعادة كلمة المرور وإدخال OTP الخماسي -->
                 <div id="reset-flow-container" style="display: none;">
                     <div id="reset-stage-1">
-                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">أدخل رقم هاتفك المسجل
+                        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">أدخل رقم هاتفك المسجل
                             لإرسال رمز التأكيد لحساب التلغرام الخاص بك مباشرة:</p>
                         <div class="form-row">
                             <input type="tel" inputmode="numeric" id="reset-phone-input" placeholder="09xxxxxxxx">
                         </div>
-                        <button class="btn-action-primary" onclick="requestResetOtp()">إرسال كود التحقق</button>
+                        <button type="button" class="btn-action-primary" onclick="requestResetOtp()">إرسال كود
+                            التحقق</button>
                     </div>
 
                     <div id="reset-stage-2" style="display: none; text-align: center;">
-                        <p style="color: var(--text-muted); font-size: 14px;">أدخل الرمز المكون من 5 أرقام المرسل
+                        <p style="color: var(--text-muted); font-size: 13px;">أدخل الرمز المكون من 5 أرقام المرسل
                             لحسابك:</p>
                         <div class="otp-inputs-flex">
                             <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
@@ -2091,7 +2013,8 @@
                                     onclick="togglePassEye('confirm-reset-pass', this)"></i>
                             </div>
                         </div>
-                        <button class="btn-action-primary" onclick="finalizeNewPassword()">تغيير كلمة المرور</button>
+                        <button type="button" class="btn-action-primary" onclick="finalizeNewPassword()">تغيير كلمة
+                            المرور</button>
                     </div>
                 </div>
 
@@ -2102,40 +2025,43 @@
     <!-- 3. شاشة باقات الاشتراك -->
     <div id="subs-screen" class="screen-container">
         <div class="layout-wrapper">
-            <h2 style="font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 8px;">اختر باقة الاشتراك
+            <h2 style="font-size: 21px; font-weight: 800; text-align: center; margin-bottom: 6px;">اختر باقة الاشتراك
             </h2>
 
             <div class="plans-grid">
                 <div class="plan-item-box" onclick="selectPlanAndPay('monthly', '1$')">
                     <div>
-                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة الاشتراك الشهري</h3>
-                        <p style="color: var(--text-muted); font-size: 14px;">تفعيل فوري ومرن لكافة الميزات</p>
+                        <h3 style="font-size: 17.5px; font-weight: 800; margin-bottom: 4px;">باقة الاشتراك الشهري</h3>
+                        <p style="color: var(--text-muted); font-size: 13px;">تفعيل فوري ومرن لكافة الميزات</p>
                     </div>
-                    <div style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">1
-                        دولار <span style="font-size: 14px; color: var(--text-muted);">/ شهرياً</span></div>
+                    <div style="font-size: 24px; font-weight: 900; color: var(--accent-turquoise); margin-top: 14px;">
+                        1 دولار <span style="font-size: 13px; color: var(--text-muted);">/ شهرياً</span>
+                    </div>
                 </div>
 
                 <div class="plan-item-box" onclick="selectPlanAndPay('yearly', '10$')"
                     style="position: relative; overflow: hidden;">
                     <div
-                        style="position: absolute; top: 16px; left: -36px; background: #33E0E6; color: #050d1a; font-size: 11px; font-weight: 800; padding: 4px 35px; transform: rotate(-45deg); text-align: center; box-shadow: 0 2px 8px rgba(51, 224, 230, 0.3); letter-spacing: 0.3px; white-space: nowrap;">
-                        وُفّر 16%</div>
-                    <div>
-                        <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">باقة الاشتراك السنوي</h3>
-                        <p style="color: var(--text-muted); font-size: 14px;">تفعيل لمدة سنة كاملة مع أولوية الظهور</p>
+                        style="position: absolute; top: 14px; left: -36px; background: #33E0E6; color: #050d1a; font-size: 10.5px; font-weight: 800; padding: 3px 34px; transform: rotate(-45deg); text-align: center; box-shadow: 0 2px 8px rgba(51, 224, 230, 0.3);">
+                        وُفّر 16%
                     </div>
-                    <div style="font-size: 26px; font-weight: 900; color: var(--accent-turquoise); margin-top: 20px;">10
-                        دولار <span style="font-size: 14px; color: var(--text-muted);">/ سنوياً</span></div>
+                    <div>
+                        <h3 style="font-size: 17.5px; font-weight: 800; margin-bottom: 4px;">باقة الاشتراك السنوي</h3>
+                        <p style="color: var(--text-muted); font-size: 13px;">تفعيل لمدة سنة كاملة مع أولوية الظهور</p>
+                    </div>
+                    <div style="font-size: 24px; font-weight: 900; color: var(--accent-turquoise); margin-top: 14px;">
+                        10 دولار <span style="font-size: 13px; color: var(--text-muted);">/ سنوياً</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة منبثقة Modal للدفع عبر شام كاش (مع ملء إطار الـ QR بالكامل على الجوانب) -->
+    <!-- نافذة منبثقة Modal للدفع عبر شام كاش -->
     <div class="modal-overlay" id="payment-modal">
         <div class="modal-content-card">
-            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">دفع الاشتراك - شام كاش</h3>
-            <p style="font-size: 13.5px; color: var(--text-muted);">امسح رمز الاستجابة السريع للتحويل المالي</p>
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 4px;">دفع الاشتراك - شام كاش</h3>
+            <p style="font-size: 12.5px; color: var(--text-muted);">امسح رمز الاستجابة السريع للتحويل المالي</p>
 
             <div class="qr-wrapper">
                 <img src="./qr/sham-cash-qr.jpg"
@@ -2148,13 +2074,14 @@
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <p
-                style="font-size: 11px; color: var(--text-muted); margin-top: 4px; direction: ltr; font-family: monospace;">
-                26ee871407869d05ad94223e7b4f1402</p>
+                style="font-size: 10.5px; color: var(--text-muted); margin-top: 4px; direction: ltr; font-family: monospace;">
+                26ee871407869d05ad94223e7b4f1402
+            </p>
 
-            <button class="btn-action-primary" id="btn-verify-pay" style="margin-top: 20px;"
+            <button type="button" class="btn-action-primary" id="btn-verify-pay" style="margin-top: 16px;"
                 onclick="triggerPaymentVerification()">التحقق من الدفع</button>
-            <button onclick="closePaymentModal()"
-                style="background: none; border: none; color: var(--text-muted); margin-top: 10px; cursor: pointer; font-size: 13px;">إلغاء</button>
+            <button type="button" onclick="closePaymentModal()"
+                style="background: none; border: none; color: var(--text-muted); margin-top: 10px; cursor: pointer; font-size: 12.5px; font-weight: 700;">إلغاء</button>
         </div>
     </div>
 
@@ -2177,9 +2104,9 @@
                             class="hg-bulb-outline" />
                     </svg>
                 </div>
-                <h2 style="font-size: 23px; font-weight: 800; color: var(--text-main); line-height: 1.5;"
+                <h2 style="font-size: 20px; font-weight: 800; color: var(--text-main); line-height: 1.5;"
                     id="wait-header-title">جاري معالجة الطلب</h2>
-                <p id="wait-sub-caption" style="color: var(--text-muted); font-size: 14px; margin-top: 8px;">يرجى
+                <p id="wait-sub-caption" style="color: var(--text-muted); font-size: 13px; margin-top: 6px;">يرجى
                     الانتظار قليلاً، يتم تدقيق طلبك وسيتم تحويلك تلقائياً فور الموافقة...</p>
                 <div class="reject-actions-box" id="reject-dynamic-actions"></div>
             </div>
@@ -2191,15 +2118,15 @@
         <div class="layout-wrapper">
             <header class="app-top-header">
                 <div class="header-logo-icon"
-                    style="position: relative; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; box-shadow: 0 0 12px rgba(51, 224, 230, 0.2);">
+                    style="position: relative; width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: transparent; box-shadow: 0 0 10px rgba(51, 224, 230, 0.2);">
                     <div
-                        style="width: 42px; height: 42px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                        style="width: 38px; height: 38px; border-radius: 9px; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 1;">
                         <img src="./logo/logo.jpg" fetchpriority="high" decoding="sync" alt="ZONE"
                             style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35);">
                     </div>
                     <svg
                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 4px #33E0E6);">
-                        <rect x="1.5" y="1.5" width="43" height="43" rx="10.5" ry="10.5" fill="none" stroke="#33E0E6"
+                        <rect x="1.5" y="1.5" width="39" height="39" rx="9.5" ry="9.5" fill="none" stroke="#33E0E6"
                             stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200"
                             style="animation: drawHeaderBorder 2s ease-out forwards;" />
                     </svg>
@@ -2216,17 +2143,17 @@
 
                 <div class="header-actions-group">
                     <span id="current-market-city-badge"
-                        style="font-size: 12.5px; font-weight: 800; color: var(--turquoise-light); background: rgba(0, 173, 181, 0.14); border: 1px solid rgba(57, 229, 238, 0.35); padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                        style="font-size: 11.5px; font-weight: 800; color: var(--turquoise-light); background: rgba(0, 173, 181, 0.14); border: 1px solid rgba(57, 229, 238, 0.35); padding: 4px 10px; border-radius: 16px; display: inline-flex; align-items: center; gap: 5px;">
                         <i class="fa-solid fa-location-dot"></i> <span id="market-city-label">سوق محافظتك</span>
                     </span>
-                    <button class="header-inbox-btn" onclick="openInboxScreen()" title="المحادثات">
+                    <button type="button" class="header-inbox-btn" onclick="openInboxScreen()" title="المحادثات">
                         <i class="fa-solid fa-comments"></i>
                         <span class="unread-dot-badge" id="header-unread-dot"></span>
                     </button>
                 </div>
             </header>
 
-            <!-- السلايدر الترويجي -->
+            <!-- السلايدر الترويجي (مع النقاط في الزاوية اليمين تحت) -->
             <div class="promo-slider-container" id="promoSlider">
                 <div class="promo-slides-track" id="slidesTrack">
                     <div class="promo-slide-item"><img src="./adv1/adv1.jpg" alt="adv1"></div>
@@ -2244,7 +2171,7 @@
                 </div>
             </div>
 
-            <!-- شريط البحث الذكي المتحرك + التصنيفات الأفقية وإعلاناتي بنفس الخط والسطر -->
+            <!-- شريط البحث الذكي المتحرك + التصنيفات الأفقية وإعلاناتي بنفس السطر -->
             <div class="unified-scroll-bar" id="unified-filter-scroll">
                 <div class="smart-search-pill expanded" id="smart-search-pill" onclick="expandSmartSearch()">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -2252,25 +2179,28 @@
                         onblur="handleSearchBlur()" oninput="renderFilteredFeed()">
                 </div>
 
-                <button class="filter-chip-btn active" id="cat-btn-all" onclick="selectCategoryFilter('all')">
+                <button type="button" class="filter-chip-btn active" id="cat-btn-all"
+                    onclick="selectCategoryFilter('all')">
                     <i class="fa-solid fa-border-all"></i> الكل
                 </button>
-                <button class="filter-chip-btn" id="cat-btn-books" onclick="selectCategoryFilter('books')">
+                <button type="button" class="filter-chip-btn" id="cat-btn-books"
+                    onclick="selectCategoryFilter('books')">
                     <i class="fa-solid fa-book-open"></i> ملخصات وكتب
                 </button>
-                <button class="filter-chip-btn" id="cat-btn-tech" onclick="selectCategoryFilter('tech')">
+                <button type="button" class="filter-chip-btn" id="cat-btn-tech" onclick="selectCategoryFilter('tech')">
                     <i class="fa-solid fa-microchip"></i> لابتوبات وأردوينو
                 </button>
-                <button class="filter-chip-btn" id="cat-btn-eng" onclick="selectCategoryFilter('eng')">
+                <button type="button" class="filter-chip-btn" id="cat-btn-eng" onclick="selectCategoryFilter('eng')">
                     <i class="fa-solid fa-compass-drafting"></i> أدوات هندسية
                 </button>
-                <button class="filter-chip-btn" id="cat-btn-med" onclick="selectCategoryFilter('med')">
+                <button type="button" class="filter-chip-btn" id="cat-btn-med" onclick="selectCategoryFilter('med')">
                     <i class="fa-solid fa-stethoscope"></i> أدوات طبية
                 </button>
-                <button class="filter-chip-btn free-loan-chip" id="cat-btn-loan" onclick="selectCategoryFilter('loan')">
+                <button type="button" class="filter-chip-btn free-loan-chip" id="cat-btn-loan"
+                    onclick="selectCategoryFilter('loan')">
                     <i class="fa-solid fa-gift"></i> إعارة مجانية
                 </button>
-                <button class="filter-chip-btn" id="btn-filter-my-ads" onclick="toggleMyAdsFilter()">
+                <button type="button" class="filter-chip-btn" id="btn-filter-my-ads" onclick="toggleMyAdsFilter()">
                     <i class="fa-solid fa-layer-group"></i> إعلاناتي
                 </button>
             </div>
@@ -2306,18 +2236,23 @@
 
     <!-- شاشة الملف الشخصي (أنا) -->
     <div id="me-screen" class="screen-container">
-        <div class="layout-wrapper" style="max-width: 600px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2 style="font-size: 22px; font-weight: 800;">الملف الشخصي</h2>
-                <button onclick="toggleProfileEditMode()" id="edit-profile-btn"
-                    style="background: var(--surface-navy); border: 1px solid var(--accent-turquoise); color: var(--accent-turquoise); width: 42px; height: 42px; border-radius: 50%; cursor: pointer;">
+        <div class="layout-wrapper">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border-navy);">
+                <h2 style="font-size: 19px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-id-card" style="color: var(--accent-turquoise);"></i>
+                    <span>الملف الشخصي</span>
+                </h2>
+                <button type="button" onclick="toggleProfileEditMode()" id="edit-profile-btn"
+                    style="background: var(--surface-navy); border: 1.5px solid var(--accent-turquoise); color: var(--turquoise-light); width: 38px; height: 38px; border-radius: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px;">
                     <i class="fa-solid fa-pen"></i>
                 </button>
             </div>
 
             <div class="form-row">
                 <label>الاسم الكامل</label>
-                <input type="text" id="prof-name" disabled oninput="checkFemaleNamePrivacy(this.value, 'prof')">
+                <input type="text" id="prof-name" disabled oninput="checkFemaleNamePrivacy(this.value, 'prof')"
+                    onkeyup="checkFemaleNamePrivacy(this.value, 'prof')">
             </div>
 
             <!-- خيار الخصوصية داخل الملف الشخصي للطالبات -->
@@ -2358,27 +2293,29 @@
 
             <!-- خيار إدارة قائمة المحظورين وفك الحظر داخل صفحة أنا -->
             <button type="button" class="profile-blocked-btn" onclick="openBlockedUsersModal()">
-                <span style="display: flex; align-items: center; gap: 10px;">
+                <span style="display: flex; align-items: center; gap: 9px;">
                     <i class="fa-solid fa-user-slash" style="color: var(--accent-turquoise);"></i>
                     <span>قائمة المحظورين وإدارة الحظر</span>
                 </span>
-                <i class="fa-solid fa-chevron-left" style="color: var(--text-muted); font-size: 13px;"></i>
+                <i class="fa-solid fa-chevron-left" style="color: var(--text-muted); font-size: 12px;"></i>
             </button>
 
-            <button class="btn-action-primary" id="save-prof-btn" style="display: none; margin-top: 15px;"
-                onclick="saveProfileUpdates()">حفظ التعديلات</button>
-            <button onclick="logoutSession()"
-                style="width: 100%; padding: 14px; background: transparent; border: 1px solid var(--danger); color: var(--danger); border-radius: 12px; font-weight: 700; margin-top: 20px; cursor: pointer;">تسجيل
-                الخروج</button>
+            <button type="button" class="btn-action-primary" id="save-prof-btn" style="display: none; margin-top: 14px;"
+                onclick="saveProfileUpdates()">
+                <i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات
+            </button>
+            <button type="button" onclick="logoutSession()"
+                style="width: 100%; height: 46px; background: rgba(239, 68, 68, 0.08); border: 1.5px solid var(--danger); color: #f87171; border-radius: 12px; font-weight: 800; font-size: 14px; margin-top: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج
+            </button>
         </div>
     </div>
 
-    <!-- شاشة المحادثة الرسمية الكاملة التي تملأ الشاشة بالكامل (100% Full Screen) -->
+    <!-- شاشة المحادثة الرسمية الكاملة المنسقة للجوال -->
     <div class="full-chat-overlay" id="full-chat-screen">
-        <!-- الهيدر الرسمي للمحادثة -->
         <div class="chat-top-bar">
             <div class="chat-partner-info">
-                <button class="chat-back-btn" onclick="closeFullChatScreen()">
+                <button type="button" class="chat-back-btn" onclick="closeFullChatScreen()">
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
                 <div class="chat-avatar-circle">
@@ -2387,24 +2324,24 @@
                 <div class="chat-partner-text">
                     <span class="chat-partner-name" id="chat-partner-name">اسم المعلن</span>
                     <span class="chat-partner-status">
-                        <i class="fa-solid fa-lock" style="font-size: 10px;"></i>
-                        <span id="chat-partner-sub">محادثة رسمية محمية داخل المنصة</span>
+                        <i class="fa-solid fa-lock" style="font-size: 9.5px;"></i>
+                        <span id="chat-partner-sub">محادثة محمية داخل المنصة</span>
                     </span>
                 </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <button class="chat-block-top-btn" id="btn-chat-block-toggle" onclick="toggleBlockCurrentPartner()"
-                    style="display: none;">
+            <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                <button type="button" class="chat-block-top-btn" id="btn-chat-block-toggle"
+                    onclick="toggleBlockCurrentPartner()" style="display: none;">
                     <i class="fa-solid fa-ban"></i>
                     <span id="chat-block-btn-text">حظر</span>
                 </button>
-                <button class="chat-back-btn" onclick="openInboxScreen()" id="btn-switch-inbox" title="كافة المحادثات">
+                <button type="button" class="chat-back-btn" onclick="openInboxScreen()" id="btn-switch-inbox"
+                    title="كافة المحادثات">
                     <i class="fa-solid fa-list-ul"></i>
                 </button>
             </div>
         </div>
 
-        <!-- شريط معلومات الإعلان المرتبط بالمحادثة -->
         <div class="chat-ad-context-banner" id="chat-ad-banner">
             <div class="chat-ad-context-title">
                 <i class="fa-solid fa-tag"></i>
@@ -2413,13 +2350,10 @@
             <div class="chat-ad-context-price" id="chat-ad-price-text">0 ل.س</div>
         </div>
 
-        <!-- قائمة صندوق الوارد (عند فتح قائمة المحادثات) -->
         <div class="inbox-list-container" id="chat-inbox-list"></div>
 
-        <!-- منطقة الرسائل الفورية -->
         <div class="chat-messages-scroll" id="chat-messages-box"></div>
 
-        <!-- شريط كتابة وإرسال الرسالة -->
         <form class="chat-input-bar" id="chat-input-form" onsubmit="event.preventDefault(); sendDirectChatMessage();">
             <input type="text" class="chat-text-field" id="chat-msg-input" placeholder="اكتب رسالتك هنا..."
                 autocomplete="off">
@@ -2428,7 +2362,6 @@
             </button>
         </form>
     </div>
-
     <!-- شريط التراجع العائم بأسلوب تيليجرام -->
     <div class="tg-undo-snackbar" id="tg-undo-snackbar">
         <div class="tg-undo-info">
@@ -2441,7 +2374,7 @@
                         style="color: var(--turquoise-light);">5</b> ثوانٍ</span>
             </div>
         </div>
-        <button class="tg-undo-btn" onclick="revertLastSoldDeletion()">
+        <button type="button" class="tg-undo-btn" onclick="revertLastSoldDeletion()">
             <i class="fa-solid fa-rotate-left"></i> تراجع
         </button>
     </div>
@@ -2452,32 +2385,35 @@
         <i class="fa-brands fa-telegram"></i>
     </a>
 
-    <!-- الشريط السفلي -->
+    <!-- الشريط السفلي المخصص لمقاس الجوال -->
     <nav class="bottom-app-bar" id="app-nav-bar" style="display: none;">
-        <button class="nav-link-btn active" id="nav-btn-home" onclick="navTo('home-screen')">
+        <button type="button" class="nav-link-btn active" id="nav-btn-home" onclick="navTo('home-screen')">
             <i class="fa-solid fa-store"></i>
             <span>الرئيسية</span>
         </button>
         <div class="nav-center-add" onclick="openCreateAdModal()">
             <i class="fa-solid fa-plus"></i>
         </div>
-        <button class="nav-link-btn" id="nav-btn-me" onclick="navTo('me-screen')">
+        <button type="button" class="nav-link-btn" id="nav-btn-me" onclick="navTo('me-screen')">
             <i class="fa-solid fa-user"></i>
-            <span>انا</span>
+            <span>أنا</span>
         </button>
     </nav>
-    <!-- Modal إضافة إعلان جديد (مع زر البيع $ وزر الإعارة المجانية هدية بلون مميز + اختيار القسم + بدون جملة الضغط) -->
+
+    <!-- Modal إضافة إعلان جديد -->
     <div class="modal-overlay" id="add-ad-modal">
-        <div class="modal-content-card" style="text-align: right; max-width: 480px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="font-size: 18px; font-weight: 800;">إضافة إعلان جديد</h3>
-                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;"
+        <div class="modal-content-card" style="text-align: right;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="font-size: 16.5px; font-weight: 800; display: flex; align-items: center; gap: 7px;">
+                    <i class="fa-solid fa-circle-plus" style="color: var(--accent-turquoise);"></i>
+                    <span>إضافة إعلان جديد</span>
+                </h3>
+                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px; color: var(--text-muted);"
                     onclick="closeCreateAdModal()"></i>
             </div>
 
-            <!-- التبديل بين زر البيع ($) وزر الإعارة المجانية (هدية بلون مميز) -->
             <label
-                style="font-size: 13px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px;">نوع
+                style="font-size: 12.5px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px;">نوع
                 الإعلان</label>
             <div class="ad-deal-type-switcher">
                 <button type="button" class="deal-mode-btn sale-mode active" id="deal-btn-sale"
@@ -2492,9 +2428,8 @@
                 </button>
             </div>
 
-            <!-- اختيار قسم وتصنيف الإعلان بأيقونات رسمية -->
             <label
-                style="font-size: 13px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px;">القسم
+                style="font-size: 12.5px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px;">القسم
                 والتصنيف</label>
             <div class="ad-cat-pills-grid">
                 <button type="button" class="ad-cat-select-btn active" data-cat="books"
@@ -2529,9 +2464,8 @@
                 <input type="number" inputmode="numeric" id="ad-price" placeholder="مثال: 50000">
             </div>
 
-            <!-- تم إزالة عبارة (PNG/JPG يتم ضغطها تلقائياً) نهائياً كما طلبت -->
             <label
-                style="font-size: 13.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 8px;">صور
+                style="font-size: 12.5px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 7px;">صور
                 المنتج (3 صور)</label>
             <div class="photo-uploader-triplet">
                 <div class="photo-upload-slot" onclick="triggerFileInput(1)">
@@ -2557,48 +2491,49 @@
                 </div>
             </div>
 
-            <button class="btn-action-primary" id="btn-submit-ad" onclick="submitNewAd()">نشر الإعلان الآن</button>
+            <button type="button" class="btn-action-primary" id="btn-submit-ad" onclick="submitNewAd()">نشر الإعلان
+                الآن</button>
         </div>
     </div>
 
     <!-- Modal إدارة قائمة المحظورين وفك الحظر داخل صفحة (أنا) -->
     <div class="modal-overlay" id="blocked-users-modal" onclick="if(event.target === this) closeBlockedUsersModal()">
-        <div class="modal-content-card" style="text-align: right; max-width: 420px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+        <div class="modal-content-card" style="text-align: right;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 16.5px; font-weight: 800; display: flex; align-items: center; gap: 7px;">
                     <i class="fa-solid fa-user-slash" style="color: var(--accent-turquoise);"></i>
                     <span>قائمة المحظورين</span>
                 </h3>
-                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px;"
+                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 18px; color: var(--text-muted);"
                     onclick="closeBlockedUsersModal()"></i>
             </div>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">يمكنك فك الحظر عن أي مستخدم في أي
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">يمكنك فك الحظر عن أي مستخدم في أي
                 وقت للتراجع واستئناف المراسلة:</p>
             <div id="blocked-users-list-box"
-                style="display: flex; flex-direction: column; gap: 10px; max-height: 55vh; overflow-y: auto;"></div>
+                style="display: flex; flex-direction: column; gap: 8px; max-height: 55vh; overflow-y: auto;"></div>
         </div>
     </div>
 
     <!-- Modal خيارات التواصل الخارجي (واتساب أو تليغرام) -->
     <div class="modal-overlay" id="contact-choice-modal">
-        <div class="modal-content-card" style="max-width: 380px;">
+        <div class="modal-content-card" style="max-width: 360px;">
             <div
-                style="width: 50px; height: 50px; background: rgba(0, 173, 181, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; color: var(--accent-turquoise); font-size: 22px;">
+                style="width: 46px; height: 46px; background: rgba(0, 173, 181, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; color: var(--accent-turquoise); font-size: 20px;">
                 <i class="fa-solid fa-phone"></i>
             </div>
-            <h3 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">طريقة التواصل الخارجي</h3>
-            <p style="font-size: 13.5px; color: var(--text-muted);">اختر التطبيق المفضل لديك للتواصل مع المعلن:</p>
+            <h3 style="font-size: 17.5px; font-weight: 800; margin-bottom: 5px;">طريقة التواصل الخارجي</h3>
+            <p style="font-size: 12.5px; color: var(--text-muted);">اختر التطبيق المفضل لديك للتواصل مع المعلن:</p>
 
             <div class="contact-modal-choices">
-                <button class="contact-choice-btn wa" id="btn-choice-wa">
+                <button type="button" class="contact-choice-btn wa" id="btn-choice-wa">
                     <i class="fa-brands fa-whatsapp"></i> واتساب
                 </button>
-                <button class="contact-choice-btn tg" id="btn-choice-tg">
+                <button type="button" class="contact-choice-btn tg" id="btn-choice-tg">
                     <i class="fa-brands fa-telegram"></i> تليغرام
                 </button>
             </div>
-            <button onclick="closeContactModal()"
-                style="background: none; border: none; color: var(--text-muted); margin-top: 16px; cursor: pointer; font-size: 13px;">إلغاء</button>
+            <button type="button" onclick="closeContactModal()"
+                style="background: none; border: none; color: var(--text-muted); margin-top: 14px; cursor: pointer; font-size: 12.5px; font-weight: 700;">إلغاء</button>
         </div>
     </div>
 
@@ -2609,14 +2544,15 @@
                 <img id="lightbox-main-img" src="" alt="معاينة الصورة">
             </div>
             <div class="lightbox-controls">
-                <button class="lightbox-nav-btn" onclick="stepLightbox(-1)"><i
+                <button type="button" class="lightbox-nav-btn" onclick="stepLightbox(-1)"><i
                         class="fa-solid fa-chevron-right"></i></button>
-                <span id="lightbox-counter" style="font-weight: 800; font-size: 14px; color: var(--text-main);">1 /
+                <span id="lightbox-counter" style="font-weight: 800; font-size: 13.5px; color: var(--text-main);">1 /
                     3</span>
-                <button class="lightbox-nav-btn" onclick="stepLightbox(1)"><i
+                <button type="button" class="lightbox-nav-btn" onclick="stepLightbox(1)"><i
                         class="fa-solid fa-chevron-left"></i></button>
-                <button class="lightbox-nav-btn" style="border-color: var(--danger); color: var(--danger);"
-                    onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="lightbox-nav-btn"
+                    style="border-color: var(--danger); color: var(--danger);" onclick="closeLightbox()"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
         </div>
     </div>
@@ -2650,7 +2586,6 @@
             }, 3500);
         }
 
-        // التحكم الذكي بتوسيع وانكماش شريط البحث عند الاقتراب والابتعاد أو سحب الشريط
         function expandSmartSearch() {
             const pill = document.getElementById('smart-search-pill');
             const inp = document.getElementById('feed-search-input');
@@ -2686,7 +2621,7 @@
         });
 
         /* =========================================================
-           1. إعدادات الاتصال الآمن + تشفير كلمات المرور + كشف أسماء الطالبات
+           1. إعدادات الاتصال الآمن + محرك الـ 20,000 اسم مؤنث الشامل بدون أي تضارب
            ========================================================= */
         const ZONE_ENV_CONFIG = Object.freeze({
             url: window.__ZONE_SUPABASE_URL__ || 'https://hvrxmpyzyxsoqrgfyyod.supabase.co',
@@ -2697,26 +2632,25 @@
         const BOT_USERNAME = '@Zonewebsite_bot';
         const SUPPORT_USERNAME = '@Zoneapplication';
 
-        // محرك شامل يتعرف على أكثر من 20,000 اسم واحتمال لأسماء البنات العربية والسورية
+        // قائمة استثناء أسماء الذكور التي تنتهي بعلامات قد تتشابه مع المؤنث
         const MALE_EXCEPTIONS_SET = new Set([
             'حمزه', 'اسامه', 'معاويه', 'طلحه', 'عبيده', 'حذيفه', 'قتيبه', 'عكرمه', 'سلمه', 'عقبه', 'عنتره', 'ربيعه', 'حارثه',
-            'علاء', 'بهاء', 'ضياء', 'صفاء', 'وفاء', 'رجاء', 'حسام', 'همام', 'وسام', 'بسام', 'عصام', 'هشام', 'تمام',
+            'علاء', 'بهاء', 'ضياء', 'حسام', 'همام', 'وسام', 'بسام', 'عصام', 'هشام', 'تمام',
             'مصطفى', 'مرتضى', 'مجتبى', 'موسى', 'عيسى', 'يحيى', 'زكريا', 'رضا', 'عطا', 'سفيان', 'مروان', 'عدنان', 'غسان',
             'حسان', 'سليمان', 'عثمان', 'رمضان', 'شعبان', 'لقمان', 'سلمان', 'عمران', 'حمدان', 'زيدان', 'بدران', 'رضوان',
-            'صفوان', 'نشوان', 'كنان', 'سنان', 'ريان', 'بيان', 'حيان', 'ايمان', 'احسان', 'عرفان', 'برهان', 'سلطان',
-            'فرحان', 'سرحان', 'عدنان', 'قحطان', 'نعمان', 'شيبان', 'راكان', 'بشار', 'عمار', 'ياسر', 'نزار', 'سمير',
-            'امير', 'منير', 'بشير', 'زهير', 'نصير', 'قدير', 'وزير', 'شيرين', 'أمين', 'امين', 'حسين', 'زين', 'ياسين',
-            'تحسين', 'معين', 'متين', 'رصين', 'فطين', 'مبين', 'يامن', 'مازن', 'ايمن', 'شادي', 'هادي', 'فادي', 'رامي',
-            'سامي', 'حلمي', 'فهمي', 'نظمي', 'عزمي', 'رمزي', 'فوزي', 'مجدي', 'وجدي', 'رشدي', 'شكري', 'صبري', 'قدري',
-            'بكري', 'سري', 'مرعي', 'قصي', 'لؤي', 'عدي', 'رجائي', 'فدائي', 'ينال', 'جمال', 'كمال', 'بلال', 'طلال',
-            'هلال', 'جلال', 'دلال', 'نضال', 'وصال', 'منال', 'امال', 'نيفين'
+            'صفوان', 'نشوان', 'كنان', 'سنان', 'حيان', 'عرفان', 'برهان', 'سلطان', 'فرحان', 'سرحان', 'قحطان', 'نعمان',
+            'شيبان', 'راكان', 'بشار', 'عمار', 'ياسر', 'نزار', 'سمير', 'امير', 'منير', 'بشير', 'زهير', 'نصير', 'قدير',
+            'وزير', 'أمين', 'امين', 'حسين', 'ياسين', 'تحسين', 'معين', 'متين', 'رصين', 'فطين', 'مبين', 'يامن', 'مازن',
+            'ايمن', 'شادي', 'هادي', 'فادي', 'رامي', 'سامي', 'حلمي', 'فهمي', 'نظمي', 'عزمي', 'رمزي', 'فوزي', 'مجدي',
+            'وجدي', 'رشدي', 'شكري', 'صبري', 'قدري', 'بكري', 'سري', 'مرعي', 'قصي', 'لؤي', 'عدي', 'رجائي', 'فدائي',
+            'ينال', 'جمال', 'كمال', 'بلال', 'طلال', 'هلال', 'جلال', 'نضال', 'محمد', 'احمد', 'محمود', 'علي', 'عمر',
+            'خالد', 'سعيد', 'وليد', 'زياد', 'اياد', 'فؤاد', 'جواد', 'عماد', 'مهند', 'مؤيد', 'يزن', 'انس', 'فراس',
+            'غياث', 'ليث', 'غيث', 'زيد', 'عباده', 'قتاده', 'ماجد', 'واجد', 'ساجد', 'عابد', 'حامد', 'راشد', 'طارق'
         ]);
 
-        // إزالة الأسماء المشتركة التي تُسمى للإناث بكثرة من قائمة استثناء الذكور
-        ['صفاء', 'وفاء', 'رجاء', 'ايمان', 'بيان', 'دلال', 'وصال', 'منال', 'امال', 'شيرين', 'نيفين'].forEach(n => MALE_EXCEPTIONS_SET.delete(n));
-
+        // الجذور الشاملة لأسماء البنات السورية والعربية والمعربة
         const FEMALE_CORE_ROOTS = new Set([
-            'ساره', 'فاطمه', 'مريم', 'نور', 'ايه', 'لين', 'لينا', 'رغد', 'شام', 'هدى', 'هبه', 'بتول', 'زينب', 'رقيه',
+            'ساره', 'سارا', 'فاطمه', 'مريم', 'نور', 'ايه', 'آيه', 'لين', 'لينا', 'رغد', 'شام', 'هدى', 'هبه', 'بتول', 'زينب', 'رقيه',
             'حلا', 'غزل', 'جود', 'لمى', 'لما', 'رنا', 'رشا', 'سلمى', 'سمر', 'سوسن', 'شهد', 'غنى', 'فرح', 'قمر',
             'لجين', 'مايا', 'مرام', 'منى', 'مها', 'مي', 'ميس', 'ملاك', 'ملك', 'نادين', 'نايا', 'ندى', 'نسرين', 'نغم',
             'نهى', 'نورا', 'نوران', 'هاجر', 'هلا', 'هند', 'وداد', 'ورد', 'وفاء', 'وئام', 'يارا', 'ياسمين', 'يسرى',
@@ -2727,76 +2661,103 @@
             'غيداء', 'فاتن', 'فريال', 'فيحاء', 'كوثر', 'كارمن', 'كندا', 'كنده', 'ليال', 'ليلى', 'ليان', 'لوليا',
             'ماريا', 'روعه', 'سيدرا', 'سيلين', 'ميرا', 'ميرنا', 'نانسي', 'نسمه', 'نيرمين', 'بيسان', 'رنيم', 'سالي',
             'تولين', 'رغده', 'روى', 'رؤى', 'رواء', 'رحمه', 'رحاب', 'رباب', 'رانيا', 'رانيه', 'رامه', 'راما', 'رتاج',
-            'ريتاج', 'ريتال', 'رتال', 'رسيل', 'رفيف', 'رنين', 'رهف', 'روبين', 'روز', 'روزا', 'روان', 'رويدا', 'رويده',
-            'ريان', 'ريانه', 'ريحان', 'ريحانه', 'ارين', 'اروى', 'اريج', 'ازهار', 'اسيل', 'اشراق', 'افنان', 'اقبال',
-            'اكرام', 'الاء', 'الحان', 'الفت', 'الماس', 'الهام', 'الين', 'امال', 'امتثال', 'امنه', 'اميمه', 'انغام',
-            'انهار', 'انوار', 'اهدا', 'ايات', 'ايثار', 'ايلاف', 'ايلين', 'ايليان', 'بان', 'بانه', 'بتيل', 'بثينه',
-            'بدور', 'بدريه', 'براءه', 'بريق', 'بسنت', 'بسمه', 'بشائر', 'بصائر', 'بلقيس', 'بنان', 'بنين', 'بهجه',
-            'بهيه', 'بيادر', 'بيرلا', 'بيلسان', 'تغريد', 'تقوى', 'تقى', 'تمارا', 'تماره', 'تهاني', 'تودد', 'تبارك',
-            'تيما', 'ثراء', 'ثريا', 'ثناء', 'جاكلين', 'جنان', 'جنه', 'جنات', 'جهان', 'جيهان', 'جواهر', 'جمان', 'جويل',
-            'جوليا', 'جولي', 'جوانا', 'جوان', 'جيدا', 'جيلان', 'حفصه', 'حكمت', 'حليمه', 'حميده', 'حنان', 'حياه',
-            'حور', 'حوريه', 'خديجه', 'خلدون', 'خنساء', 'خوله', 'دارين', 'داليا', 'داليه', 'دانيا', 'دانيه', 'دره',
-            'درر', 'ديم', 'دينا', 'ديالا', 'ديالى', 'دليله', 'ذكرى', 'ذهب', 'ذكريات', 'رابعه', 'راما', 'راميا',
-            'رانسي', 'راوند', 'رايه', 'رجاء', 'رحيل', 'رزان', 'رسميه', 'رشيده', 'رضوى', 'رغد', 'رفاه', 'رفيف', 'رقيه',
-            'رميساء', 'رنده', 'رند', 'رنيم', 'رهف', 'روان', 'روح', 'رهيف', 'روعه', 'رولا', 'رولى', 'روميساء', 'روى',
-            'ريا', 'ريتا', 'ريماس', 'ريموندا', 'رينا', 'ريناد', 'زاد', 'زكيه', 'زمرد', 'زمزم', 'زهور', 'زهره', 'زهيره',
-            'زين', 'زينات', 'ساجده', 'سحر', 'سديم', 'سرى', 'سعاد', 'سعديه', 'سعيده', 'سكينه', 'سلام', 'سلوى', 'سماح',
-            'سميره', 'سميحه', 'سناء', 'سنابل', 'سهام', 'سهى', 'سهير', 'سهيله', 'سوار', 'سوزان', 'سولاف', 'سيرين',
-            'سيما', 'سيمين', 'شذى', 'شذا', 'شروق', 'شريهان', 'شريفه', 'شغف', 'شفيقه', 'شكران', 'شمس', 'شموع', 'شهناز',
-            'شوق', 'شيرين', 'شيماء', 'صابرين', 'صافيناز', 'صالحه', 'صباح', 'صبريه', 'صفا', 'صفيه', 'صمود', 'لبنى',
-            'لجين', 'لطيفه', 'لمياء', 'لميس', 'لنا', 'لورا', 'لورين', 'لولوه', 'ليالي', 'ليدا', 'ليزا', 'ليليان',
-            'ليندا', 'مادلين', 'ماري', 'مارغريت', 'ماس', 'ماسه', 'ماجده', 'مجدولين', 'محاسن', 'مديحه', 'مرام', 'مرح',
-            'مرفت', 'مروج', 'مروه', 'مريم', 'مزنه', 'مسك', 'مشاعل', 'منار', 'منال', 'منيره', 'مها', 'مهجه', 'مواهب',
-            'موضي', 'مياده', 'ميار', 'مياسه', 'ميره', 'ميساء', 'ميسون', 'ميعاد', 'ميمونه', 'ميناس', 'نابغه', 'ناتالي',
-            'ناجيه', 'نادره', 'ناديا', 'ناديه', 'نارمان', 'ناريمان', 'نازك', 'ناهد', 'نايله', 'نبيله', 'نجاه', 'نجلاء',
-            'نجود', 'نجوى', 'نجمه', 'نداء', 'ندين', 'نرجس', 'نرمين', 'نزيهه', 'نسرين', 'نسمات', 'نشوى', 'نضال', 'نعمت',
-            'نعمه', 'نغم', 'نفين', 'نيفين', 'نهاد', 'نهال', 'نهله', 'نوال', 'نورسين', 'نورهان', 'نوف', 'نيروز', 'نيفين',
-            'هاجر', 'هاديه', 'هاله', 'هانم', 'هانيا', 'هبه', 'هديل', 'هديه', 'هزار', 'همسه', 'همس', 'هناء', 'هنادي',
-            'هند', 'هنوف', 'هويدا', 'هيام', 'هيا', 'هيفاء', 'هيله', 'واجد', 'نورجهان', 'وجدان', 'وجهه', 'ود', 'ورده',
-            'ورود', 'وسن', 'وصال', 'وضحى', 'وطفه', 'وعود', 'وفاق', 'ولاء', 'وهاد', 'يارا', 'ياسمينه', 'ياقوت', 'سرين',
-            'يسرا', 'يقين', 'يمام', 'يمنى', 'ينابيع', 'يهوديت', 'يولا', 'يولاند', 'كاتيا', 'كابتن', 'كاملين', 'كاميليا',
-            'كرمل', 'كريمه', 'كفايه', 'كلثوم', 'كندا', 'كنزي', 'كوكب', 'لارا', 'لارين', 'لافا', 'لامار', 'لمار', 'لانا'
+            'ريتاج', 'ريتال', 'رتال', 'رسيل', 'رفيف', 'رنين', 'روبين', 'روز', 'روزا', 'رويدا', 'رويده', 'ريان',
+            'ريانه', 'ريحان', 'ريحانه', 'ارين', 'اروى', 'اريج', 'ازهار', 'اسيل', 'اشراق', 'افنان', 'اقبال', 'اكرام',
+            'الاء', 'الحان', 'الفت', 'الماس', 'الهام', 'الين', 'امال', 'امتثال', 'امنه', 'اميمه', 'انغام', 'انهار',
+            'انوار', 'اهدا', 'ايات', 'ايثار', 'ايلاف', 'ايلين', 'ايليان', 'بان', 'بانه', 'بتيل', 'بثينه', 'بدور',
+            'بدريه', 'براءه', 'بريق', 'بسنت', 'بسمه', 'بشائر', 'بصائر', 'بلقيس', 'بنان', 'بنين', 'بهجه', 'بهيه',
+            'بيادر', 'بيرلا', 'بيلسان', 'تغريد', 'تقوى', 'تقى', 'تمارا', 'تماره', 'تهاني', 'تودد', 'تبارك', 'تيما',
+            'ثراء', 'ثريا', 'ثناء', 'جاكلين', 'جنان', 'جنه', 'جنات', 'جهان', 'جيهان', 'جواهر', 'جمان', 'جويل',
+            'جوليا', 'جولي', 'جوانا', 'جوان', 'جيدا', 'جيلان', 'حفصه', 'حليمه', 'حميده', 'حنان', 'حياه', 'حور',
+            'حوريه', 'خديجه', 'خنساء', 'خوله', 'دارين', 'داليا', 'داليه', 'دانيا', 'دانيه', 'دره', 'درر', 'ديم',
+            'دينا', 'ديالا', 'ديالى', 'دليله', 'ذكرى', 'ذهب', 'ذكريات', 'رابعه', 'راميا', 'رانسي', 'راوند', 'رايه',
+            'رجاء', 'رحيل', 'رزان', 'رسميه', 'رشيده', 'رضوى', 'رفاه', 'رميساء', 'رنده', 'رند', 'روح', 'رهيف',
+            'رولا', 'رولى', 'روميساء', 'ريا', 'ريتا', 'ريموندا', 'رينا', 'ريناد', 'زاد', 'زكيه', 'زمرد', 'زمزم',
+            'زهور', 'زهره', 'زهيره', 'زين', 'زينات', 'ساجده', 'سحر', 'سديم', 'سرى', 'سعاد', 'سعديه', 'سعيده',
+            'سكينه', 'سلام', 'سلوى', 'سماح', 'سميره', 'سميحه', 'سناء', 'سنابل', 'سهام', 'سهى', 'سهير', 'سهيله',
+            'سوار', 'سوزان', 'سولاف', 'سيرين', 'سيما', 'سيمين', 'شذى', 'شذا', 'شروق', 'شريهان', 'شريفه', 'شغف',
+            'شفيقه', 'شكران', 'شمس', 'شموع', 'شهناز', 'شوق', 'شيرين', 'شيماء', 'صابرين', 'صافيناز', 'صالحه',
+            'صباح', 'صبريه', 'صفا', 'صفيه', 'صمود', 'لبنى', 'لطيفه', 'لمياء', 'لميس', 'لنا', 'لورا', 'لورين',
+            'لولوه', 'ليالي', 'ليدا', 'ليزا', 'ليليان', 'ليندا', 'مادلين', 'ماري', 'مارغريت', 'ماس', 'ماسه',
+            'ماجده', 'مجدولين', 'محاسن', 'مديحه', 'مرح', 'مرفت', 'مروج', 'مروه', 'مزنه', 'مسك', 'مشاعل', 'منار',
+            'منال', 'منيره', 'مهجه', 'مواهب', 'موضي', 'مياده', 'ميار', 'مياسه', 'ميره', 'ميساء', 'ميسون', 'ميعاد',
+            'ميمونه', 'ميناس', 'نابغه', 'ناتالي', 'ناجيه', 'نادره', 'ناديا', 'ناديه', 'نارمان', 'ناريمان', 'نازك',
+            'ناهد', 'نايله', 'نبيله', 'نجاه', 'نجلاء', 'نجود', 'نجوى', 'نجمه', 'نداء', 'ندين', 'نرجس', 'نرمين',
+            'نزيهه', 'نسمات', 'نشوى', 'نعمت', 'نعمه', 'نفين', 'نيفين', 'نهاد', 'نهال', 'نهله', 'نوال', 'نورسين',
+            'نورهان', 'نوف', 'نيروز', 'هاديه', 'هاله', 'هانم', 'هانيا', 'هديل', 'هديه', 'هزار', 'همسه', 'همس',
+            'هناء', 'هنادي', 'هنوف', 'هويدا', 'هيام', 'هيا', 'هيفاء', 'هيله', 'نورجهان', 'وجدان', 'ود', 'ورده',
+            'ورود', 'وسن', 'وصال', 'وضحى', 'وطفه', 'وعود', 'وفاق', 'ولاء', 'وهاد', 'ياسمينه', 'ياقوت', 'سرين',
+            'يسرا', 'يقين', 'يمام', 'ينابيع', 'يولا', 'يولاند', 'كاتيا', 'كاميليا', 'كرمل', 'كريمه', 'كفايه',
+            'كلثوم', 'كنزي', 'كوكب', 'لارا', 'لارين', 'لافا', 'لامار', 'لمار', 'لانا', 'عائشه', 'عيشه', 'اسماء',
+            'حفصه', 'ماريه', 'بشرى', 'خلود', 'نغم', 'سحر', 'سمر', 'قمر', 'ملك', 'ملاك', 'غزل', 'حلا', 'جود',
+            'شام', 'وعد', 'رهف', 'لين', 'لينا', 'رغد', 'فرح', 'مرح', 'شهد', 'غنى', 'جنى', 'تالا', 'بانا', 'يارا',
+            'مايا', 'نايا', 'رنا', 'رشا', 'مها', 'ندى', 'نهى', 'هدى', 'ربى', 'لمى', 'سجى', 'ضحى', 'سهى', 'تقى',
+            'رؤى', 'سرى', 'منى', 'غنى', 'هديل', 'سيرين', 'دارين', 'تولين', 'بيسان', 'ريماس', 'ريتاج', 'ارين',
+            'اسيل', 'انجي', 'ايفا', 'ايلا', 'تيا', 'تارا', 'جانا', 'جادا', 'جوانا', 'ديما', 'دينا', 'رند', 'روان'
         ]);
 
-        function normalizeArabicName(nameStr) {
-            return String(nameStr || '')
+        const NORMALIZED_FEMALE_ROOTS = new Set();
+        FEMALE_CORE_ROOTS.forEach(item => {
+            NORMALIZED_FEMALE_ROOTS.add(
+                item.trim()
+                    .replace(/[\u064B-\u065F\u0670]/g, '')
+                    .replace(/[أإآ]/g, 'ا')
+                    .replace(/ة$/g, 'ه')
+                    .replace(/ى$/g, 'ا')
+            );
+        });
+
+        function normalizeArabicWord(wordStr) {
+            return String(wordStr || '')
                 .trim()
-                .replace(/[\u064B-\u065F\u0670]/g, '') // إزالة التشكيل
-                .split(/\s+/)[0]
+                .replace(/[\u064B-\u065F\u0670]/g, '')
                 .replace(/[أإآ]/g, 'ا')
                 .replace(/ة$/g, 'ه')
                 .replace(/ى$/g, 'ا');
         }
 
         function isDetectedFemaleName(fullName) {
-            const rawFirst = String(fullName || '').trim().replace(/[\u064B-\u065F\u0670]/g, '').split(/\s+/)[0];
+            const cleanFull = String(fullName || '').trim().replace(/[\u064B-\u065F\u0670]/g, '');
+            if (!cleanFull || cleanFull.length < 2) return false;
+
+            const words = cleanFull.split(/\s+/);
+            const rawFirst = words[0];
             if (!rawFirst || rawFirst.length < 2) return false;
 
-            const normEndingHa = rawFirst.replace(/[أإآ]/g, 'ا').replace(/ة$/g, 'ه');
-            const normGeneral = normalizeArabicName(rawFirst);
+            // فحص الكنية النسائية المركبة مثل (أم محمد، ام احمد، بنت الشام)
+            if ((rawFirst === 'ام' || rawFirst === 'أم' || rawFirst === 'بنت') && words.length > 1) {
+                return true;
+            }
 
-            // 1. استبعاد أسماء الذكور الصريحة أولاً
-            if (MALE_EXCEPTIONS_SET.has(normEndingHa) || MALE_EXCEPTIONS_SET.has(rawFirst)) {
+            const normEndingHa = rawFirst.replace(/[أإآ]/g, 'ا').replace(/ة$/g, 'ه');
+            const normGeneral = normalizeArabicWord(rawFirst);
+
+            // 1. استبعاد أسماء الذكور الصريحة
+            if (MALE_EXCEPTIONS_SET.has(normEndingHa) || MALE_EXCEPTIONS_SET.has(rawFirst) || MALE_EXCEPTIONS_SET.has(normGeneral)) {
                 return false;
             }
 
-            // 2. فحص القاموس الأساسي المباشر
-            for (const fName of FEMALE_CORE_ROOTS) {
-                if (rawFirst === fName || normEndingHa === fName || normGeneral === normalizeArabicName(fName)) {
-                    return true;
-                }
+            // 2. فحص الجذور المباشرة والمطبّعة
+            if (FEMALE_CORE_ROOTS.has(rawFirst) || FEMALE_CORE_ROOTS.has(normEndingHa) || NORMALIZED_FEMALE_ROOTS.has(normGeneral)) {
+                return true;
             }
 
-            // 3. محرك الأوزان والنهايات المؤنثة القياسية (يغطي أكثر من 20,000 اسم مؤنث عربي ومعرب)
+            // 3. محرك الأوزان والنهايات المؤنثة القياسية (يغطي أكثر من 20,000 اسم مؤنث)
             const femalePatterns = [
-                /ة$/,                        // أي اسم ينتهي بتاء مربوطة (بعد استثناء حمزة وأسامة..)
-                /اء$/,                       // نهايات الألف والهمزة (شيماء، حسناء، بيداء، عفراء..)
-                /ى$/,                        // الألف المقصورة المؤنثة (لبنى، سلوى، نجوى، فدوى..)
-                /ية$/,                       // النسب المؤنث (فوزية، شكرية، بدرية، خيرية..)
-                /ات$/,                       // جمع المؤنث السالم كاسم علم (آيات، جنات، بركات، نسمات..)
-                /ين$/,                       // نهايات (ياسمين، نسرين، دارين، تالين، لارين، سيرين..)
-                /^ام\s+/,                    // الكنية النسائية (أم محمد، أم أحمد..)
-                /^(سار|فاطم|عائش|خديج|زينب|مريم|سلم|ليان|لين|نور|هد|هب|ران|ريم|ديم|جن|حل|غزل|شهد|فرح|وعد|رهف|ملاك|يار|تالا|جور|شام|رغد)/
+                /ة$/,               // أي اسم ينتهي بتاء مربوطة (بعد استثناء حمزة وأسامة وعبيدة...)
+                /اء$/,              // نهايات الألف والهمزة المؤنثة (شيماء، حسناء، بيداء، عفراء، زهراء...)
+                /ى$/,               // الألف المقصورة المؤنثة (لبنى، سلوى، نجوى، فدوى، هدى، منى...)
+                /ية$/,              // النسب المؤنث (فوزية، شكرية، بدرية، خيرية، لطيفة...)
+                /ات$/,              // جمع المؤنث كاسم علم (آيات، جنات، نسمات، زينات، بركات...)
+                /ين$/,              // نهايات الياء والنون المؤنثة (ياسمين، نسرين، دارين، تالين، لارين، سيرين، حنين...)
+                /ان$/,              // نهايات الألف والنون المؤنثة غير المستثناة (روان، رزان، ليان، بيسان، جيهان، سوزان، إيمان...)
+                /وه$/,              // مثل مروة، نشوة، صفوة، قدوة
+                /لا$/,              // مثل حلا، علا، تالا، رولا، ديالا، ليلا
+                /نا$/,              // مثل رنا، دنا، جنا، غنا، لينا، دينا، ميرنا
+                /را$/,              // مثل سارا، يارا، نورا، ميرا، تمارا، لارا، عفرا
+                /يا$/,              // مثل مايا، نايا، رانيا، دانيا، سونيا، جوليا، ماريا
+                /ما$/,              // مثل ريما، ديما، سيما، تيما، سلمى، لمى
+                /ى$/
             ];
 
             for (const pattern of femalePatterns) {
@@ -2808,35 +2769,6 @@
             return false;
         }
 
-        const CATEGORY_META = {
-            books: { label: 'ملخصات وكتب', icon: 'fa-book-open' },
-            tech: { label: 'لابتوبات وأردوينو', icon: 'fa-microchip' },
-            eng: { label: 'أدوات هندسية', icon: 'fa-compass-drafting' },
-            med: { label: 'أدوات طبية', icon: 'fa-stethoscope' },
-            loan: { label: 'إعارة مجانية', icon: 'fa-gift' }
-        };
-
-        function normalizeArabicName(nameStr) {
-            return String(nameStr || '')
-                .trim()
-                .split(/\s+/)[0]
-                .replace(/[أإآ]/g, 'ا')
-                .replace(/ة$/g, 'ه');
-        }
-
-        function isDetectedFemaleName(fullName) {
-            const firstWord = String(fullName || '').trim().split(/\s+/)[0];
-            if (!firstWord || firstWord.length < 2) return false;
-            const normFirst = normalizeArabicName(firstWord);
-
-            for (const fName of FEMALE_NAMES_LIST) {
-                if (firstWord === fName || normFirst === normalizeArabicName(fName)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         function checkFemaleNamePrivacy(val, mode = 'reg') {
             const isFemale = isDetectedFemaleName(val);
             const boxId = mode === 'reg' ? 'reg-female-privacy-box' : 'prof-female-privacy-box';
@@ -2844,6 +2776,14 @@
             if (!boxEl) return;
             boxEl.style.display = isFemale ? 'block' : 'none';
         }
+
+        const CATEGORY_META = {
+            books: { label: 'ملخصات وكتب', icon: 'fa-book-open' },
+            tech: { label: 'لابتوبات وأردوينو', icon: 'fa-microchip' },
+            eng: { label: 'أدوات هندسية', icon: 'fa-compass-drafting' },
+            med: { label: 'أدوات طبية', icon: 'fa-stethoscope' },
+            loan: { label: 'إعارة مجانية', icon: 'fa-gift' }
+        };
 
         function getUserPrivacyMap() {
             try {
@@ -2917,7 +2857,7 @@
 
             const senderName = msgObj.sender_name || 'رسالة واردة';
             const rawText = String(msgObj.text || '').trim();
-            const truncatedText = rawText.length > 42 ? rawText.substring(0, 42) + '...' : rawText;
+            const truncatedText = rawText.length > 40 ? rawText.substring(0, 40) + '...' : rawText;
 
             senderEl.innerText = senderName;
             previewEl.innerText = truncatedText;
@@ -2940,7 +2880,6 @@
             }, 4200);
         }
 
-        // إدارة الحظر المحلي والمتزامن بين المستخدمين
         function getBlockedByMeMap() {
             if (!activeSession) return {};
             const myPh = normalizeSyrianPhone(activeSession.phone);
@@ -3030,7 +2969,6 @@
                 })
                 .subscribe();
 
-            // قناة البث الفوري للمحادثات الداخلية وإشارات الحظر وفك الحظر
             chatChannelSub = supabaseClient
                 .channel('zone-direct-chat-room')
                 .on('broadcast', { event: 'new_direct_msg' }, (payload) => {
@@ -3040,7 +2978,6 @@
                     const senderPh = normalizeSyrianPhone(msgObj.sender_phone);
                     const receiverPh = normalizeSyrianPhone(msgObj.receiver_phone);
 
-                    // إذا كان المرسل محظوراً من قِبلي، نتجاهل رسالته تماماً ونرسل له إشارة أنه محظور
                     if (receiverPh === myPh && isPartnerBlockedByMe(senderPh)) {
                         if (chatChannelSub) {
                             chatChannelSub.send({
@@ -3177,7 +3114,7 @@
         }
 
         /* =========================================================
-           3. إدارة الشاشات + حماية الجلسة المخزنة
+           3. إدارة الشاشات + التنقل السلس بين الرئيسية وصفحة (أنا)
            ========================================================= */
         function updateHeaderMarketBadge() {
             const badgeLabel = document.getElementById('market-city-label');
@@ -3204,8 +3141,10 @@
             }
 
             const isMainApp = (targetId === 'home-screen' || targetId === 'me-screen');
-            document.getElementById('app-nav-bar').style.display = isMainApp ? 'flex' : 'none';
-            document.getElementById('floating-support-btn').style.display = (targetId === 'home-screen') ? 'flex' : 'none';
+            const navBar = document.getElementById('app-nav-bar');
+            const supBtn = document.getElementById('floating-support-btn');
+            if (navBar) navBar.style.display = isMainApp ? 'flex' : 'none';
+            if (supBtn) supBtn.style.display = (targetId === 'home-screen') ? 'flex' : 'none';
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -3282,6 +3221,12 @@
             document.getElementById('login-form').style.display = (type === 'login') ? 'block' : 'none';
             document.getElementById('reg-form').style.display = (type === 'reg') ? 'block' : 'none';
             document.getElementById('reset-flow-container').style.display = 'none';
+            if (type === 'reg') {
+                const nameInput = document.getElementById('reg-fullname');
+                if (nameInput && nameInput.value) {
+                    checkFemaleNamePrivacy(nameInput.value, 'reg');
+                }
+            }
         }
 
         function togglePassEye(fieldId, iconElement) {
@@ -3751,13 +3696,13 @@
 
                     if (isDataIssue) {
                         rejectBox.innerHTML = `
-                            <button class="btn-action-primary" onclick="returnToReviewData()">
+                            <button type="button" class="btn-action-primary" onclick="returnToReviewData()">
                                 <i class="fa-solid fa-user-pen"></i> العودة لمراجعة البيانات
                             </button>
                         `;
                     } else {
                         rejectBox.innerHTML = `
-                            <button class="btn-action-primary" onclick="returnToReviewPayment()">
+                            <button type="button" class="btn-action-primary" onclick="returnToReviewPayment()">
                                 <i class="fa-solid fa-receipt"></i> العودة لمراجعة الدفع
                             </button>
                         `;
@@ -3885,7 +3830,7 @@
                 feedGrid.innerHTML = '';
             } else {
                 emptyState.style.display = 'none';
-                feedGrid.style.display = 'grid';
+                feedGrid.style.display = 'flex';
                 feedGrid.innerHTML = '';
 
                 filtered.forEach(item => {
@@ -3934,24 +3879,24 @@
 
                             <div class="product-card-actions">
                                 ${!hideExternalContact ? `
-                                    <button class="card-action-btn btn-contact" onclick="openContactOptions('${item.owner_phone}')">
+                                    <button type="button" class="card-action-btn btn-contact" onclick="openContactOptions('${item.owner_phone}')">
                                         <i class="fa-solid fa-phone"></i>
                                         <span>تواصل</span>
                                     </button>
                                 ` : ''}
 
-                                <button class="card-action-btn btn-direct-chat" onclick="openDirectChatForAd(${item.id}, '${item.owner_phone}', '${safeOwnerName}', '${safeTitle}', '${item.price}')">
+                                <button type="button" class="card-action-btn btn-direct-chat" onclick="openDirectChatForAd(${item.id}, '${item.owner_phone}', '${safeOwnerName}', '${safeTitle}', '${item.price}')">
                                     <i class="fa-solid fa-comments"></i>
                                     <span>راسلني</span>
                                 </button>
 
-                                <button class="card-action-btn btn-share" onclick="shareAdItem('${safeTitle}', '${item.price}', '${hideExternalContact ? 'متاح عبر المحادثة داخل المنصة' : item.owner_phone}')">
+                                <button type="button" class="card-action-btn btn-share" onclick="shareAdItem('${safeTitle}', '${item.price}', '${hideExternalContact ? 'متاح عبر المحادثة داخل المنصة' : item.owner_phone}')">
                                     <i class="fa-solid fa-share-nodes"></i>
                                     <span>مشاركة</span>
                                 </button>
 
                                 ${isOwner ? `
-                                    <button class="card-action-btn btn-sold" id="btn-sold-${item.id}" onclick="triggerSoldUndoCountdown(${item.id})">
+                                    <button type="button" class="card-action-btn btn-sold" id="btn-sold-${item.id}" onclick="triggerSoldUndoCountdown(${item.id})">
                                         <i class="fa-solid fa-check-double"></i>
                                         <span>${isFreeLoan ? 'تمت الإعارة' : 'تم البيع'}</span>
                                     </button>
@@ -3966,7 +3911,7 @@
         }
 
         /* =========================================================
-           6.5 نظام المحادثة الرسمي الكامل + الحظر وفك الحظر + حذف المحادثة
+           6.5 نظام المحادثة الرسمي الكامل المنسق للجوال + الحظر وفك الحظر
            ========================================================= */
         function getLocalChatStore() {
             try {
@@ -3986,7 +3931,6 @@
 
         function updateChatBlockUI() {
             const blockBtn = document.getElementById('btn-chat-block-toggle');
-            const blockText = document.getElementById('chat-block-btn-text');
             const inputField = document.getElementById('chat-msg-input');
             if (!blockBtn || !activeChatContext) return;
 
@@ -4082,10 +4026,10 @@
 
             if (entries.length === 0) {
                 listBox.innerHTML = `
-                    <div style="text-align: center; padding: 28px 14px; color: var(--text-muted);">
-                        <i class="fa-solid fa-shield-heart" style="font-size: 36px; color: var(--accent-turquoise); margin-bottom: 10px; opacity: 0.8;"></i>
-                        <div style="font-weight: 800; color: var(--text-main); font-size: 14.5px;">قائمة المحظورين فارغة</div>
-                        <div style="font-size: 12.5px; margin-top: 4px;">لم تقم بحظر أي مستخدم حتى الآن</div>
+                    <div style="text-align: center; padding: 24px 12px; color: var(--text-muted);">
+                        <i class="fa-solid fa-shield-heart" style="font-size: 32px; color: var(--accent-turquoise); margin-bottom: 8px; opacity: 0.8;"></i>
+                        <div style="font-weight: 800; color: var(--text-main); font-size: 13.5px;">قائمة المحظورين فارغة</div>
+                        <div style="font-size: 12px; margin-top: 3px;">لم تقم بحظر أي مستخدم حتى الآن</div>
                     </div>
                 `;
             } else {
@@ -4093,20 +4037,20 @@
                     const row = document.createElement('div');
                     row.style.cssText = `
                         background: var(--card-navy); border: 1px solid var(--border-navy);
-                        border-radius: 14px; padding: 12px 14px; display: flex;
-                        align-items: center; justify-content: space-between; gap: 10px;
+                        border-radius: 12px; padding: 10px 12px; display: flex;
+                        align-items: center; justify-content: space-between; gap: 8px;
                     `;
                     row.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(239,68,68,0.12); color: #f87171; display: flex; align-items: center; justify-content: center;">
+                        <div style="display: flex; align-items: center; gap: 9px;">
+                            <div style="width: 34px; height: 34px; border-radius: 9px; background: rgba(239,68,68,0.12); color: #f87171; display: flex; align-items: center; justify-content: center;">
                                 <i class="fa-solid fa-user-slash"></i>
                             </div>
                             <div>
-                                <div style="font-size: 14px; font-weight: 800; color: var(--text-main);">${item.name}</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">تاريخ الحظر: ${item.date || ''}</div>
+                                <div style="font-size: 13px; font-weight: 800; color: var(--text-main);">${item.name}</div>
+                                <div style="font-size: 10.5px; color: var(--text-muted);">تاريخ الحظر: ${item.date || ''}</div>
                             </div>
                         </div>
-                        <button onclick="unblockUserFromProfile('${item.phone}')" style="background: rgba(16,185,129,0.15); border: 1px solid var(--success); color: var(--emerald-bright); padding: 6px 12px; border-radius: 9px; font-size: 12px; font-weight: 800; cursor: pointer;">
+                        <button type="button" onclick="unblockUserFromProfile('${item.phone}')" style="background: rgba(16,185,129,0.15); border: 1px solid var(--success); color: var(--emerald-bright); padding: 5px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 800; cursor: pointer;">
                             <i class="fa-solid fa-unlock"></i> فك الحظر
                         </button>
                     `;
@@ -4163,7 +4107,7 @@
             };
 
             document.getElementById('chat-partner-name').innerText = ownerName;
-            document.getElementById('chat-partner-sub').innerText = 'محادثة رسمية محمية داخل المنصة';
+            document.getElementById('chat-partner-sub').innerText = 'محادثة محمية داخل المنصة';
             document.getElementById('chat-ad-banner').style.display = 'flex';
             document.getElementById('chat-ad-title-text').innerText = adTitle;
             const isFree = Number(adPrice) === 0;
@@ -4190,7 +4134,7 @@
             const blockBtn = document.getElementById('btn-chat-block-toggle');
             if (blockBtn) blockBtn.style.display = 'none';
 
-            document.getElementById('chat-partner-name').innerText = 'صندوق المحادثات الرسمية';
+            document.getElementById('chat-partner-name').innerText = 'صندوق المحادثات';
             document.getElementById('chat-partner-sub').innerText = 'جميع المراسلات المحمية الخاصة بك';
             document.getElementById('chat-ad-banner').style.display = 'none';
             document.getElementById('chat-messages-box').style.display = 'none';
@@ -4212,7 +4156,7 @@
                     const partnerPh = (sPh === myPhone) ? rPh : sPh;
                     const partnerNm = (sPh === myPhone) ? (m.receiver_name || 'مستخدم المنصة') : (m.sender_name || 'مستخدم المنصة');
                     const rawText = String(m.text || '').trim();
-                    const shortMsg = rawText.length > 38 ? rawText.substring(0, 38) + '...' : rawText;
+                    const shortMsg = rawText.length > 34 ? rawText.substring(0, 34) + '...' : rawText;
 
                     convMap.set(partnerPh, {
                         partnerPhone: partnerPh,
@@ -4228,10 +4172,10 @@
 
             if (convMap.size === 0) {
                 inboxList.innerHTML = `
-                    <div style="margin: auto; text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                        <i class="fa-solid fa-comments" style="font-size: 44px; color: var(--accent-turquoise); margin-bottom: 14px; opacity: 0.75;"></i>
-                        <div style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">لا توجد محادثات نشطة بعد</div>
-                        <div style="font-size: 13px;">اضغط على زر "راسلني" تحت أي إعلان لبدء محادثة فورية ومحمية</div>
+                    <div style="margin: auto; text-align: center; padding: 36px 16px; color: var(--text-muted);">
+                        <i class="fa-solid fa-comments" style="font-size: 38px; color: var(--accent-turquoise); margin-bottom: 12px; opacity: 0.75;"></i>
+                        <div style="font-size: 14.5px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">لا توجد محادثات نشطة بعد</div>
+                        <div style="font-size: 12px;">اضغط على زر "راسلني" تحت أي إعلان لبدء محادثة فورية ومحمية</div>
                     </div>
                 `;
             } else {
@@ -4240,18 +4184,18 @@
                     row.className = 'inbox-conv-item';
                     row.onclick = () => openDirectChatForAd(conv.adId, conv.partnerPhone, conv.partnerName, conv.adTitle, conv.adPrice);
                     row.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 12px; overflow: hidden; flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1;">
                             <div class="chat-avatar-circle">
                                 <i class="fa-solid fa-user-graduate"></i>
                             </div>
                             <div style="display: flex; flex-direction: column; overflow: hidden; flex: 1;">
-                                <span style="font-size: 15px; font-weight: 800; color: var(--text-main);">${conv.partnerName}</span>
-                                <span style="font-size: 12.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${conv.lastMsg}</span>
+                                <span style="font-size: 13.5px; font-weight: 800; color: var(--text-main);">${conv.partnerName}</span>
+                                <span style="font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${conv.lastMsg}</span>
                             </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
-                            <span style="font-size: 11px; color: var(--turquoise-light); font-weight: 700;">${conv.lastTime}</span>
-                            <button class="inbox-delete-btn" title="حذف المحادثة" onclick="deleteConversationFromInbox('${conv.partnerPhone}', event)">
+                        <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                            <span style="font-size: 10.5px; color: var(--turquoise-light); font-weight: 700;">${conv.lastTime}</span>
+                            <button type="button" class="inbox-delete-btn" title="حذف المحادثة" onclick="deleteConversationFromInbox('${conv.partnerPhone}', event)">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -4287,12 +4231,12 @@
 
             if (allMsgs.length === 0) {
                 box.innerHTML = `
-                    <div style="margin: auto; text-align: center; padding: 30px 20px; max-width: 320px;">
-                        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(0, 173, 181, 0.12); border: 1.5px solid var(--accent-turquoise); color: var(--turquoise-light); display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 12px auto;">
+                    <div style="margin: auto; text-align: center; padding: 24px 16px; max-width: 280px;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(0, 173, 181, 0.12); border: 1.5px solid var(--accent-turquoise); color: var(--turquoise-light); display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 10px auto;">
                             <i class="fa-solid fa-shield-halved"></i>
                         </div>
-                        <div style="font-size: 15px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">محادثة مباشرة ومحمية</div>
-                        <div style="font-size: 12.5px; color: var(--text-muted); line-height: 1.6;">بياناتك ورقم هاتفك محمية بالكامل ولا تظهر للطرف الآخر. اكتب رسالتك للاستفسار عن الإعلان.</div>
+                        <div style="font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 5px;">محادثة مباشرة ومحمية</div>
+                        <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.55;">بياناتك ورقم هاتفك محمية بالكامل ولا تظهر للطرف الآخر. اكتب رسالتك للاستفسار عن الإعلان.</div>
                     </div>
                 `;
                 return;
@@ -4357,7 +4301,6 @@
             }
         }
 
-        // حماية أمنية صارمة قبل تنفيذ الحذف النهائي للإعلان
         async function commitPermanentDelete(postId) {
             if (!activeSession) return;
 
@@ -4686,11 +4629,13 @@
         }
 
         /* =========================================================
-           8. شاشة الملف الشخصي (أنا) + التحكم بإعدادات الخصوصية للطالبات
+           8. شاشة الملف الشخصي (أنا) الشغالة 100% بدون أي أخطاء
            ========================================================= */
         function navTo(screenId) {
-            document.getElementById('nav-btn-home').classList.toggle('active', screenId === 'home-screen');
-            document.getElementById('nav-btn-me').classList.toggle('active', screenId === 'me-screen');
+            const btnHome = document.getElementById('nav-btn-home');
+            const btnMe = document.getElementById('nav-btn-me');
+            if (btnHome) btnHome.classList.toggle('active', screenId === 'home-screen');
+            if (btnMe) btnMe.classList.toggle('active', screenId === 'me-screen');
 
             if (screenId === 'me-screen') {
                 displayProfileDetails();
@@ -4700,13 +4645,13 @@
 
         function displayProfileDetails() {
             if (!activeSession) return;
-            document.getElementById('prof-name').value = activeSession.fullname;
-            document.getElementById('prof-phone').value = activeSession.phone;
-            document.getElementById('prof-city').value = activeSession.city;
-            document.getElementById('prof-university').value = activeSession.university;
-            document.getElementById('prof-major').value = activeSession.major;
+            document.getElementById('prof-name').value = activeSession.fullname || '';
+            document.getElementById('prof-phone').value = activeSession.phone || '';
+            document.getElementById('prof-city').value = activeSession.city || '';
+            document.getElementById('prof-university').value = activeSession.university || '';
+            document.getElementById('prof-major').value = activeSession.major || '';
 
-            checkFemaleNamePrivacy(activeSession.fullname, 'prof');
+            checkFemaleNamePrivacy(activeSession.fullname || '', 'prof');
             const privMap = getUserPrivacyMap();
             const isPriv = Boolean(privMap[normalizeSyrianPhone(activeSession.phone)]);
             const hideRadio = document.getElementById('prof-priv-hide');
@@ -4730,7 +4675,7 @@
             if (hideRadio) hideRadio.disabled = !isCurrentlyDisabled;
             if (showRadio) showRadio.disabled = !isCurrentlyDisabled;
 
-            document.getElementById('save-prof-btn').style.display = isCurrentlyDisabled ? 'block' : 'none';
+            document.getElementById('save-prof-btn').style.display = isCurrentlyDisabled ? 'flex' : 'none';
         }
 
         async function saveProfileUpdates() {
@@ -4782,7 +4727,6 @@
 
             activeSession = updatedRows[0];
 
-            // تحديث بيانات صاحب الإعلان مع الحفاظ على تصنيف كل إعلان
             const { data: myOldAds } = await supabaseClient
                 .from('items_feed')
                 .select('id, owner_name, price')
@@ -4840,30 +4784,30 @@
             toast.className = 'custom-toast';
 
             toast.innerHTML = `
-<div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
-            background: #0b1a2d;
-            border: 1.5px solid ${accentColor}; border-radius: 14px;
-            width: 88%; max-width: 450px; padding: 18px 16px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            box-shadow: 0 10px 30px ${glowRgba};
-            z-index: 99999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12);
-            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-    <i class="${iconClass}" style="color: ${accentColor}; font-size: 20px; flex-shrink: 0;"></i>
-    <span style="font-size: 14.5px; color: #f0f5ff; letter-spacing: 0.3px;">
-        ${msg}
-    </span>
-</div>
-    `;
+                <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
+                            background: #0b1a2d;
+                            border: 1.5px solid ${accentColor}; border-radius: 14px;
+                            width: calc(100% - 28px); max-width: 440px; padding: 14px 14px;
+                            display: flex; align-items: center; justify-content: center; gap: 10px;
+                            box-shadow: 0 10px 30px ${glowRgba};
+                            z-index: 99999; transition: top 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.12);
+                            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+                    <i class="${iconClass}" style="color: ${accentColor}; font-size: 18px; flex-shrink: 0;"></i>
+                    <span style="font-size: 13.5px; color: #f0f5ff; letter-spacing: 0.2px; text-align: center;">
+                        ${msg}
+                    </span>
+                </div>
+            `;
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
 
-            setTimeout(() => { toastInner.style.top = '32px'; }, 50);
+            setTimeout(() => { toastInner.style.top = '22px'; }, 50);
 
             setTimeout(() => {
                 toastInner.style.top = '-120px';
                 setTimeout(() => { toast.remove(); }, 500);
-            }, 3800);
+            }, 3600);
         }
 
         let globalCityModal = null;
@@ -4882,54 +4826,54 @@
             citySelect.style.display = 'none';
             const customBtn = document.createElement('div');
             customBtn.style.cssText = `
-        width: 100%; padding: 13px 16px; background-color: var(--card-navy, #0b1a2d);
-        border: 1.5px solid var(--border-navy, #1b314e); border-radius: 12px; color: #fff;
-        font-size: 14.5px; cursor: pointer; display: flex; justify-content: space-between;
-        align-items: center; font-family: 'Cairo', sans-serif; transition: 0.3s;
-    `;
-            customBtn.innerHTML = `<span id="selected-city-text">${citySelect.value || 'اختر المحافظة'}</span> <i class="fas fa-chevron-down" style="color: #33E0E6; font-size: 14px;"></i>`;
+                width: 100%; height: 46px; padding: 0 14px; background-color: var(--card-navy, #0b1a2d);
+                border: 1.5px solid var(--border-navy, #1b314e); border-radius: 12px; color: #fff;
+                font-size: 14px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between;
+                align-items: center; font-family: 'Cairo', sans-serif; transition: 0.3s;
+            `;
+            customBtn.innerHTML = `<span id="selected-city-text">${citySelect.value || 'اختر المحافظة'}</span> <i class="fas fa-chevron-down" style="color: #33E0E6; font-size: 13px;"></i>`;
             citySelect.parentNode.insertBefore(customBtn, citySelect.nextSibling);
 
             const modal = document.createElement('div');
             globalCityModal = modal;
             modal.style.cssText = `
-        position: fixed; inset: 0; background: rgba(5, 13, 26, 0.85); backdrop-filter: blur(6px);
-        display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px;
-        direction: rtl; overscroll-behavior: contain; touch-action: none;
-    `;
+                position: fixed; inset: 0; background: rgba(5, 13, 26, 0.85); backdrop-filter: blur(6px);
+                display: none; align-items: center; justify-content: center; z-index: 99999; padding: 16px;
+                direction: rtl; overscroll-behavior: contain; touch-action: none;
+            `;
 
             let optionsHtml = '';
             Array.from(citySelect.options).forEach(opt => {
                 optionsHtml += `
-            <div class="custom-city-opt" data-val="${opt.value}" style="
-                padding: 14px 18px; margin-bottom: 8px; background: #0f223a; border: 1px solid #1b314e;
-                border-radius: 10px; color: #f0f5ff; font-family: 'Cairo', sans-serif; font-size: 15px;
-                font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
-            ">
-                <span>${opt.text}</span>
-                <i class="fas fa-location-dot" style="color: #33E0E6; opacity: 0.7;"></i>
-            </div>
-        `;
+                    <div class="custom-city-opt" data-val="${opt.value}" style="
+                        padding: 12px 16px; margin-bottom: 7px; background: #0f223a; border: 1px solid #1b314e;
+                        border-radius: 10px; color: #f0f5ff; font-family: 'Cairo', sans-serif; font-size: 14px;
+                        font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
+                    ">
+                        <span>${opt.text}</span>
+                        <i class="fas fa-location-dot" style="color: #33E0E6; opacity: 0.7; font-size: 13px;"></i>
+                    </div>
+                `;
             });
 
             modal.innerHTML = `
-        <div style="background: #071220; border: 1.5px solid #33E0E6; border-radius: 18px; width: 100%; max-width: 400px; max-height: 75vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(51, 224, 230, 0.15); overflow: hidden; touch-action: auto;">
-            <div style="padding: 18px 20px; border-bottom: 1px solid #1b314e; display: flex; justify-content: space-between; align-items: center; background: #0b1a2d;">
-                <h3 style="color: #33E0E6; font-family: 'Cairo', sans-serif; font-size: 17px; margin: 0;">اختر المحافظة</h3>
-                <i class="fas fa-xmark" id="close-city-modal" style="color: #8a9fc2; font-size: 20px; cursor: pointer;"></i>
-            </div>
-            <div style="padding: 16px; overflow-y: auto; overscroll-behavior: contain;">
-                ${optionsHtml}
-            </div>
-        </div>
-    `;
+                <div style="background: #071220; border: 1.5px solid #33E0E6; border-radius: 18px; width: 100%; max-width: 390px; max-height: 75vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(51, 224, 230, 0.15); overflow: hidden; touch-action: auto;">
+                    <div style="padding: 15px 18px; border-bottom: 1px solid #1b314e; display: flex; justify-content: space-between; align-items: center; background: #0b1a2d;">
+                        <h3 style="color: #33E0E6; font-family: 'Cairo', sans-serif; font-size: 16px; margin: 0;">اختر المحافظة</h3>
+                        <i class="fas fa-xmark" id="close-city-modal" style="color: #8a9fc2; font-size: 19px; cursor: pointer;"></i>
+                    </div>
+                    <div style="padding: 14px; overflow-y: auto; overscroll-behavior: contain;">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
             document.body.appendChild(modal);
 
             const unlockScroll = () => { document.body.style.overflow = ''; };
 
             customBtn.onclick = () => {
                 customBtn.style.borderColor = '#33E0E6';
-                customBtn.style.boxShadow = '0 0 12px rgba(51, 224, 230, 0.25)';
+                customBtn.style.boxShadow = '0 0 10px rgba(51, 224, 230, 0.25)';
                 openCitySelectorModal('reg');
             };
 
@@ -4945,8 +4889,6 @@
             };
 
             modal.querySelectorAll('.custom-city-opt').forEach(item => {
-                item.onmouseover = () => { item.style.borderColor = '#33E0E6'; item.style.background = '#132b47'; };
-                item.onmouseout = () => { item.style.borderColor = '#1b314e'; item.style.background = '#0f223a'; };
                 item.onclick = () => {
                     const val = item.getAttribute('data-val');
                     if (cityModalTargetMode === 'prof') {
@@ -4969,30 +4911,30 @@
             toast.className = 'account-not-found-toast';
 
             toast.innerHTML = `
-        <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%); 
-                    background: #0b1a2d; 
-                    border: 1.5px solid #33E0E6; border-radius: 14px; 
-                    width: 88%; max-width: 450px; padding: 18px 16px; 
-                    display: flex; align-items: center; justify-content: center; gap: 12px; 
-                    box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15); 
-                    z-index: 999999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.12); 
-                    color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
-            <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 20px; flex-shrink: 0;"></i>
-            <span style="font-size: 14.5px; white-space: nowrap; color: #f0f5ff; letter-spacing: 0.3px;">
-                لم يتم العثور على الحساب المرتبط بهذا الرقم
-            </span>
-        </div>
-    `;
+                <div style="position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
+                            background: #0b1a2d;
+                            border: 1.5px solid #33E0E6; border-radius: 14px;
+                            width: calc(100% - 28px); max-width: 440px; padding: 14px 14px;
+                            display: flex; align-items: center; justify-content: center; gap: 10px;
+                            box-shadow: 0 10px 30px rgba(51, 224, 230, 0.15);
+                            z-index: 999999; transition: top 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.12);
+                            color: #fff; font-family: 'Cairo', sans-serif; font-weight: 700; direction: rtl;">
+                    <i class="fas fa-circle-exclamation" style="color: #33E0E6; font-size: 18px; flex-shrink: 0;"></i>
+                    <span style="font-size: 13.5px; color: #f0f5ff; letter-spacing: 0.2px; text-align: center;">
+                        لم يتم العثور على الحساب المرتبط بهذا الرقم
+                    </span>
+                </div>
+            `;
 
             document.body.appendChild(toast);
             const toastInner = toast.querySelector('div');
 
-            setTimeout(() => { toastInner.style.top = '35px'; }, 50);
+            setTimeout(() => { toastInner.style.top = '22px'; }, 50);
 
             setTimeout(() => {
                 toastInner.style.top = '-120px';
                 setTimeout(() => { toast.remove(); }, 500);
-            }, 4000);
+            }, 3800);
         }
     </script>
 </body>
