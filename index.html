@@ -1566,9 +1566,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 7px;
             transition: var(--transition-smooth);
             white-space: nowrap;
+        }
+
+        .ad-cond-select-btn i {
+            color: var(--accent-turquoise);
+            font-size: 13px;
+            transition: var(--transition-smooth);
         }
 
         .ad-cond-select-btn.active {
@@ -1576,6 +1582,11 @@
             border-color: var(--accent-turquoise);
             color: var(--turquoise-light);
             box-shadow: 0 4px 12px rgba(0, 173, 181, 0.18);
+        }
+
+        .ad-cond-select-btn.active i {
+            color: var(--turquoise-light);
+            transform: scale(1.1);
         }
 
         /* خيار قائمة المحظورين في صفحة أنا */
@@ -2826,31 +2837,42 @@
             loan: { label: 'إعارة مجانية', icon: 'fa-gift' }
         };
 
-        // خيارات حالة المنتج المخصصة لكل قسم مع الأيقونات التي اخترتها بالضبط
+        // خيارات حالة المنتج بأيقونات FontAwesome احترافية
         const CONDITION_OPTIONS_BY_CATEGORY = {
             books: [
-                '✨ جديد كلياً',
-                '📖 نظيف جداً',
-                '✍️ عليه ملاحظات'
+                { label: 'جديد كلياً', icon: 'fa-wand-magic-sparkles' },
+                { label: 'نظيف جداً', icon: 'fa-book-open-reader' },
+                { label: 'عليه ملاحظات', icon: 'fa-pen-clip' }
             ],
             tech: [
-                '🔥 جديد بالعلبة',
-                '⭐ كالجديد',
-                '💡 مستعمل نظيف',
-                '🛠️ يحتاج صيانة'
+                { label: 'جديد بالعلبة', icon: 'fa-box-open' },
+                { label: 'كالجديد', icon: 'fa-award' },
+                { label: 'مستعمل نظيف', icon: 'fa-circle-check' },
+                { label: 'يحتاج صيانة', icon: 'fa-screwdriver-wrench' }
             ],
             eng: [
-                '🔥 جديد بالعلبة',
-                '⭐ كالجديد',
-                '💡 مستعمل نظيف',
-                '🛠️ يحتاج صيانة'
+                { label: 'جديد بالعلبة', icon: 'fa-box-open' },
+                { label: 'كالجديد', icon: 'fa-award' },
+                { label: 'مستعمل نظيف', icon: 'fa-circle-check' },
+                { label: 'يحتاج صيانة', icon: 'fa-screwdriver-wrench' }
             ],
             med: [
-                '🔥 جديد بالعلبة',
-                '⭐ كالجديد',
-                '💡 مستعمل نظيف',
-                '🛠️ يحتاج صيانة'
+                { label: 'جديد بالعلبة', icon: 'fa-box-open' },
+                { label: 'كالجديد', icon: 'fa-award' },
+                { label: 'مستعمل نظيف', icon: 'fa-circle-check' },
+                { label: 'يحتاج صيانة', icon: 'fa-screwdriver-wrench' }
             ]
+        };
+
+        // خريطة جلب الأيقونة المناسبة لكل حالة عند عرض الكرت
+        const CONDITION_ICON_MAP = {
+            'جديد كلياً': 'fa-wand-magic-sparkles',
+            'نظيف جداً': 'fa-book-open-reader',
+            'عليه ملاحظات': 'fa-pen-clip',
+            'جديد بالعلبة': 'fa-box-open',
+            'كالجديد': 'fa-award',
+            'مستعمل نظيف': 'fa-circle-check',
+            'يحتاج صيانة': 'fa-screwdriver-wrench'
         };
 
         function getUserPrivacyMap() {
@@ -2913,7 +2935,7 @@
         let currentCategoryFilter = 'all';
         let newAdDealMode = 'sale';
         let newAdSelectedCategory = 'books';
-        let newAdSelectedCondition = '✨ جديد كلياً';
+        let newAdSelectedCondition = 'جديد كلياً';
         let activeUndoItem = null;
         let lightboxPhotos = [];
         let lightboxCurrentIndex = 0;
@@ -4079,9 +4101,14 @@
 
                     const itemCatCode = extractAdCategoryCode(item);
                     const catObj = CATEGORY_META[itemCatCode] || CATEGORY_META.books;
-                    const itemCondition = extractAdConditionLabel(item);
-                    const isFreeLoan = Number(item.price) === 0 || itemCatCode === 'loan';
 
+                    // --- هنا التعديل الثالث: تنظيف النص وربطه بالأيقونة الاحترافية ---
+                    const rawCondition = extractAdConditionLabel(item);
+                    const cleanConditionText = rawCondition.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}✨📖✍️🔥⭐💡🛠️]/gu, '').trim();
+                    const condIconClass = CONDITION_ICON_MAP[cleanConditionText] || 'fa-certificate';
+                    // ------------------------------------------------------------------
+
+                    const isFreeLoan = Number(item.price) === 0 || itemCatCode === 'loan';
                     const hideExternalContact = isAdOwnerPrivate(item);
 
                     const safeTitle = String(item.title).replace(/'/g, "\\'");
@@ -4106,7 +4133,7 @@
 
                             <div class="product-meta-badges">
                                 <span class="meta-badge"><i class="fa-solid ${catObj.icon}"></i> ${catObj.label}</span>
-                                ${itemCondition ? `<span class="meta-badge condition-badge">${itemCondition}</span>` : ''}
+                                ${cleanConditionText ? `<span class="meta-badge condition-badge"><i class="fa-solid ${condIconClass}"></i> ${cleanConditionText}</span>` : ''}
                                 <span class="meta-badge"><i class="fa-solid fa-user-graduate"></i> ${cleanOwnerName}</span>
                                 ${ownerCity ? `<span class="meta-badge"><i class="fa-solid fa-location-dot"></i> ${ownerCity}</span>` : ''}
                                 ${ownerUni ? `<span class="meta-badge"><i class="fa-solid fa-building-columns"></i> ${ownerUni}</span>` : ''}
@@ -4704,16 +4731,16 @@
             const box = document.getElementById('ad-condition-pills-box');
             if (!box) return;
             const options = CONDITION_OPTIONS_BY_CATEGORY[catCode] || CONDITION_OPTIONS_BY_CATEGORY.books;
-            newAdSelectedCondition = options[0];
+            newAdSelectedCondition = options[0].label;
             box.innerHTML = '';
 
-            options.forEach((condLabel, idx) => {
+            options.forEach((condObj, idx) => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = `ad-cond-select-btn ${idx === 0 ? 'active' : ''}`;
-                btn.innerText = condLabel;
+                btn.innerHTML = `<i class="fa-solid ${condObj.icon}"></i> <span>${condObj.label}</span>`;
                 btn.onclick = () => {
-                    newAdSelectedCondition = condLabel;
+                    newAdSelectedCondition = condObj.label;
                     box.querySelectorAll('.ad-cond-select-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                 };
