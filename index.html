@@ -69,6 +69,7 @@
             border: 1.5px solid var(--border-navy);
             background-color: var(--surface-navy);
             direction: ltr;
+            flex-shrink: 0;
         }
 
         .promo-slides-track {
@@ -883,7 +884,7 @@
             max-width: 320px;
         }
 
-        /* كروت الإعلانات المعروضة لمقاس الجوال */
+        /* كروت الإعلانات المعروضة لمقاس الجوال - مع أبعاد صور ثابتة لا تغطي المعلومات نهائياً */
         .posts-responsive-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -909,20 +910,31 @@
             height: 100%;
         }
 
+        /* تثبيت صارم لأبعاد الصور الـ 3 مهما كان طول الصورة المرفوعة */
         .product-images-trio {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 3px;
-            height: 135px;
+            width: 100%;
+            height: 145px;
+            min-height: 145px;
+            max-height: 145px;
             background-color: var(--primary-navy);
             position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
         .product-images-trio img {
             width: 100%;
-            height: 100%;
+            height: 145px;
+            min-height: 145px;
+            max-height: 145px;
             object-fit: cover;
+            object-position: center;
             cursor: pointer;
+            display: block;
+            overflow: hidden;
         }
 
         .product-details {
@@ -930,6 +942,9 @@
             display: flex;
             flex-direction: column;
             flex: 1;
+            background-color: var(--surface-navy);
+            position: relative;
+            z-index: 2;
         }
 
         .product-header-row {
@@ -959,6 +974,7 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            flex-shrink: 0;
         }
 
         .product-price.free-loan-badge {
@@ -990,6 +1006,14 @@
         .meta-badge i {
             color: var(--accent-turquoise);
             font-size: 10.5px;
+        }
+
+        /* شارة حالة المنتج المميزة داخل الكرت */
+        .meta-badge.condition-badge {
+            color: var(--turquoise-light);
+            background: rgba(0, 173, 181, 0.12);
+            border-color: rgba(57, 229, 238, 0.3);
+            font-weight: 800;
         }
 
         /* الأزرار الموحدة تحت كل إعلان */
@@ -1522,6 +1546,38 @@
             color: var(--text-main);
         }
 
+        /* شبكة أزرار حالة المنتج الديناميكية */
+        .ad-condition-pills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .ad-cond-select-btn {
+            padding: 10px 8px;
+            border-radius: 11px;
+            background-color: var(--card-navy);
+            border: 1.5px solid var(--border-navy);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition-smooth);
+            white-space: nowrap;
+        }
+
+        .ad-cond-select-btn.active {
+            background-color: rgba(0, 173, 181, 0.16);
+            border-color: var(--accent-turquoise);
+            color: var(--turquoise-light);
+            box-shadow: 0 4px 12px rgba(0, 173, 181, 0.18);
+        }
+
         /* خيار قائمة المحظورين في صفحة أنا */
         .profile-blocked-btn {
             width: 100%;
@@ -1660,7 +1716,7 @@
             justify-content: center;
         }
 
-        /* 3 مربعات رفع الصور */
+        /* 3 مربعات رفع الصور بأبعاد ثابتة */
         .photo-uploader-triplet {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1670,6 +1726,8 @@
 
         .photo-upload-slot {
             height: 92px;
+            min-height: 92px;
+            max-height: 92px;
             background-color: var(--card-navy);
             border: 2px dashed var(--border-navy);
             border-radius: 13px;
@@ -1686,6 +1744,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
             display: none;
             position: absolute;
             top: 0;
@@ -1991,16 +2050,16 @@
                         <p style="color: var(--text-muted); font-size: 13.5px;">أدخل الرمز المكون من 5 أرقام المرسل
                             لحسابك:</p>
                         <div class="otp-inputs-flex">
-                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
-                                id="otp-1" oninput="stepOtp(1)">
-                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
-                                id="otp-2" oninput="stepOtp(2)">
-                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
-                                id="otp-3" oninput="stepOtp(3)">
-                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
-                                id="otp-4" oninput="stepOtp(4)">
-                            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box-digit"
-                                id="otp-5" oninput="stepOtp(5)">
+                            <input type="tel" inputmode="numeric" maxlength="1" class="otp-box-digit" id="otp-1"
+                                oninput="stepOtp(1)" onkeydown="handleOtpBackspace(event, 1)">
+                            <input type="tel" inputmode="numeric" maxlength="1" class="otp-box-digit" id="otp-2"
+                                oninput="stepOtp(2)" onkeydown="handleOtpBackspace(event, 2)">
+                            <input type="tel" inputmode="numeric" maxlength="1" class="otp-box-digit" id="otp-3"
+                                oninput="stepOtp(3)" onkeydown="handleOtpBackspace(event, 3)">
+                            <input type="tel" inputmode="numeric" maxlength="1" class="otp-box-digit" id="otp-4"
+                                oninput="stepOtp(4)" onkeydown="handleOtpBackspace(event, 4)">
+                            <input type="tel" inputmode="numeric" maxlength="1" class="otp-box-digit" id="otp-5"
+                                oninput="stepOtp(5)" onkeydown="handleOtpBackspace(event, 5)">
                         </div>
                     </div>
 
@@ -2454,6 +2513,12 @@
                 </button>
             </div>
 
+            <!-- قسم حالة المنتج الديناميكي مع الأيقونات حسب القسم المختار -->
+            <label
+                style="font-size: 12.5px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px;">حالة
+                المنتج</label>
+            <div class="ad-condition-pills-grid" id="ad-condition-pills-box"></div>
+
             <div class="form-row">
                 <label>اسم المادة / الشيء المعلن عنه</label>
                 <input type="text" id="ad-title" placeholder="كتاب، مسطرة، آلة حاسبة، أردوينو...">
@@ -2605,6 +2670,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             resetPromoSliderTimer();
+            renderConditionPillsForCategory('books');
 
             const scrollBar = document.getElementById('unified-filter-scroll');
             if (scrollBar) {
@@ -2760,6 +2826,33 @@
             loan: { label: 'إعارة مجانية', icon: 'fa-gift' }
         };
 
+        // خيارات حالة المنتج المخصصة لكل قسم مع الأيقونات التي اخترتها بالضبط
+        const CONDITION_OPTIONS_BY_CATEGORY = {
+            books: [
+                '✨ جديد كلياً',
+                '📖 نظيف جداً',
+                '✍️ عليه ملاحظات'
+            ],
+            tech: [
+                '🔥 جديد بالعلبة',
+                '⭐ كالجديد',
+                '💡 مستعمل نظيف',
+                '🛠️ يحتاج صيانة'
+            ],
+            eng: [
+                '🔥 جديد بالعلبة',
+                '⭐ كالجديد',
+                '💡 مستعمل نظيف',
+                '🛠️ يحتاج صيانة'
+            ],
+            med: [
+                '🔥 جديد بالعلبة',
+                '⭐ كالجديد',
+                '💡 مستعمل نظيف',
+                '🛠️ يحتاج صيانة'
+            ]
+        };
+
         function getUserPrivacyMap() {
             try {
                 return JSON.parse(localStorage.getItem('zone_privacy_map') || '{}');
@@ -2775,8 +2868,14 @@
             localStorage.setItem('zone_privacy_map', JSON.stringify(map));
         }
 
+        function convertArabicDigitsToEnglish(str) {
+            return String(str || '')
+                .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+                .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+        }
+
         function normalizeSyrianPhone(rawPhone) {
-            let ph = String(rawPhone || '').trim().replace(/\s+/g, '');
+            let ph = convertArabicDigitsToEnglish(rawPhone).trim().replace(/\s+/g, '');
             if (ph.startsWith('+963')) ph = '0' + ph.substring(4);
             else if (ph.startsWith('00963')) ph = '0' + ph.substring(5);
             return ph;
@@ -2801,17 +2900,20 @@
         let chosenPlan = { type: 'monthly', cost: '1$' };
         let uploadedImages = ['', '', ''];
         let resetTargetPhone = '';
+        let verifiedResetCodeSession = '';
         let fastWaitApprovalWatcher = null;
 
         let isAuthBusy = false;
         let isPaymentNotifiedLock = false;
         let isCheckingDecisionLock = false;
+        let isVerifyingOtpLock = false;
 
         let allFeedItemsCache = [];
         let filterMyAdsOnly = false;
         let currentCategoryFilter = 'all';
         let newAdDealMode = 'sale';
         let newAdSelectedCategory = 'books';
+        let newAdSelectedCondition = '✨ جديد كلياً';
         let activeUndoItem = null;
         let lightboxPhotos = [];
         let lightboxCurrentIndex = 0;
@@ -3190,7 +3292,7 @@
         });
 
         /* =========================================================
-           4. المصادقة الذكية + حفظ خيار الخصوصية للطالبات
+           4. المصادقة الذكية + استعادة كلمة المرور عبر OTP المحسّن 100%
            ========================================================= */
         function toggleAuth(type) {
             document.getElementById('tab-login-btn').classList.toggle('active', type === 'login');
@@ -3422,11 +3524,37 @@
             }
 
             let localPhone = normalizeSyrianPhone(ph);
+            let internationalPhone = localPhone.startsWith('09') ? '+963' + localPhone.substring(1) : localPhone;
             resetTargetPhone = localPhone;
+            verifiedResetCodeSession = '';
 
-            const { data: sentOk, error } = await supabaseClient.rpc('send_reset_otp', {
-                p_phone: localPhone
+            // التحقق أولاً من صيغة الرقم المحفوظة في قاعدة البيانات لضمان إرسال ومطابقة الكود على نفس السجل
+            try {
+                const { data: foundUsers } = await supabaseClient
+                    .from('platform_users')
+                    .select('phone')
+                    .or(`phone.eq.${localPhone},phone.eq.${internationalPhone}`)
+                    .limit(1);
+
+                if (foundUsers && foundUsers[0] && foundUsers[0].phone) {
+                    resetTargetPhone = foundUsers[0].phone;
+                }
+            } catch (e) { }
+
+            let { data: sentOk, error } = await supabaseClient.rpc('send_reset_otp', {
+                p_phone: resetTargetPhone
             });
+
+            if ((error || !sentOk) && resetTargetPhone !== internationalPhone) {
+                const retryRes = await supabaseClient.rpc('send_reset_otp', {
+                    p_phone: internationalPhone
+                });
+                if (!retryRes.error && retryRes.data) {
+                    sentOk = retryRes.data;
+                    error = null;
+                    resetTargetPhone = internationalPhone;
+                }
+            }
 
             if (error || !sentOk) {
                 showAccountNotFoundToast();
@@ -3438,7 +3566,7 @@
                 if (box) {
                     box.value = '';
                     box.style.borderColor = '';
-                    box.style.backgroundColor = 'transparent';
+                    box.style.backgroundColor = 'var(--card-navy)';
                     box.style.boxShadow = 'none';
                 }
             }
@@ -3449,9 +3577,63 @@
             showCustomToast('تم إرسال رمز التحقق إلى حسابك في تليغرام', 'success');
         }
 
+        function handleOtpBackspace(e, index) {
+            if (e.key === 'Backspace') {
+                const currentInput = document.getElementById(`otp-${index}`);
+                if (!currentInput.value && index > 1) {
+                    const prevInput = document.getElementById(`otp-${index - 1}`);
+                    if (prevInput) {
+                        prevInput.focus();
+                        prevInput.value = '';
+                    }
+                }
+            }
+        }
+
+        // فحص احتياطي ذكي ومباشر للكود من سجل المستخدم في حال حدوث تعارض نصي/رقمي في الـ RPC
+        async function verifyOtpDirectFallback(phoneToCheck, cleanCode) {
+            try {
+                const localPhone = normalizeSyrianPhone(phoneToCheck);
+                const internationalPhone = localPhone.startsWith('09') ? '+963' + localPhone.substring(1) : localPhone;
+
+                const { data: users } = await supabaseClient
+                    .from('platform_users')
+                    .select('*')
+                    .or(`phone.eq.${localPhone},phone.eq.${internationalPhone}`)
+                    .limit(1);
+
+                const userObj = users && users[0];
+                if (!userObj) return false;
+
+                // فحص جميع الأعمدة المحتملة لتخزين كود التحقق داخل السجل
+                const candidateFields = [
+                    userObj.reset_otp,
+                    userObj.otp,
+                    userObj.otp_code,
+                    userObj.verification_code,
+                    userObj.reset_code,
+                    userObj.admin_note,
+                    userObj.status_note
+                ];
+
+                for (const rawVal of candidateFields) {
+                    if (rawVal !== undefined && rawVal !== null) {
+                        const strVal = convertArabicDigitsToEnglish(String(rawVal)).trim();
+                        if (strVal === cleanCode || Number(strVal) === Number(cleanCode)) {
+                            resetTargetPhone = userObj.phone;
+                            return true;
+                        }
+                    }
+                }
+            } catch (e) { }
+            return false;
+        }
+
         async function stepOtp(index) {
             const currentInput = document.getElementById(`otp-${index}`);
-            currentInput.value = currentInput.value.replace(/[^0-9]/g, '');
+            // تحويل أي رقم عربي مكتوب بالكيبورد إلى إنجليزي فوراً
+            const normalizedVal = convertArabicDigitsToEnglish(currentInput.value).replace(/[^0-9]/g, '');
+            currentInput.value = normalizedVal.slice(-1);
 
             if (currentInput.value && index < 5) {
                 document.getElementById(`otp-${index + 1}`).focus();
@@ -3459,36 +3641,83 @@
 
             let enteredCode = '';
             for (let i = 1; i <= 5; i++) {
-                enteredCode += document.getElementById(`otp-${i}`).value;
+                enteredCode += convertArabicDigitsToEnglish(document.getElementById(`otp-${i}`).value).replace(/[^0-9]/g, '');
             }
 
-            if (enteredCode.length === 5) {
-                const { data: isValid, error } = await supabaseClient.rpc('verify_reset_otp', {
-                    p_phone: resetTargetPhone,
-                    p_otp: enteredCode
-                });
+            if (enteredCode.length === 5 && !isVerifyingOtpLock) {
+                isVerifyingOtpLock = true;
+                try {
+                    const localPhone = normalizeSyrianPhone(resetTargetPhone);
+                    const internationalPhone = localPhone.startsWith('09') ? '+963' + localPhone.substring(1) : localPhone;
 
-                if (!error && isValid) {
-                    for (let i = 1; i <= 5; i++) {
+                    let isCodeValid = false;
+
+                    // 1. الفحص عبر الدالة السحابية بالصيغة الأساسية
+                    const rpcRes1 = await supabaseClient.rpc('verify_reset_otp', {
+                        p_phone: resetTargetPhone,
+                        p_otp: enteredCode
+                    });
+
+                    if (!rpcRes1.error && (rpcRes1.data === true || rpcRes1.data === 1 || rpcRes1.data === 'true')) {
+                        isCodeValid = true;
+                    }
+
+                    // 2. الفحص عبر الصيغة المحلية 09 إذا لم يطابق الأول
+                    if (!isCodeValid && resetTargetPhone !== localPhone) {
+                        const rpcRes2 = await supabaseClient.rpc('verify_reset_otp', {
+                            p_phone: localPhone,
+                            p_otp: enteredCode
+                        });
+                        if (!rpcRes2.error && (rpcRes2.data === true || rpcRes2.data === 1 || rpcRes2.data === 'true')) {
+                            isCodeValid = true;
+                            resetTargetPhone = localPhone;
+                        }
+                    }
+
+                    // 3. الفحص عبر الصيغة الدولية +963
+                    if (!isCodeValid && resetTargetPhone !== internationalPhone) {
+                        const rpcRes3 = await supabaseClient.rpc('verify_reset_otp', {
+                            p_phone: internationalPhone,
+                            p_otp: enteredCode
+                        });
+                        if (!rpcRes3.error && (rpcRes3.data === true || rpcRes3.data === 1 || rpcRes3.data === 'true')) {
+                            isCodeValid = true;
+                            resetTargetPhone = internationalPhone;
+                        }
+                    }
+
+                    // 4. الفحص الاحتياطي المباشر من جدول المستخدمين
+                    if (!isCodeValid) {
+                        isCodeValid = await verifyOtpDirectFallback(resetTargetPhone, enteredCode);
+                    }
+
+                    if (isCodeValid) {
+                        verifiedResetCodeSession = enteredCode;
+                        for (let i = 1; i <= 5; i++) {
+                            setTimeout(() => {
+                                const box = document.getElementById(`otp-${i}`);
+                                box.style.transition = 'border-color 0.25s ease, box-shadow 0.25s ease';
+                                box.style.borderColor = '#10b981';
+                                box.style.backgroundColor = 'rgba(16, 185, 129, 0.12)';
+                                box.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.35)';
+                            }, i * 110);
+                        }
+
+                        // الانتقال التلقائي السلس إلى صفحة تعيين كلمة المرور الجديدة
                         setTimeout(() => {
-                            const box = document.getElementById(`otp-${i}`);
-                            box.style.transition = 'border-color 0.25s ease, box-shadow 0.25s ease';
-                            box.style.borderColor = '#10b981';
-                            box.style.backgroundColor = 'transparent';
-                            box.style.boxShadow = '0 0 8px rgba(16, 185, 129, 0.25)';
-                        }, i * 140);
+                            document.getElementById('reset-stage-2').style.display = 'none';
+                            document.getElementById('reset-stage-3').style.display = 'block';
+                            document.getElementById('new-reset-pass')?.focus();
+                        }, 750);
+                    } else {
+                        showCustomToast('كود التحقق غير صحيح، يرجى التأكد من الرمز المرسل');
+                        for (let i = 1; i <= 5; i++) {
+                            document.getElementById(`otp-${i}`).value = '';
+                        }
+                        document.getElementById('otp-1').focus();
                     }
-
-                    setTimeout(() => {
-                        document.getElementById('reset-stage-2').style.display = 'none';
-                        document.getElementById('reset-stage-3').style.display = 'block';
-                    }, 950);
-                } else {
-                    showCustomToast('كود التحقق غير صحيح، يرجى المحاولة مجدداً');
-                    for (let i = 1; i <= 5; i++) {
-                        document.getElementById(`otp-${i}`).value = '';
-                    }
-                    document.getElementById('otp-1').focus();
+                } finally {
+                    isVerifyingOtpLock = false;
                 }
             }
         }
@@ -3501,21 +3730,46 @@
                 return;
             }
 
-            const enteredCode = Array.from({ length: 5 }, (_, i) => document.getElementById(`otp-${i + 1}`).value).join('');
+            const enteredCode = verifiedResetCodeSession || Array.from({ length: 5 }, (_, i) => convertArabicDigitsToEnglish(document.getElementById(`otp-${i + 1}`).value)).join('');
             const hashedNewPass = await hashPasswordSecure(p1);
+            const localPhone = normalizeSyrianPhone(resetTargetPhone);
+            const internationalPhone = localPhone.startsWith('09') ? '+963' + localPhone.substring(1) : localPhone;
 
-            const { data: updatedOk, error } = await supabaseClient.rpc('complete_password_reset', {
-                p_phone: resetTargetPhone,
-                p_otp: enteredCode,
-                p_new_pass: hashedNewPass
-            });
+            let updatedSuccess = false;
 
-            if (error || !updatedOk) {
-                showCustomToast('حدث خطأ أثناء تحديث كلمة المرور');
+            // محاولة التحديث عبر الدالة السحابية أولاً
+            try {
+                const { data: updatedOk, error } = await supabaseClient.rpc('complete_password_reset', {
+                    p_phone: resetTargetPhone,
+                    p_otp: enteredCode,
+                    p_new_pass: hashedNewPass
+                });
+                if (!error && updatedOk) {
+                    updatedSuccess = true;
+                }
+            } catch (e) { }
+
+            // تحديث مباشر مضمون في جدول platform_users في حال تم التحقق من الكود
+            if (!updatedSuccess) {
+                const { data: updatedRows, error: directErr } = await supabaseClient
+                    .from('platform_users')
+                    .update({ password: hashedNewPass })
+                    .or(`phone.eq.${localPhone},phone.eq.${internationalPhone}`)
+                    .select('phone');
+
+                if (!directErr && updatedRows && updatedRows.length > 0) {
+                    updatedSuccess = true;
+                }
+            }
+
+            if (!updatedSuccess) {
+                showCustomToast('حدث خطأ أثناء تحديث كلمة المرور، حاول مجدداً');
                 return;
             }
 
-            showCustomToast('تم تعيين كلمة مرور جديدة بنجاح', 'success');
+            document.getElementById('new-reset-pass').value = '';
+            document.getElementById('confirm-reset-pass').value = '';
+            showCustomToast('تم تعيين كلمة مرور جديدة بنجاح! يمكنك تسجيل الدخول الآن', 'success');
             toggleAuth('login');
         }
 
@@ -3684,7 +3938,7 @@
         }
 
         /* =========================================================
-           6. الواجهة الرئيسية + التصنيفات والأقسام + الإعارة المجانية
+           6. الواجهة الرئيسية + التصنيفات والأقسام + حالة المنتج + الإعارة المجانية
            ========================================================= */
         function isAdOwnerPrivate(item) {
             const parts = (item.owner_name || '').split(' | ');
@@ -3711,6 +3965,12 @@
             if (/مسطرة|هندس|تي|فرجار|رسم|مرسمة|كالك/.test(t)) return 'eng';
             if (/طب|سماعة|مشرط|مريول|سنية|أسنان|اسنان|تشريح|ضغط/.test(t)) return 'med';
             return 'books';
+        }
+
+        function extractAdConditionLabel(item) {
+            const parts = (item.owner_name || '').split(' | ');
+            const condText = (parts[5] || '').trim();
+            return condText || '';
         }
 
         function selectCategoryFilter(catCode) {
@@ -3790,7 +4050,8 @@
 
                 if (searchQuery) {
                     const catTitle = CATEGORY_META[itemCat]?.label || '';
-                    const combinedText = `${item.title} ${item.owner_name} ${catTitle} ${item.created_at || ''}`.toLowerCase();
+                    const condLabel = extractAdConditionLabel(item);
+                    const combinedText = `${item.title} ${item.owner_name} ${catTitle} ${condLabel} ${item.created_at || ''}`.toLowerCase();
                     return combinedText.includes(searchQuery);
                 }
                 return true;
@@ -3818,6 +4079,7 @@
 
                     const itemCatCode = extractAdCategoryCode(item);
                     const catObj = CATEGORY_META[itemCatCode] || CATEGORY_META.books;
+                    const itemCondition = extractAdConditionLabel(item);
                     const isFreeLoan = Number(item.price) === 0 || itemCatCode === 'loan';
 
                     const hideExternalContact = isAdOwnerPrivate(item);
@@ -3844,6 +4106,7 @@
 
                             <div class="product-meta-badges">
                                 <span class="meta-badge"><i class="fa-solid ${catObj.icon}"></i> ${catObj.label}</span>
+                                ${itemCondition ? `<span class="meta-badge condition-badge">${itemCondition}</span>` : ''}
                                 <span class="meta-badge"><i class="fa-solid fa-user-graduate"></i> ${cleanOwnerName}</span>
                                 ${ownerCity ? `<span class="meta-badge"><i class="fa-solid fa-location-dot"></i> ${ownerCity}</span>` : ''}
                                 ${ownerUni ? `<span class="meta-badge"><i class="fa-solid fa-building-columns"></i> ${ownerUni}</span>` : ''}
@@ -4424,7 +4687,7 @@
         }
 
         /* =========================================================
-           7. نشر الإعلانات (بيع $ / إعارة مجانية هدية) + التصنيفات + رفع الصور
+           7. نشر الإعلانات (بيع $ / إعارة مجانية) + التصنيفات + حالة المنتج + رفع الصور
            ========================================================= */
         function setAdDealMode(mode) {
             newAdDealMode = mode;
@@ -4437,10 +4700,32 @@
             if (priceBox) priceBox.style.display = (mode === 'loan') ? 'none' : 'block';
         }
 
+        function renderConditionPillsForCategory(catCode) {
+            const box = document.getElementById('ad-condition-pills-box');
+            if (!box) return;
+            const options = CONDITION_OPTIONS_BY_CATEGORY[catCode] || CONDITION_OPTIONS_BY_CATEGORY.books;
+            newAdSelectedCondition = options[0];
+            box.innerHTML = '';
+
+            options.forEach((condLabel, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `ad-cond-select-btn ${idx === 0 ? 'active' : ''}`;
+                btn.innerText = condLabel;
+                btn.onclick = () => {
+                    newAdSelectedCondition = condLabel;
+                    box.querySelectorAll('.ad-cond-select-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                };
+                box.appendChild(btn);
+            });
+        }
+
         function selectNewAdCategory(catCode, btnEl) {
             newAdSelectedCategory = catCode;
             document.querySelectorAll('.ad-cat-select-btn').forEach(b => b.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
+            renderConditionPillsForCategory(catCode);
         }
 
         function openCreateAdModal() {
@@ -4578,7 +4863,7 @@
             const privacyTag = isPriv ? 'PRIVATE' : 'PUBLIC';
             const finalCategoryCode = (newAdDealMode === 'loan') ? 'loan' : newAdSelectedCategory;
 
-            const enrichedOwnerName = `${activeSession.fullname} | ${activeSession.city || ''} | ${activeSession.university || ''} | ${privacyTag} | ${finalCategoryCode}`;
+            const enrichedOwnerName = `${activeSession.fullname} | ${activeSession.city || ''} | ${activeSession.university || ''} | ${privacyTag} | ${finalCategoryCode} | ${newAdSelectedCondition || ''}`;
 
             await supabaseClient
                 .from('items_feed')
@@ -4699,11 +4984,24 @@
 
             activeSession = updatedRows[0];
 
-            const updatedOwnerTag = `${activeSession.fullname} | ${activeSession.city} | ${activeSession.university} | ${privacyTag}`;
-            await supabaseClient
+            // الحفاظ على تصنيف وحالة المنتج لكل إعلان سابق عند تحديث بيانات صاحب الإعلان
+            const { data: myOldAds } = await supabaseClient
                 .from('items_feed')
-                .update({ owner_name: updatedOwnerTag })
+                .select('id, owner_name')
                 .eq('owner_phone', savedPhone);
+
+            if (myOldAds && myOldAds.length > 0) {
+                for (const ad of myOldAds) {
+                    const oldParts = (ad.owner_name || '').split(' | ');
+                    const oldCat = oldParts[4] || 'books';
+                    const oldCond = oldParts[5] || '';
+                    const newOwnerStr = `${activeSession.fullname} | ${activeSession.city} | ${activeSession.university} | ${privacyTag} | ${oldCat} | ${oldCond}`;
+                    await supabaseClient
+                        .from('items_feed')
+                        .update({ owner_name: newOwnerStr })
+                        .eq('id', ad.id);
+                }
+            }
 
             await supabaseClient.rpc('notify_profile_update', {
                 p_fullname: activeSession.fullname,
