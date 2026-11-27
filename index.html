@@ -4,25 +4,31 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STREET FOOD — WE DON'T NEED A SLOGAN</title>
+    <title>STREET FOOD | حلب — موغامبو</title>
+    <meta name="description"
+        content="المنيو التفاعلي والطلب المباشر لمطعم STREET FOOD في حلب — موغامبو، سنتر نادي الاتحاد. شاورما، كريسبي، وبرغر يومياً من 12 ظهراً حتى 2 فجراً." />
+    <meta name="theme-color" content="#E50914" />
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23E50914'/%3E%3Ctext x='32' y='41' font-family='Arial,sans-serif' font-weight='900' font-size='26' fill='%23ffffff' text-anchor='middle'%3ESF%3C/text%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@600;800;900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap"
         rel="stylesheet" />
     <style>
         :root {
             --bg: #050507;
-            --bg-2: #0B0B0F;
-            --surface: #111116;
-            --surface-2: #17171F;
+            --bg-2: #0B0B10;
+            --surface: #111117;
+            --surface-2: #181822;
             --brand: #E50914;
-            --brand-hi: #FF2936;
+            --brand-hi: #FF2432;
             --brand-glow: rgba(229, 9, 20, 0.42);
-            --brand-soft: rgba(229, 9, 20, 0.14);
-            --gold: #F5B041;
-            --text: #F8F8FA;
-            --muted: #9898A6;
+            --brand-soft: rgba(229, 9, 20, 0.13);
+            --wa: #25D366;
+            --wa-dark: #16A34A;
+            --text: #F9F9FB;
+            --muted: #9A9AA8;
             --line: rgba(255, 255, 255, 0.08);
             --line-hi: rgba(255, 255, 255, 0.18);
             --radius-xl: 30px;
@@ -51,7 +57,16 @@
             overflow-x: hidden;
         }
 
-        /* ================= CINEMATIC STUDIO BACKGROUND ================= */
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        svg {
+            display: block;
+            flex-shrink: 0;
+        }
+
+        /* ================= AMBIENT STUDIO LIGHTING ================= */
         .studio-bg {
             position: fixed;
             inset: 0;
@@ -60,15 +75,15 @@
             overflow: hidden;
         }
 
-        .studio-orb {
+        .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(90px);
+            filter: blur(95px);
             opacity: 0.55;
             will-change: transform;
         }
 
-        .orb-1 {
+        .orb-red {
             width: 680px;
             height: 680px;
             top: -260px;
@@ -77,12 +92,12 @@
             animation: drift 14s ease-in-out infinite alternate;
         }
 
-        .orb-2 {
-            width: 560px;
-            height: 560px;
+        .orb-warm {
+            width: 540px;
+            height: 540px;
             bottom: -220px;
-            right: -120px;
-            background: radial-gradient(circle, rgba(245, 176, 65, 0.12) 0%, transparent 70%);
+            right: -130px;
+            background: radial-gradient(circle, rgba(255, 138, 0, 0.1) 0%, transparent 70%);
             animation: drift 18s ease-in-out infinite alternate-reverse;
         }
 
@@ -90,11 +105,11 @@
             position: absolute;
             inset: 0;
             background-image:
-                linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+                linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
             background-size: 64px 64px;
-            mask-image: radial-gradient(ellipse 80% 60% at 50% 15%, #000 10%, transparent 80%);
-            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 15%, #000 10%, transparent 80%);
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 15%, #000 10%, transparent 82%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 15%, #000 10%, transparent 82%);
         }
 
         @keyframes drift {
@@ -103,16 +118,16 @@
             }
 
             100% {
-                transform: translate(35px, 28px) scale(1.08);
+                transform: translate(34px, 26px) scale(1.07);
             }
         }
 
-        /* ================= INTRO SPLASH SCREEN (DYNAMIC LOGO REVEAL) ================= */
+        /* ================= CINEMATIC INTRO SPLASH ================= */
         .preloader {
             position: fixed;
             inset: 0;
             z-index: 300;
-            background: radial-gradient(circle at 50% 45%, #1A0608 0%, #050507 65%);
+            background: radial-gradient(circle at 50% 45%, #1D0609 0%, #050507 65%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -143,8 +158,8 @@
             border-radius: 50%;
             background: conic-gradient(from 0deg, transparent 0%, var(--brand) 30%, #fff 50%, var(--brand) 70%, transparent 100%);
             filter: blur(18px);
-            opacity: 0.65;
-            animation: spinSlow 3.6s linear infinite;
+            opacity: 0.7;
+            animation: spinSlow 3.4s linear infinite;
         }
 
         .splash-ring-svg {
@@ -153,19 +168,19 @@
             width: calc(100% + 52px);
             height: calc(100% + 52px);
             animation: spinSlow 16s linear infinite;
-            opacity: 0.78;
+            opacity: 0.82;
         }
 
         .splash-logo-core {
             position: relative;
-            width: 150px;
-            height: 150px;
+            width: 152px;
+            height: 152px;
             border-radius: 50%;
             padding: 4px;
-            background: linear-gradient(135deg, #FF3B47, #E50914, #7A0007);
-            box-shadow: 0 0 60px rgba(229, 9, 20, 0.55), inset 0 0 20px rgba(255, 255, 255, 0.35);
+            background: linear-gradient(135deg, #FF3B47, #E50914, #6E0006);
+            box-shadow: 0 0 65px rgba(229, 9, 20, 0.55), inset 0 0 20px rgba(255, 255, 255, 0.35);
             overflow: hidden;
-            animation: logoPopIn 0.9s var(--ease) both;
+            animation: logoPopIn 0.85s var(--ease) both;
         }
 
         .splash-logo-core img {
@@ -182,7 +197,7 @@
             inset: -40%;
             background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.6) 50%, transparent 62%);
             transform: translateX(-120%);
-            animation: sheenSweep 1.5s var(--ease) 0.35s forwards;
+            animation: sheenSweep 1.4s var(--ease) 0.35s forwards;
         }
 
         .splash-title {
@@ -191,7 +206,6 @@
             font-size: 28px;
             font-weight: 900;
             letter-spacing: 5px;
-            text-transform: uppercase;
             animation: fadeUp 0.7s var(--ease) 0.25s both;
         }
 
@@ -217,18 +231,12 @@
             height: 100%;
             width: 0%;
             background: linear-gradient(90deg, var(--brand), #fff);
-            animation: loadFill 1.25s var(--ease) forwards;
+            animation: loadFill 1.2s var(--ease) forwards;
         }
 
         @keyframes spinSlow {
             to {
                 transform: rotate(360deg);
-            }
-        }
-
-        @keyframes spinReverse {
-            to {
-                transform: rotate(-360deg);
             }
         }
 
@@ -285,45 +293,44 @@
             z-index: 2;
         }
 
-        /* ================= LUXURY GLASS NAVBAR + DYNAMIC LOGO ================= */
+        /* ================= NAVBAR + DYNAMIC LOGO ================= */
         .navbar {
             position: fixed;
             top: 0;
             inset-inline: 0;
             z-index: 60;
-            padding: 18px 0;
+            padding: 16px 0;
             transition: all 0.35s var(--ease);
             border-bottom: 1px solid transparent;
         }
 
         .navbar.scrolled {
-            background: rgba(5, 5, 7, 0.8);
+            background: rgba(5, 5, 7, 0.86);
             backdrop-filter: blur(22px);
             -webkit-backdrop-filter: blur(22px);
             border-bottom-color: var(--line);
-            padding: 12px 0;
+            padding: 11px 0;
         }
 
         .nav-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 16px;
         }
 
         .brand-link {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 13px;
             text-decoration: none;
             color: var(--text);
         }
 
-        /* Dynamic Animated Logo Seal */
         .logo-dyn {
             position: relative;
-            width: 54px;
-            height: 54px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -335,9 +342,9 @@
         .logo-dyn::before {
             content: "";
             position: absolute;
-            inset: -3px;
+            inset: -2.5px;
             border-radius: 50%;
-            background: conic-gradient(from 0deg, var(--brand), rgba(255, 255, 255, 0.85), var(--brand), rgba(229, 9, 20, 0.1), var(--brand));
+            background: conic-gradient(from 0deg, var(--brand), rgba(255, 255, 255, 0.9), var(--brand), rgba(229, 9, 20, 0.08), var(--brand));
             animation: spinSlow 6s linear infinite;
             z-index: 0;
         }
@@ -350,22 +357,17 @@
             background: radial-gradient(circle, var(--brand-glow) 0%, transparent 72%);
             opacity: 0.7;
             z-index: -1;
-            transition: opacity 0.3s ease;
         }
 
         .brand-link:hover .logo-dyn {
-            transform: scale(1.09) rotate(-6deg);
-        }
-
-        .brand-link:hover .logo-dyn::after {
-            opacity: 1;
+            transform: scale(1.08) rotate(-6deg);
         }
 
         .logo-dyn-inner {
             position: relative;
             z-index: 1;
-            width: 48px;
-            height: 48px;
+            width: 47px;
+            height: 47px;
             border-radius: 50%;
             overflow: hidden;
             background: var(--brand);
@@ -412,15 +414,15 @@
 
         .brand-title-en {
             font-family: 'Outfit', sans-serif;
-            font-size: 21px;
+            font-size: 20px;
             font-weight: 900;
-            letter-spacing: 1px;
+            letter-spacing: 0.9px;
         }
 
         .brand-slogan-sm {
             font-family: 'Outfit', sans-serif;
             font-size: 9.5px;
-            letter-spacing: 1.9px;
+            letter-spacing: 1.8px;
             color: var(--muted);
             font-weight: 700;
             margin-top: 2px;
@@ -429,7 +431,7 @@
         .nav-menu {
             display: flex;
             align-items: center;
-            gap: 32px;
+            gap: 28px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--line);
             padding: 9px 24px;
@@ -452,59 +454,69 @@
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .btn-glass {
+        .icon-sq {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--line-hi);
             color: var(--text);
-            height: 44px;
-            padding: 0 16px;
-            border-radius: 13px;
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            text-decoration: none;
+            cursor: pointer;
             transition: all 0.25s var(--ease);
         }
 
-        .btn-glass:hover {
-            background: rgba(255, 255, 255, 0.11);
-            transform: translateY(-1px);
+        .icon-sq:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .icon-sq.ig:hover {
+            background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF);
+            border-color: transparent;
+            box-shadow: 0 8px 22px rgba(221, 42, 123, 0.35);
+        }
+
+        .icon-sq.wa:hover {
+            background: var(--wa-dark);
+            border-color: transparent;
+            box-shadow: 0 8px 22px rgba(22, 163, 74, 0.35);
         }
 
         .btn-cart-top {
             background: linear-gradient(135deg, var(--brand-hi), var(--brand));
             border: none;
             color: #fff;
-            height: 44px;
-            padding: 0 18px;
-            border-radius: 13px;
+            height: 42px;
+            padding: 0 16px;
+            border-radius: 12px;
             font-family: inherit;
             font-size: 14px;
             font-weight: 800;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 28px var(--brand-glow);
+            gap: 9px;
+            box-shadow: 0 10px 26px var(--brand-glow);
             transition: all 0.25s var(--ease);
         }
 
         .btn-cart-top:hover {
             transform: translateY(-2px);
-            box-shadow: 0 14px 36px rgba(229, 9, 20, 0.55);
+            box-shadow: 0 14px 34px rgba(229, 9, 20, 0.55);
         }
 
         .pill-count {
             background: rgba(0, 0, 0, 0.3);
-            min-width: 24px;
-            height: 24px;
-            border-radius: 8px;
+            min-width: 23px;
+            height: 23px;
+            border-radius: 7px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -512,34 +524,34 @@
             font-weight: 900;
         }
 
-        /* ================= HERO WELCOME SECTION ================= */
+        /* ================= HERO SECTION ================= */
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 120px 0 80px;
+            padding: 118px 0 76px;
             position: relative;
         }
 
         .hero-grid {
             display: grid;
-            grid-template-columns: 1.02fr 0.98fr;
+            grid-template-columns: 1.03fr 0.97fr;
             align-items: center;
-            gap: 60px;
+            gap: 56px;
         }
 
-        .live-badge {
+        .status-pill {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: rgba(229, 9, 20, 0.1);
-            border: 1px solid rgba(229, 9, 20, 0.32);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--line-hi);
             padding: 7px 16px;
             border-radius: 999px;
             font-size: 13px;
-            font-weight: 800;
-            color: #FF7B82;
-            margin-bottom: 24px;
+            font-weight: 700;
+            color: #E4E4EC;
+            margin-bottom: 22px;
         }
 
         .live-dot {
@@ -551,34 +563,40 @@
             animation: pulse 2s infinite;
         }
 
+        .live-dot.closed {
+            background: #F59E0B;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+            animation: none;
+        }
+
         @keyframes pulse {
 
             0%,
             100% {
-                box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.25);
+                box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.26);
             }
 
             50% {
-                box-shadow: 0 0 0 8px rgba(74, 222, 128, 0.05);
+                box-shadow: 0 0 0 8px rgba(74, 222, 128, 0.04);
             }
         }
 
         .hero-kicker {
             font-family: 'Outfit', sans-serif;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 800;
-            letter-spacing: 4px;
-            color: var(--muted);
-            margin-bottom: 14px;
+            letter-spacing: 3.6px;
+            color: var(--brand-hi);
+            margin-bottom: 12px;
             text-transform: uppercase;
         }
 
         .hero-headline {
-            font-size: clamp(40px, 5.4vw, 68px);
+            font-size: clamp(38px, 5.2vw, 66px);
             font-weight: 900;
-            line-height: 1.1;
-            letter-spacing: -0.6px;
-            margin-bottom: 20px;
+            line-height: 1.12;
+            letter-spacing: -0.5px;
+            margin-bottom: 18px;
         }
 
         .hero-headline .accent {
@@ -588,18 +606,49 @@
         }
 
         .hero-sub {
-            font-size: 17px;
+            font-size: 16.5px;
             color: var(--muted);
             max-width: 520px;
             line-height: 1.85;
-            margin-bottom: 34px;
+            margin-bottom: 28px;
+        }
+
+        .branch-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid var(--line);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #D6D6E0;
+            text-decoration: none;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .meta-chip svg {
+            color: var(--brand-hi);
+        }
+
+        a.meta-chip:hover {
+            border-color: var(--line-hi);
+            background: rgba(255, 255, 255, 0.07);
         }
 
         .hero-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 14px;
-            margin-bottom: 44px;
+            gap: 12px;
+            margin-bottom: 36px;
         }
 
         .btn-hero-main {
@@ -607,61 +656,87 @@
             color: #fff;
             text-decoration: none;
             border: none;
-            padding: 16px 34px;
-            border-radius: 16px;
+            padding: 15px 30px;
+            border-radius: 15px;
             font-family: inherit;
-            font-size: 16px;
+            font-size: 15.5px;
             font-weight: 800;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 16px 40px var(--brand-glow);
+            box-shadow: 0 16px 38px var(--brand-glow);
             transition: all 0.25s var(--ease);
         }
 
         .btn-hero-main:hover {
             transform: translateY(-3px);
-            box-shadow: 0 22px 48px rgba(229, 9, 20, 0.55);
+            box-shadow: 0 22px 46px rgba(229, 9, 20, 0.55);
         }
 
-        .btn-hero-ghost {
+        .btn-social-wa {
+            background: rgba(37, 211, 102, 0.12);
+            border: 1px solid rgba(37, 211, 102, 0.35);
+            color: #4ADE80;
+            text-decoration: none;
+            padding: 15px 22px;
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            transition: all 0.25s var(--ease);
+        }
+
+        .btn-social-wa:hover {
+            background: var(--wa-dark);
+            color: #fff;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(22, 163, 74, 0.35);
+        }
+
+        .btn-social-ig {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--line-hi);
             color: var(--text);
             text-decoration: none;
-            padding: 16px 28px;
-            border-radius: 16px;
+            padding: 15px 22px;
+            border-radius: 15px;
             font-family: inherit;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
+            font-size: 15px;
+            font-weight: 800;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 9px;
             transition: all 0.25s var(--ease);
         }
 
-        .btn-hero-ghost:hover {
-            background: rgba(255, 255, 255, 0.09);
+        .btn-social-ig:hover {
+            background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF);
+            border-color: transparent;
+            color: #fff;
             transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(221, 42, 123, 0.35);
         }
 
         .metrics-bar {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 16px;
-            padding-top: 28px;
+            padding-top: 24px;
             border-top: 1px solid var(--line);
-            max-width: 480px;
+            max-width: 470px;
         }
 
         .metric strong {
             display: block;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 900;
             color: #fff;
-            line-height: 1.15;
+            line-height: 1.2;
         }
 
         .metric span {
@@ -670,7 +745,7 @@
             font-weight: 600;
         }
 
-        /* ================= HERO 3D INTERACTIVE SHOWCASE + FLOATING LOGO SEAL ================= */
+        /* ================= 3D HERO STAGE + FLOATING MEDALLION ================= */
         .hero-visual-wrap {
             position: relative;
             perspective: 1200px;
@@ -692,7 +767,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(229, 9, 20, 0.26), transparent 60%);
+            background: radial-gradient(circle at 50% 0%, rgba(229, 9, 20, 0.24), transparent 60%);
             z-index: 1;
             pointer-events: none;
         }
@@ -702,7 +777,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: opacity 0.45s ease, transform 0.65s var(--ease);
+            transition: opacity 0.4s ease, transform 0.65s var(--ease);
         }
 
         .hero-stage-img.switching {
@@ -726,14 +801,21 @@
             top: 20px;
             right: 20px;
             z-index: 4;
-            background: rgba(5, 5, 7, 0.72);
+            background: rgba(5, 5, 7, 0.76);
             backdrop-filter: blur(14px);
             border: 1px solid rgba(255, 255, 255, 0.16);
-            padding: 8px 16px;
+            padding: 7px 14px;
             border-radius: 999px;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 800;
             color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .stage-top-pill svg {
+            color: var(--brand-hi);
         }
 
         .stage-info-row {
@@ -744,7 +826,7 @@
         }
 
         .stage-dish-name {
-            font-size: 26px;
+            font-size: 25px;
             font-weight: 900;
             line-height: 1.2;
             margin-bottom: 4px;
@@ -776,7 +858,6 @@
             transform: scale(1.04);
         }
 
-        /* Interactive Burger Switcher Strip */
         .stage-switcher {
             display: flex;
             align-items: center;
@@ -817,7 +898,6 @@
             box-shadow: 0 8px 22px var(--brand-glow);
         }
 
-        /* Floating Dynamic 3D Logo Medallion */
         .floating-medallion {
             position: absolute;
             top: -26px;
@@ -861,7 +941,7 @@
 
             0%,
             100% {
-                transform: translateY(0px) rotate(0deg);
+                transform: translateY(0) rotate(0deg);
             }
 
             50% {
@@ -869,12 +949,13 @@
             }
         }
 
-        /* ================= LUXURY MARQUEE RIBBON ================= */
+        /* ================= SEAMLESS MARQUEE RIBBON ================= */
         .brand-ribbon {
+            direction: ltr;
             border-top: 1px solid var(--line);
             border-bottom: 1px solid var(--line);
             background: rgba(255, 255, 255, 0.015);
-            padding: 18px 0;
+            padding: 17px 0;
             overflow: hidden;
             position: relative;
             z-index: 2;
@@ -883,8 +964,14 @@
         .ribbon-track {
             display: flex;
             width: max-content;
+            animation: marqueeLtr 28s linear infinite;
+        }
+
+        .ribbon-set {
+            display: flex;
+            align-items: center;
             gap: 44px;
-            animation: marquee 28s linear infinite;
+            padding-right: 44px;
         }
 
         .ribbon-item {
@@ -892,9 +979,9 @@
             align-items: center;
             gap: 14px;
             font-family: 'Outfit', 'Cairo', sans-serif;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 800;
-            letter-spacing: 2.5px;
+            letter-spacing: 2.2px;
             color: var(--muted);
             text-transform: uppercase;
             white-space: nowrap;
@@ -908,19 +995,19 @@
             box-shadow: 0 0 12px var(--brand);
         }
 
-        @keyframes marquee {
+        @keyframes marqueeLtr {
             0% {
                 transform: translateX(0);
             }
 
             100% {
-                transform: translateX(50%);
+                transform: translateX(-50%);
             }
         }
 
         /* ================= SECTIONS ================= */
         .section {
-            padding: 92px 0;
+            padding: 90px 0;
             position: relative;
             z-index: 2;
         }
@@ -957,7 +1044,7 @@
             max-width: 460px;
         }
 
-        /* Signature Editorial Grid */
+        /* Signature Cards */
         .sig-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -965,7 +1052,7 @@
         }
 
         .sig-card {
-            background: linear-gradient(180deg, rgba(25, 25, 34, 0.9) 0%, rgba(13, 13, 18, 0.95) 100%);
+            background: linear-gradient(180deg, rgba(24, 24, 34, 0.92) 0%, rgba(12, 12, 17, 0.96) 100%);
             border: 1px solid var(--line);
             border-radius: var(--radius-xl);
             overflow: hidden;
@@ -974,19 +1061,6 @@
             flex-direction: column;
             position: relative;
             transition: transform 0.35s var(--ease), border-color 0.35s ease, box-shadow 0.35s ease;
-        }
-
-        .sig-card::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            padding: 1px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 40%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
         }
 
         .sig-card:hover {
@@ -1032,9 +1106,12 @@
             color: #fff;
             font-size: 12px;
             font-weight: 800;
-            padding: 5px 13px;
+            padding: 5px 12px;
             border-radius: 999px;
-            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.45);
         }
 
         .sig-body {
@@ -1081,12 +1158,15 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--line-hi);
             color: #fff;
-            padding: 9px 18px;
+            padding: 9px 16px;
             border-radius: 12px;
             font-family: inherit;
             font-size: 13px;
             font-weight: 800;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             transition: all 0.25s var(--ease);
         }
 
@@ -1097,21 +1177,21 @@
             box-shadow: 0 8px 22px var(--brand-glow);
         }
 
-        /* ================= FULL MENU BAR & GRID ================= */
+        /* ================= FULL MENU ================= */
         .menu-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
             flex-wrap: wrap;
-            background: rgba(17, 17, 22, 0.85);
+            background: rgba(17, 17, 23, 0.88);
             backdrop-filter: blur(18px);
             border: 1px solid var(--line);
             padding: 12px;
             border-radius: 20px;
             margin-bottom: 34px;
             position: sticky;
-            top: 78px;
+            top: 76px;
             z-index: 30;
         }
 
@@ -1168,7 +1248,6 @@
             font-size: 14px;
             font-weight: 600;
             outline: none;
-            transition: border-color 0.2s ease;
         }
 
         .search-field input:focus {
@@ -1283,8 +1362,6 @@
             background: var(--brand-soft);
             border: 1px solid rgba(229, 9, 20, 0.3);
             color: #FF5B64;
-            font-size: 20px;
-            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1298,55 +1375,162 @@
             border-color: var(--brand);
         }
 
-        /* ================= EXPERIENCE PILLARS ================= */
-        .pillars-grid {
+        /* ================= BRANCH & DIRECT CONTACT CARD ================= */
+        .branch-card {
+            background: linear-gradient(145deg, rgba(22, 22, 30, 0.94) 0%, rgba(10, 10, 14, 0.98) 100%);
+            border: 1px solid var(--line-hi);
+            border-radius: 32px;
+            padding: 44px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 22px;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 40px;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .pillar {
-            background: linear-gradient(180deg, rgba(20, 20, 27, 0.85), rgba(11, 11, 15, 0.7));
-            border: 1px solid var(--line);
-            border-radius: var(--radius-xl);
-            padding: 30px;
-            transition: border-color 0.25s ease, transform 0.25s ease;
+        .branch-card::before {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            top: -180px;
+            left: -120px;
+            background: radial-gradient(circle, rgba(229, 9, 20, 0.2), transparent 70%);
+            pointer-events: none;
         }
 
-        .pillar:hover {
-            border-color: rgba(229, 9, 20, 0.35);
-            transform: translateY(-4px);
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-top: 26px;
         }
 
-        .pillar-ico {
-            width: 52px;
-            height: 52px;
-            border-radius: 15px;
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .info-ico {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
             background: var(--brand-soft);
             border: 1px solid rgba(229, 9, 20, 0.3);
+            color: var(--brand-hi);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            margin-bottom: 18px;
+            flex-shrink: 0;
         }
 
-        .pillar h3 {
-            font-size: 19px;
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
-
-        .pillar p {
-            font-size: 14px;
+        .info-row h4 {
+            font-size: 13px;
             color: var(--muted);
-            line-height: 1.8;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .info-row p,
+        .info-row a {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .info-row a:hover {
+            color: var(--brand-hi);
+        }
+
+        .contact-actions-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .action-tile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 18px 22px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid var(--line-hi);
+            background: rgba(255, 255, 255, 0.035);
+            cursor: pointer;
+            font-family: inherit;
+            width: 100%;
+            text-align: right;
+            transition: all 0.25s var(--ease);
+        }
+
+        .action-tile:hover {
+            transform: translateY(-3px);
+        }
+
+        .action-tile.wa-tile {
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.14), rgba(22, 163, 74, 0.06));
+            border-color: rgba(37, 211, 102, 0.35);
+        }
+
+        .action-tile.wa-tile:hover {
+            background: linear-gradient(135deg, #22C55E, #16A34A);
+            border-color: transparent;
+            box-shadow: 0 16px 36px rgba(22, 163, 74, 0.35);
+        }
+
+        .action-tile.ig-tile {
+            background: linear-gradient(135deg, rgba(221, 42, 123, 0.14), rgba(129, 52, 175, 0.08));
+            border-color: rgba(221, 42, 123, 0.35);
+        }
+
+        .action-tile.ig-tile:hover {
+            background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF);
+            border-color: transparent;
+            box-shadow: 0 16px 36px rgba(221, 42, 123, 0.35);
+        }
+
+        .action-tile.qr-tile:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .tile-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .tile-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tile-title {
+            font-size: 15.5px;
+            font-weight: 800;
+        }
+
+        .tile-sub {
+            font-size: 12.5px;
+            opacity: 0.78;
+            font-weight: 600;
         }
 
         /* ================= FOOTER ================= */
         .footer {
             border-top: 1px solid var(--line);
-            padding: 52px 0 96px;
+            padding: 46px 0 94px;
             background: #030305;
             position: relative;
             z-index: 2;
@@ -1357,7 +1541,13 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 24px;
+            gap: 20px;
+        }
+
+        .footer-socials {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* ================= MOBILE STICKY CART ================= */
@@ -1398,7 +1588,7 @@
         .overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.78);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
             z-index: 100;
             opacity: 0;
@@ -1478,20 +1668,28 @@
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            background: rgba(5, 5, 7, 0.82);
+            background: rgba(5, 5, 7, 0.86);
             border: 1px solid var(--line-hi);
             color: #fff;
-            font-size: 16px;
-            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 5;
+            z-index: 10;
+            transition: background 0.2s ease;
+        }
+
+        .close-x:hover {
+            background: var(--brand);
+            border-color: var(--brand);
         }
 
         .modal-pad {
             padding: 22px 24px 26px;
+        }
+
+        .modal-pad.no-media {
+            padding-top: 56px;
         }
 
         .f-label {
@@ -1570,9 +1768,10 @@
             border: none;
             background: var(--surface-2);
             color: #fff;
-            font-size: 18px;
-            font-weight: 800;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .stepper span {
@@ -1588,6 +1787,24 @@
             padding: 14px 0;
             border-bottom: 1px solid var(--line);
             gap: 12px;
+        }
+
+        .clear-cart-btn {
+            background: transparent;
+            border: 1px solid var(--line);
+            color: var(--muted);
+            padding: 5px 11px;
+            border-radius: 9px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .clear-cart-btn:hover {
+            border-color: var(--brand);
+            color: var(--brand-hi);
         }
 
         .seg-box {
@@ -1611,6 +1828,10 @@
             font-size: 13px;
             font-weight: 800;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
         }
 
         .seg-opt.active {
@@ -1626,14 +1847,17 @@
             border-radius: 15px;
             padding: 15px;
             font-family: inherit;
-            font-size: 16px;
+            font-size: 15.5px;
             font-weight: 800;
             cursor: pointer;
             margin-top: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             box-shadow: 0 12px 30px rgba(22, 163, 74, 0.35);
         }
 
-        /* Luxury QR Table Stand Preview */
         .qr-stand {
             text-align: center;
             padding: 34px 26px 30px;
@@ -1655,6 +1879,33 @@
             display: block;
         }
 
+        .qr-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .qr-action-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--line-hi);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: background 0.2s ease;
+        }
+
+        .qr-action-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
+
         /* Toast */
         .toast {
             position: fixed;
@@ -1665,11 +1916,14 @@
             pointer-events: none;
             background: #fff;
             color: #050507;
-            padding: 11px 22px;
+            padding: 11px 20px;
             border-radius: 999px;
             font-size: 14px;
             font-weight: 800;
             z-index: 150;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             transition: all 0.25s var(--ease);
             box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
             white-space: nowrap;
@@ -1680,24 +1934,23 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Fallback placeholder if user forgot a specific image */
         .img-fallback-box {
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 35%, #2B0B0E, #0B0B0F);
+            background: radial-gradient(circle at 50% 35%, #2B0B0E, #0B0B10);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            color: rgba(255, 255, 255, 0.6);
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.55);
             font-size: 12px;
             font-weight: 700;
         }
 
         .reveal {
             opacity: 0;
-            transform: translateY(28px);
+            transform: translateY(26px);
             transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
         }
 
@@ -1714,7 +1967,7 @@
 
             .hero {
                 min-height: auto;
-                padding: 112px 0 60px;
+                padding: 110px 0 58px;
             }
 
             .hero-grid {
@@ -1746,8 +1999,9 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .pillars-grid {
+            .branch-card {
                 grid-template-columns: 1fr;
+                padding: 28px;
             }
         }
 
@@ -1783,7 +2037,7 @@
             }
 
             .menu-bar {
-                top: 68px;
+                top: 66px;
             }
 
             .stage-dish-name {
@@ -1795,14 +2049,14 @@
 
 <body>
 
-    <!-- Studio Ambient Lighting -->
+    <!-- Studio Lighting -->
     <div class="studio-bg">
-        <div class="studio-orb orb-1"></div>
-        <div class="studio-orb orb-2"></div>
+        <div class="orb orb-red"></div>
+        <div class="orb orb-warm"></div>
         <div class="studio-grid"></div>
     </div>
 
-    <!-- Cinematic Dynamic Logo Intro -->
+    <!-- Intro Splash with Dynamic Logo -->
     <div class="preloader" id="preloader" onclick="dismissSplash()">
         <div class="splash-emblem">
             <div class="splash-halo"></div>
@@ -1820,13 +2074,20 @@
             </div>
         </div>
         <div class="splash-title">STREET FOOD</div>
-        <div class="splash-sub">WE DON'T NEED A SLOGAN</div>
+        <div class="splash-sub">ALEPPO • MOGAMBO</div>
         <div class="splash-bar">
             <div class="splash-bar-fill"></div>
         </div>
     </div>
 
-    <div class="toast" id="toast">تمت الإضافة إلى السلة ✓</div>
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span id="toastText">تمت الإضافة إلى السلة</span>
+    </div>
 
     <!-- Navbar -->
     <header class="navbar" id="navbar">
@@ -1848,32 +2109,61 @@
                 <a href="#home">الرئيسية</a>
                 <a href="#signature">تشكيلة البرغر</a>
                 <a href="#menu">المنيو الكامل</a>
-                <a href="#why">تجربة الطلب</a>
+                <a href="#branch">الموقع والتواصل</a>
             </nav>
 
             <div class="nav-right">
-                <button class="btn-glass" onclick="openQr()">
-                    <span>QR</span>
-                    <span class="hide-xs">الطاولات</span>
+                <a id="navIgLink" href="#" target="_blank" rel="noopener" class="icon-sq ig"
+                    title="إنستغرام @1street.food" aria-label="Instagram">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+                <a id="navWaLink" href="#" target="_blank" rel="noopener" class="icon-sq wa" title="واتساب 0994388824"
+                    aria-label="WhatsApp">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                        </path>
+                    </svg>
+                </a>
+                <button class="icon-sq" onclick="openQr()" title="باركود منيو الطاولات" aria-label="QR Code">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                        <path d="M14 14h3v3h-3zM20 14v3h-3M14 20h7"></path>
+                    </svg>
                 </button>
                 <button class="btn-cart-top" onclick="openCart()">
-                    <span class="hide-xs">سلة الطلب</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span class="hide-xs">السلة</span>
                     <span class="pill-count" id="navCount">0</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Welcome / Hero Section -->
+    <!-- Hero Welcome Section -->
     <section class="hero" id="home">
         <div class="container hero-grid">
             <div>
-                <div class="live-badge">
-                    <span class="live-dot"></span>
-                    <span>مفتوح الآن • توصيل سريع واستلام مباشر</span>
+                <div class="status-pill" id="liveStatusPill">
+                    <span class="live-dot" id="liveDot"></span>
+                    <span id="liveStatusText">مفتوح الآن — من 12:00 ظهراً حتى 2:00 فجراً</span>
                 </div>
 
-                <div class="hero-kicker">STREET FOOD • SIGNATURE EXPERIENCE</div>
+                <div class="hero-kicker">SHAWARMA • CRISPY • BURGER</div>
 
                 <h1 class="hero-headline">
                     نكهة الشارع الفخمة..<br />
@@ -1881,45 +2171,82 @@
                 </h1>
 
                 <p class="hero-sub">
-                    برغر مقرمش ولحم بقري صافي محضّر لحظة بلحظة مع صوصات ستريت فود الخاصة. تصفّح المنيو التفاعلي وابعث
-                    طلبك مباشرة عالواتساب بثواني وبدون أي عمولة.
+                    برغر طازج، كريسبي مقرمش، وشاورما محضّرة لحظة بلحظة في قلب حلب — تصفّح المنيو الكامل وابعث طلبك
+                    مباشرة على واتساب الفرع بضغطة زر وبدون أي عمولات.
                 </p>
+
+                <div class="branch-chips">
+                    <a id="heroMapChip" href="#" target="_blank" rel="noopener" class="meta-chip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>موغامبو — سنتر نادي الاتحاد، حلب</span>
+                    </a>
+                    <div class="meta-chip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span>12:00 ظهراً — 2:00 فجراً</span>
+                    </div>
+                </div>
 
                 <div class="hero-buttons">
                     <a href="#menu" class="btn-hero-main">
                         <span>تصفح المنيو واطلب الآن</span>
-                        <span>←</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
                     </a>
-                    <a href="#signature" class="btn-hero-ghost">
-                        <span>🔥 الأكثر طلباً</span>
+                    <a id="heroWaBtn" href="#" target="_blank" rel="noopener" class="btn-social-wa">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                            </path>
+                        </svg>
+                        <span>واتساب مباشر</span>
+                    </a>
+                    <a id="heroIgBtn" href="#" target="_blank" rel="noopener" class="btn-social-ig">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                        <span>إنستغرام</span>
                     </a>
                 </div>
 
                 <div class="metrics-bar">
                     <div class="metric">
                         <strong>+35</strong>
-                        <span>صنف طازج بالمنيو</span>
+                        <span>صنف طازج يومياً</span>
                     </div>
                     <div class="metric">
                         <strong>0%</strong>
                         <span>عمولة طلب مباشر</span>
                     </div>
                     <div class="metric">
-                        <strong>فوري</strong>
-                        <span>تأكيد مباشر عالواتساب</span>
+                        <strong>021</strong>
+                        <span>موغامبو — حلب</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Interactive 3D Hero Stage + Floating Dynamic Logo Medallion -->
+            <!-- Interactive 3D Hero Stage -->
             <div class="hero-visual-wrap">
-                <!-- Dynamic Rotating Logo Seal -->
                 <div class="floating-medallion">
                     <svg class="medallion-ring" viewBox="0 0 160 160">
                         <defs>
                             <path id="sealPath" d="M 80, 80 m -62, 0 a 62,62 0 1,1 124,0 a 62,62 0 1,1 -124,0" />
                         </defs>
-                        <text fill="rgba(255,255,255,0.82)" font-family="Outfit, sans-serif" font-size="10.2"
+                        <text fill="rgba(255,255,255,0.85)" font-family="Outfit, sans-serif" font-size="10.2"
                             font-weight="800" letter-spacing="3.2">
                             <textPath href="#sealPath">STREET FOOD • WE DON'T NEED A SLOGAN • </textPath>
                         </text>
@@ -1930,9 +2257,14 @@
                     </div>
                 </div>
 
-                <!-- Main Stage -->
                 <div class="hero-stage" id="heroStage">
-                    <span class="stage-top-pill" id="stageTag">🔥 الأكثر طلباً</span>
+                    <span class="stage-top-pill" id="stageTag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z" />
+                        </svg>
+                        <span id="stageTagText">الأكثر طلباً</span>
+                    </span>
                     <img class="hero-stage-img" id="stageImg" alt="Street Food Burger" />
                     <div class="hero-stage-vignette">
                         <div class="stage-info-row">
@@ -1947,25 +2279,28 @@
                     </div>
                 </div>
 
-                <!-- Interactive Burger Switcher Thumbnails -->
                 <div class="stage-switcher" id="stageSwitcher"></div>
             </div>
         </div>
     </section>
 
-    <!-- Moving Brand Ribbon -->
-    <div class="brand-ribbon">
+    <!-- Seamless Moving Brand Ribbon -->
+    <div class="brand-ribbon" aria-hidden="true">
         <div class="ribbon-track">
-            <span class="ribbon-item"><span class="ribbon-dot"></span> STREET FOOD</span>
-            <span class="ribbon-item"><span class="ribbon-dot"></span> WE DON'T NEED A SLOGAN</span>
-            <span class="ribbon-item"><span class="ribbon-dot"></span> تشيتوس برغر • الأكثر طلباً</span>
-            <span class="ribbon-item"><span class="ribbon-dot"></span> سموكي برغر • كلاسيك بيف</span>
-            <span class="ribbon-item"><span class="ribbon-dot"></span> طلب مباشر بدون عمولة</span>
-            <span class="ribbon-item"><span class="ribbon-dot"></span> STREET FOOD</span>
-            <span class="ribbon-item"><span class="ribbon-dot"></span> WE DON'T NEED A SLOGAN</span>
-            <span class="ribbon-item"><span class="ribbon-dot"></span> تشيتوس برغر • الأكثر طلباً</span>
-            <span class="ribbon-item"><span class="ribbon-dot"></span> سموكي برغر • كلاسيك بيف</span>
-            <span class="ribbon-item"><span class="ribbon-dot"></span> طلب مباشر بدون عمولة</span>
+            <div class="ribbon-set">
+                <span class="ribbon-item"><span class="ribbon-dot"></span> STREET FOOD</span>
+                <span class="ribbon-item"><span class="ribbon-dot"></span> WE DON'T NEED A SLOGAN</span>
+                <span class="ribbon-item"><span class="ribbon-dot"></span> ALEPPO — MOGAMBO</span>
+                <span class="ribbon-item"><span class="ribbon-dot"></span> SHAWARMA • CRISPY • BURGER</span>
+                <span class="ribbon-item"><span class="ribbon-dot"></span> DAILY 12 PM — 2 AM</span>
+            </div>
+            <div class="ribbon-set">
+                <span class="ribbon-item"><span class="ribbon-dot"></span> STREET FOOD</span>
+                <span class="ribbon-item"><span class="ribbon-dot"></span> WE DON'T NEED A SLOGAN</span>
+                <span class="ribbon-item"><span class="ribbon-dot"></span> ALEPPO — MOGAMBO</span>
+                <span class="ribbon-item"><span class="ribbon-dot"></span> SHAWARMA • CRISPY • BURGER</span>
+                <span class="ribbon-item"><span class="ribbon-dot"></span> DAILY 12 PM — 2 AM</span>
+            </div>
         </div>
     </div>
 
@@ -1974,10 +2309,10 @@
         <div class="container">
             <div class="sec-head reveal">
                 <div>
-                    <span class="eyebrow">SIGNATURE BURGERS</span>
+                    <span class="eyebrow">SIGNATURE COLLECTION</span>
                     <h2 class="sec-title">تشكيلة البرغر الأشهر</h2>
                 </div>
-                <p class="sec-desc">اختر وجبتك من تشكيلة ستريت فود المصنوعة بإتقان، وعدّل عليها إضافاتك وملاحظاتك للمطبخ
+                <p class="sec-desc">اختر وجبتك من تشكيلة ستريت فود المحضّرة بإتقان، وعدّل إضافاتك وملاحظاتك للمطبخ
                     بسهولة.</p>
             </div>
 
@@ -1993,8 +2328,8 @@
                     <span class="eyebrow">COMPLETE MENU</span>
                     <h2 class="sec-title">المنيو الكامل</h2>
                 </div>
-                <p class="sec-desc">البرغر، الشاورما، الوجبات، الصندويش، والبوكسات — كل الأصناف بمكان واحد وسرعة استجابة
-                    فورية.</p>
+                <p class="sec-desc">البرغر، الشاورما، الوجبات، الصندويش، والبوكسات — كل الأصناف بمكان واحد وبتجربة طلب
+                    مباشرة.</p>
             </div>
 
             <div class="menu-bar">
@@ -2014,24 +2349,132 @@
         </div>
     </section>
 
-    <!-- Why Direct Order -->
-    <section class="section" id="why" style="padding-top: 20px;">
+    <!-- Branch Location & Direct Contact Section -->
+    <section class="section" id="branch" style="padding-top: 20px;">
         <div class="container">
-            <div class="pillars-grid reveal">
-                <div class="pillar">
-                    <div class="pillar-ico">🔥</div>
-                    <h3>تحضير طازج عند الطلب</h3>
-                    <p>كل وجبة بتتجهز سخنة ولحظة بلحظة حسب ملاحظاتك الدقيقة للمطبخ بدون أي تنازل عن القرمشة والطعم.</p>
+            <div class="branch-card reveal">
+                <div>
+                    <span class="eyebrow">LOCATION & DIRECT CONTACT</span>
+                    <h2 class="sec-title">زورونا أو اطلبوا مباشرة</h2>
+                    <p style="color:var(--muted); margin-top:10px; font-size:15px;">
+                        استقبال الطلبات يومياً للتوصيل والاستلام المباشر من الفرع في موغامبو بدون وسطاء.
+                    </p>
+
+                    <div class="info-list">
+                        <div class="info-row">
+                            <div class="info-ico">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>عنوان الفرع</h4>
+                                <a id="branchMapLink" href="#" target="_blank" rel="noopener">موغامبو — سنتر نادي
+                                    الاتحاد، حلب، سوريا (021)</a>
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-ico">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>أوقات العمل اليومية</h4>
+                                <p>يومياً من 12:00 ظهراً حتى 2:00 فجراً</p>
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-ico">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>رقم الطلبات المباشر (واتساب)</h4>
+                                <a id="branchWaTextLink" href="#" target="_blank" rel="noopener" dir="ltr"
+                                    style="display:inline-block;">0994 388 824</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="pillar">
-                    <div class="pillar-ico">⚡</div>
-                    <h3>طلب مباشر بدون وسطاء</h3>
-                    <p>لا تسجيل حساب ولا عمولات تطبيقات؛ نقّي وجبتك وبضغطة زر بيوصل طلبك مرتب وجاهز لواتساب المطعم.</p>
-                </div>
-                <div class="pillar">
-                    <div class="pillar-ico">📱</div>
-                    <h3>تجربة QR فخمة للطاولات</h3>
-                    <p>نظام منيو تفاعلي بيشتغل عالطاولات وللتوصيل سوا، بتصميم يعكس قوة وهوية براند Street Food.</p>
+
+                <div class="contact-actions-panel">
+                    <a id="cardWaBtn" href="#" target="_blank" rel="noopener" class="action-tile wa-tile">
+                        <div class="tile-left">
+                            <div class="tile-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="tile-title">محادثة واتساب فورية</div>
+                                <div class="tile-sub" dir="ltr">0994388824</div>
+                            </div>
+                        </div>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </a>
+
+                    <a id="cardIgBtn" href="#" target="_blank" rel="noopener" class="action-tile ig-tile">
+                        <div class="tile-left">
+                            <div class="tile-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="tile-title">حسابنا الرسمي على إنستغرام</div>
+                                <div class="tile-sub" dir="ltr">@1street.food</div>
+                            </div>
+                        </div>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </a>
+
+                    <button class="action-tile qr-tile" onclick="openQr()">
+                        <div class="tile-left">
+                            <div class="tile-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                                    <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                                    <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                                    <path d="M14 14h3v3h-3zM20 14v3h-3M14 20h7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="tile-title">بطاقة باركود منيو الطاولات</div>
+                                <div class="tile-sub">جاهزة للطباعة ومسح الكاميرا</div>
+                            </div>
+                        </div>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -2048,11 +2491,33 @@
                 </div>
                 <div class="brand-meta">
                     <span class="brand-title-en" style="font-size:18px;">STREET FOOD</span>
-                    <span class="brand-slogan-sm">WE DON'T NEED A SLOGAN</span>
+                    <span class="brand-slogan-sm">ALEPPO • MOGAMBO • 021</span>
                 </div>
             </div>
+
+            <div class="footer-socials">
+                <a id="footIgLink" href="#" target="_blank" rel="noopener" class="icon-sq ig"
+                    title="إنستغرام @1street.food" aria-label="Instagram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+                <a id="footWaLink" href="#" target="_blank" rel="noopener" class="icon-sq wa" title="واتساب 0994388824"
+                    aria-label="WhatsApp">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                        </path>
+                    </svg>
+                </a>
+            </div>
+
             <div style="font-size:13px; color:var(--muted);">
-                تصميم وتطوير <strong style="color:#fff;">أوزكان بيك</strong> • أنظمة المطاعم والمتاجر الذكية
+                تصميم وتطوير <strong style="color:#fff;">أوزكان بيك</strong>
             </div>
         </div>
     </footer>
@@ -2060,7 +2525,15 @@
     <!-- Mobile Floating Cart -->
     <div class="mob-bar" id="mobBar">
         <button class="mob-bar-btn" onclick="openCart()">
-            <span>🛒 عرض السلة (<span id="mobCount">0</span>)</span>
+            <span style="display:inline-flex; align-items:center; gap:9px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                <span>عرض السلة (<span id="mobCount">0</span>)</span>
+            </span>
             <span id="mobTotal">0 ل.س</span>
         </button>
     </div>
@@ -2068,11 +2541,17 @@
     <!-- Item Detail Modal -->
     <div class="overlay" id="itemModal" onclick="backdropClose(event, 'itemModal')">
         <div class="modal-box">
+            <button class="close-x" onclick="closeOverlay('itemModal')" aria-label="إغلاق">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
             <div class="modal-media" id="mMedia">
-                <button class="close-x" onclick="closeOverlay('itemModal')">✕</button>
                 <img id="mImg" alt="" />
             </div>
-            <div class="modal-pad">
+            <div class="modal-pad" id="mPad">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
                     <div>
                         <h2 id="mTitle" style="font-size:22px; font-weight:900;"></h2>
@@ -2090,9 +2569,20 @@
 
                 <div class="qty-bar">
                     <div class="stepper">
-                        <button onclick="stepModal(-1)">−</button>
+                        <button onclick="stepModal(-1)" aria-label="إنقاص">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
                         <span id="mQty">1</span>
-                        <button onclick="stepModal(1)">+</button>
+                        <button onclick="stepModal(1)" aria-label="زيادة">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
                     </div>
                     <button class="btn-hero-main" style="flex:1; justify-content:center; padding:13px 16px;"
                         id="mAddBtn" onclick="addCartItem()">
@@ -2107,24 +2597,51 @@
     <div class="overlay drawer" id="cartDrawer" onclick="backdropClose(event, 'cartDrawer')">
         <div class="drawer-box">
             <div
-                style="display:flex; justify-content:space-between; align-items:center; padding-bottom:16px; border-bottom:1px solid var(--line);">
-                <h2 style="font-size:22px; font-weight:900;">سلة الطلب</h2>
-                <button class="close-x" style="position:static;" onclick="closeOverlay('cartDrawer')">✕</button>
+                style="display:flex; justify-content:space-between; align-items:center; padding-bottom:16px; border-bottom:1px solid var(--line); gap:10px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <h2 style="font-size:21px; font-weight:900;">سلة الطلب</h2>
+                    <button class="clear-cart-btn" id="clearCartBtn" style="display:none;" onclick="clearCart()">تفريغ
+                        السلة</button>
+                </div>
+                <button class="close-x" style="position:static;" onclick="closeOverlay('cartDrawer')"
+                    aria-label="إغلاق">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
 
             <div id="cartLines" style="margin-top:8px;"></div>
 
             <div id="cartForm" style="display:none; margin-top:auto; padding-top:16px;">
                 <div class="seg-box">
-                    <button class="seg-opt active" id="segDel" onclick="setType('delivery')">🛵 توصيل للمنزل</button>
-                    <button class="seg-opt" id="segPick" onclick="setType('pickup')">🍽️ استلام / طاولة</button>
+                    <button class="seg-opt active" id="segDel" onclick="setType('delivery')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                        <span>توصيل للمنزل</span>
+                    </button>
+                    <button class="seg-opt" id="segPick" onclick="setType('pickup')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>استلام / طاولة</span>
+                    </button>
                 </div>
 
                 <label class="f-label" for="cName">الاسم الكامل</label>
                 <input class="input-dark" type="text" id="cName" placeholder="اكتب اسمك..." />
 
                 <div id="cAddrWrap">
-                    <label class="f-label" for="cAddr">العنوان بالتفصيل</label>
+                    <label class="f-label" for="cAddr">العنوان بالتفصيل (حلب)</label>
                     <input class="input-dark" type="text" id="cAddr"
                         placeholder="المنطقة، الشارع، البناء أو أقرب معلم..." />
                 </div>
@@ -2141,15 +2658,29 @@
                     <span id="drawerTotal" style="font-size:18px; font-weight:900; color:#fff;">0 ل.س</span>
                 </div>
 
-                <button class="wa-btn" onclick="submitWhatsApp()">إرسال الطلب عبر واتساب</button>
+                <button class="wa-btn" onclick="submitWhatsApp()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                        </path>
+                    </svg>
+                    <span>إرسال الطلب عبر واتساب</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Luxury Printable QR Modal -->
+    <!-- QR Modal -->
     <div class="overlay" id="qrModal" onclick="backdropClose(event, 'qrModal')">
         <div class="modal-box" style="max-width:410px;">
-            <button class="close-x" onclick="closeOverlay('qrModal')">✕</button>
+            <button class="close-x" onclick="closeOverlay('qrModal')" aria-label="إغلاق">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
             <div class="qr-stand">
                 <div class="logo-dyn" style="width:68px; height:68px; margin:0 auto 14px;">
                     <div class="logo-dyn-inner" style="width:60px; height:60px;">
@@ -2162,48 +2693,110 @@
                 <div class="qr-frame">
                     <img id="qrCodeImg" alt="QR Code" />
                 </div>
-                <p style="font-size:12px; color:var(--muted);">جاهز للطباعة على طاولات الصالة وعلب التوصيل</p>
+                <p style="font-size:12px; color:var(--muted);">موغامبو — سنتر نادي الاتحاد، حلب</p>
+                <div class="qr-actions">
+                    <button class="qr-action-btn" onclick="copyMenuLink()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span>نسخ رابط المنيو</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         // =========================================================================
-        // إعدادات المطعم (غيّر رقم الواتساب هون لرقمك للتجربة بالصيغة الدولية بدون +)
+        // إعدادات الفرع والروابط الرسمية (جاهزة 100% لفرع ستريت فود - حلب)
         // =========================================================================
         const CONFIG = {
             name: "STREET FOOD",
-            whatsapp: "963900000000", // <--- ضع رقمك هون
-            currency: "ل.س"
+            phoneDisplay: "0994388824",
+            whatsapp: "963994388824",
+            instagram: "https://www.instagram.com/1street.food/",
+            mapsQuery: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("موغامبو سنتر نادي الاتحاد حلب"),
+            currency: "ل.س",
+            storageKey: "street_food_aleppo_cart_v1"
         };
 
+        function bindContactLinks() {
+            const waDirect = `https://wa.me/${CONFIG.whatsapp}`;
+            ["navWaLink", "heroWaBtn", "cardWaBtn", "branchWaTextLink", "footWaLink"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.href = waDirect;
+            });
+            ["navIgLink", "heroIgBtn", "cardIgBtn", "footIgLink"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.href = CONFIG.instagram;
+            });
+            ["heroMapChip", "branchMapLink"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.href = CONFIG.mapsQuery;
+            });
+        }
+
+        function updateLiveStatus() {
+            const h = new Date().getHours();
+            const isOpen = (h >= 12 || h < 2);
+            const dot = document.getElementById("liveDot");
+            const txt = document.getElementById("liveStatusText");
+            if (isOpen) {
+                dot.classList.remove("closed");
+                txt.textContent = "مفتوح الآن — يومياً 12:00 ظهراً حتى 2:00 فجراً";
+            } else {
+                dot.classList.add("closed");
+                txt.textContent = "نستقبل الطلبات يومياً من 12:00 ظهراً حتى 2:00 فجراً";
+            }
+        }
+
         // =========================================================================
-        // كاشف الصور الذكي: بيجرب تلقائياً بدون امتداد وبكل الامتدادات الشائعة
+        // كاشف الصور الذكي (يجرب الامتدادات والأحرف الكبيرة والمجلدات تلقائياً)
         // =========================================================================
-        const IMG_CANDIDATES = (base) => [
-            `${base}.jpg`,
-            `${base}.jpeg`,
-            `${base}.png`,
-            `${base}.webp`,
-            `${base}.JPG`,
-            `${base}.JPEG`,
-            `${base}.PNG`,
-            `${base}.jfif`,
-            `${base}`,
-            `${base}.jpg.jpg`,
-            `images/${base}.jpg`,
-            `images/${base}.png`,
-            `images/${base}.jpeg`,
-            `images/${base}.webp`,
-            `images/${base}`,
-            `img/${base}.jpg`,
-            `img/${base}.png`
-        ];
+        const IMG_CACHE = {};
+
+        const IMG_CANDIDATES = (base) => {
+            const cap = base.charAt(0).toUpperCase() + base.slice(1);
+            const altSpace = base.replace(/-/g, " ");
+            const altUnder = base.replace(/-/g, "_");
+            const names = Array.from(new Set([base, cap, base.toUpperCase(), altSpace, altUnder]));
+            const exts = [".jpg", ".jpeg", ".png", ".webp", ".JPG", ".JPEG", ".PNG", ".jfif", ""];
+            const dirs = ["", "images/", "img/", "assets/"];
+            const out = [];
+            for (const d of dirs) {
+                for (const n of names) {
+                    for (const e of exts) out.push(`${d}${n}${e}`);
+                }
+            }
+            return out;
+        };
+
+        const ICON_PLUS = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+        const ICON_MINUS = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+        const ICON_STAR = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z"/></svg>`;
+        const ICON_PLATE = `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle></svg>`;
 
         function attachSmartImage(imgEl, baseName) {
             if (!imgEl || !baseName) return;
+
+            const oldFb = imgEl.parentElement && imgEl.parentElement.querySelector(".img-fallback-box");
+            if (oldFb) oldFb.remove();
+            imgEl.style.display = "block";
+
+            if (IMG_CACHE[baseName]) {
+                imgEl.onerror = null;
+                imgEl.src = IMG_CACHE[baseName];
+                return;
+            }
+
             const list = IMG_CANDIDATES(baseName);
             let idx = 0;
+
+            imgEl.onload = () => {
+                IMG_CACHE[baseName] = imgEl.getAttribute("src");
+            };
 
             imgEl.onerror = () => {
                 idx++;
@@ -2217,14 +2810,11 @@
                         fb.className = "img-fallback-box";
                         fb.innerHTML = baseName === "logo"
                             ? `<span style="font-family:Outfit;font-weight:900;font-size:11px;color:#fff;text-align:center;line-height:1.1;">STREET<br>FOOD</span>`
-                            : `<span style="font-size:32px;">🍔</span><span>${baseName}</span>`;
+                            : `${ICON_PLATE}<span>${baseName}</span>`;
                         imgEl.parentElement.appendChild(fb);
                     }
                 }
             };
-            imgEl.style.display = "block";
-            const oldFb = imgEl.parentElement && imgEl.parentElement.querySelector(".img-fallback-box");
-            if (oldFb) oldFb.remove();
             imgEl.src = list[0];
         }
 
@@ -2235,7 +2825,7 @@
         }
 
         // =========================================================================
-        // بيانات المنيو (أسماء الصور بدون امتداد ليتم كشفها تلقائياً)
+        // بيانات المنيو الكاملة
         // =========================================================================
         const EXTRAS = [
             { id: "fries", name: "بطاطا مقلية إضافية", price: 150 },
@@ -2254,14 +2844,12 @@
         ];
 
         const MENU = [
-            // البرغر (بأسماء الصور الستة بدون امتداد)
-            { id: "b1", cat: "burgers", name: "تشيتوس برغر", desc: "صدر دجاج كرانشي، جبنة تشيدر، موزريلا مقلية، صوص هاني ماستر.", price: 450, imgBase: "cheetos", badge: "🔥 الأكثر طلباً", featured: true },
-            { id: "b2", cat: "burgers", name: "سموكي برغر", desc: "صدر دجاج، حبش، جبنة تشيدر، صوص مدخن.", price: 450, imgBase: "smoky", badge: "✨ نكهة مدخنة", featured: true },
-            { id: "b3", cat: "burgers", name: "كلاسيك بيف برغر", desc: "برغر لحم بقري، كول سلو، بطاطا، صوص روز.", price: 500, imgBase: "classic-beef", badge: "🥩 لحم صافي", featured: true },
+            { id: "b1", cat: "burgers", name: "تشيتوس برغر", desc: "صدر دجاج كرانشي، جبنة تشيدر، موزريلا مقلية، صوص هاني ماستر.", price: 450, imgBase: "cheetos", badge: "الأكثر طلباً", featured: true },
+            { id: "b2", cat: "burgers", name: "سموكي برغر", desc: "صدر دجاج، حبش، جبنة تشيدر، صوص مدخن.", price: 450, imgBase: "smoky", badge: "نكهة مدخنة", featured: true },
+            { id: "b3", cat: "burgers", name: "كلاسيك بيف برغر", desc: "برغر لحم بقري، كول سلو، بطاطا، صوص روز.", price: 500, imgBase: "classic-beef", badge: "لحم بقري صافي", featured: true },
             { id: "b4", cat: "burgers", name: "ميني بيف برغر", desc: "برغر صغير من اللحم البقري مع الخس والطماطم والجبنة في خبز طري.", price: 320, imgBase: "mini-beef", featured: true },
-            { id: "b5", cat: "burgers", name: "زنجر برغر", desc: "صدر دجاج مقرمش متبّل، خس طازج، جبنة وصوص ستريت فود الخاص.", price: 450, imgBase: "zinger", badge: "⚡ مقرمش", featured: true },
+            { id: "b5", cat: "burgers", name: "زنجر برغر", desc: "صدر دجاج مقرمش متبّل، خس طازج، جبنة وصوص ستريت فود الخاص.", price: 450, imgBase: "zinger", badge: "كرانشي", featured: true },
 
-            // الشاورما
             { id: "sh1", cat: "shawarma", name: "شاورما كومبو", desc: "وجبة شاورما متكاملة مع بطاطا ومشروب", price: 0 },
             { id: "sh2", cat: "shawarma", name: "شاورما اكسترا", desc: "كمية دجاج مضاعفة وصوص غني", price: 0 },
             { id: "sh3", cat: "shawarma", name: "شاورما دبس رمان", desc: "نكهة دبس الرمان الأصلية مع كريم الثوم", price: 0 },
@@ -2275,7 +2863,6 @@
             { id: "sh11", cat: "shawarma", name: "ربع كيلو شاورما", desc: "يقدم مع بطاطا وكريم ثوم ومخلل", price: 0 },
             { id: "sh12", cat: "shawarma", name: "نصف كيلو شاورما", desc: "عائلي مع بطاطا وكريم ثوم ومخلل", price: 0 },
 
-            // الوجبات
             { id: "m1", cat: "meals", name: "تندر تشكن", desc: "قطع تندر دجاج مقرمشة مع صوص وبطاطا", price: 0 },
             { id: "m2", cat: "meals", name: "سلو تشكن", desc: "وجبة دجاج مع سلطة الكول سلو والبطاطا", price: 0 },
             { id: "m3", cat: "meals", name: "ستريبس", desc: "شرائح دجاج ستريبس مقرمشة", price: 0 },
@@ -2283,7 +2870,6 @@
             { id: "m5", cat: "meals", name: "تشكن سبايسي", desc: "دجاج مقرمش حار لعشاق السبايسي", price: 0 },
             { id: "m6", cat: "meals", name: "تشكن كريسبي", desc: "وجبة الكريسبي الكلاسيكية المقرمشة", price: 0 },
 
-            // الصندويش
             { id: "s1", cat: "sandwiches", name: "كريسبي", desc: "صندويش دجاج كريسبي مقرمش", price: 0 },
             { id: "s2", cat: "sandwiches", name: "دجاج تندوري", desc: "تتبيلة التندوري الخاصة", price: 0 },
             { id: "s3", cat: "sandwiches", name: "مكسيكانو", desc: "دجاج مكسيكي مع فليفلة وذرة وصوص حار", price: 0 },
@@ -2293,7 +2879,6 @@
             { id: "s7", cat: "sandwiches", name: "فاير صندويش", desc: "صندويش حار بخلطة فاير الخاصة", price: 0 },
             { id: "s8", cat: "sandwiches", name: "تندر تشكن", desc: "صندويش قطع التندر المقرمشة", price: 0 },
 
-            // البوكسات
             { id: "bx1", cat: "boxes", name: "تشكن بوكس", desc: "بوكس دجاج مشبع مع بطاطا وصوصات", price: 0 },
             { id: "bx2", cat: "boxes", name: "شاورما بوكس", desc: "بوكس شاورما مع بطاطا ومقبلات", price: 0 },
             { id: "bx3", cat: "boxes", name: "برغر زنجر بوكس", desc: "زنجر برغر مع إضافات البوكس الكاملة", price: 0 },
@@ -2306,27 +2891,39 @@
         let heroIdx = 0;
         let heroTimer = null;
         let activeCat = "all";
-        let cart = [];
+        let cart = loadCart();
         let activeItem = null;
         let mQty = 1;
         let orderType = "delivery";
+
+        function loadCart() {
+            try {
+                const saved = localStorage.getItem(CONFIG.storageKey);
+                return saved ? JSON.parse(saved) : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveCart() {
+            try {
+                localStorage.setItem(CONFIG.storageKey, JSON.stringify(cart));
+            } catch { }
+        }
 
         function fmt(v) {
             return v > 0 ? `${v.toLocaleString('en-US')} ${CONFIG.currency}` : "حسب التسعيرة";
         }
 
-        // ================= HERO INTERACTIVE SWITCHER =================
+        // Hero Switcher
         function renderHeroSwitcher() {
-            const wrap = document.getElementById("stageSwitcher");
-            wrap.innerHTML = FEATURED.map((item, i) => `
+            document.getElementById("stageSwitcher").innerHTML = FEATURED.map((item, i) => `
       <button class="switch-thumb ${i === heroIdx ? 'active' : ''}" onclick="setHero(${i})" title="${item.name}">
         <img id="thumb-${i}" alt="${item.name}" />
       </button>
     `).join("");
 
-            FEATURED.forEach((item, i) => {
-                attachSmartImage(document.getElementById(`thumb-${i}`), item.imgBase);
-            });
+            FEATURED.forEach((item, i) => attachSmartImage(document.getElementById(`thumb-${i}`), item.imgBase));
         }
 
         function setHero(index, manual = true) {
@@ -2337,28 +2934,22 @@
             imgEl.classList.add("switching");
             setTimeout(() => {
                 attachSmartImage(imgEl, item.imgBase);
-                document.getElementById("stageTag").textContent = item.badge || "🍔 اختيار ستريت فود";
+                document.getElementById("stageTagText").textContent = item.badge || "اختيار ستريت فود";
                 document.getElementById("stageTitle").textContent = item.name;
                 document.getElementById("stageDesc").textContent = item.desc;
                 document.getElementById("stageBtn").textContent = `اطلب • ${fmt(item.price)}`;
                 imgEl.classList.remove("switching");
             }, 180);
 
-            document.querySelectorAll(".switch-thumb").forEach((btn, i) => {
-                btn.classList.toggle("active", i === heroIdx);
-            });
-
+            document.querySelectorAll(".switch-thumb").forEach((btn, i) => btn.classList.toggle("active", i === heroIdx));
             if (manual) startHeroLoop();
         }
 
         function startHeroLoop() {
             clearInterval(heroTimer);
-            heroTimer = setInterval(() => {
-                setHero((heroIdx + 1) % FEATURED.length, false);
-            }, 5000);
+            heroTimer = setInterval(() => setHero((heroIdx + 1) % FEATURED.length, false), 5000);
         }
 
-        // Subtle 3D Mouse Tilt on Hero Stage
         const stageEl = document.getElementById("heroStage");
         stageEl.addEventListener("mousemove", (e) => {
             const r = stageEl.getBoundingClientRect();
@@ -2370,13 +2961,12 @@
             stageEl.style.transform = "rotateY(0deg) rotateX(0deg)";
         });
 
-        // ================= SIGNATURE GRID =================
+        // Signature Grid
         function renderSignature() {
-            const grid = document.getElementById("sigGrid");
-            grid.innerHTML = FEATURED.map(item => `
+            document.getElementById("sigGrid").innerHTML = FEATURED.map(item => `
       <article class="sig-card" onclick="openModal('${item.id}')">
         <div class="sig-media">
-          ${item.badge ? `<span class="hot-tag">${item.badge}</span>` : ""}
+          ${item.badge ? `<span class="hot-tag">${ICON_STAR}<span>${item.badge}</span></span>` : ""}
           <img id="sig-img-${item.id}" alt="${item.name}" />
         </div>
         <div class="sig-body">
@@ -2384,18 +2974,19 @@
           <p class="sig-desc">${item.desc}</p>
           <div class="sig-foot">
             <span class="price-xl">${fmt(item.price)}</span>
-            <button class="btn-add-card" onclick="event.stopPropagation(); openModal('${item.id}')">+ أضف للطلب</button>
+            <button class="btn-add-card" onclick="event.stopPropagation(); openModal('${item.id}')">
+              ${ICON_PLUS}
+              <span>أضف للطلب</span>
+            </button>
           </div>
         </div>
       </article>
     `).join("");
 
-            FEATURED.forEach(item => {
-                attachSmartImage(document.getElementById(`sig-img-${item.id}`), item.imgBase);
-            });
+            FEATURED.forEach(item => attachSmartImage(document.getElementById(`sig-img-${item.id}`), item.imgBase));
         }
 
-        // ================= FULL MENU =================
+        // Full Menu
         function renderTabs() {
             document.getElementById("catTabs").innerHTML = CATEGORIES.map(c => `
       <button class="cat-tab ${activeCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">${c.name}</button>
@@ -2419,7 +3010,7 @@
             });
 
             if (!filtered.length) {
-                wrap.innerHTML = `<div style="text-align:center; padding:54px 20px; color:var(--muted); font-weight:700;">ما في نتائج مطابقة.. جرّب كلمة تانية 🍔</div>`;
+                wrap.innerHTML = `<div style="text-align:center; padding:54px 20px; color:var(--muted); font-weight:700;">لا توجد أصناف مطابقة لبحثك حالياً</div>`;
                 return;
             }
 
@@ -2448,7 +3039,7 @@
                 </div>
                 <div class="row-end">
                   <span class="${item.price > 0 ? 'price-xl' : 'price-sm'}" style="${item.price > 0 ? 'font-size:15.5px;' : ''}">${fmt(item.price)}</span>
-                  <button class="row-plus" onclick="event.stopPropagation(); openModal('${item.id}')">+</button>
+                  <button class="row-plus" onclick="event.stopPropagation(); openModal('${item.id}')" aria-label="إضافة">${ICON_PLUS}</button>
                 </div>
               </article>
             `).join("")}
@@ -2459,13 +3050,34 @@
 
             wrap.innerHTML = html;
             filtered.forEach(item => {
-                if (item.imgBase) {
-                    attachSmartImage(document.getElementById(`row-img-${item.id}`), item.imgBase);
-                }
+                if (item.imgBase) attachSmartImage(document.getElementById(`row-img-${item.id}`), item.imgBase);
             });
         }
 
-        // ================= ITEM MODAL =================
+        // Modal & Overlay Helpers
+        function openOverlay(id) {
+            document.getElementById(id).classList.add("open");
+            document.body.classList.add("no-scroll");
+        }
+
+        function closeOverlay(id) {
+            document.getElementById(id).classList.remove("open");
+            if (!document.querySelector(".overlay.open")) {
+                document.body.classList.remove("no-scroll");
+            }
+        }
+
+        function backdropClose(e, id) {
+            if (e.target.id === id) closeOverlay(id);
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                document.querySelectorAll(".overlay.open").forEach(el => closeOverlay(el.id));
+            }
+        });
+
+        // Item Modal
         function openModal(id) {
             activeItem = MENU.find(m => m.id === id);
             if (!activeItem) return;
@@ -2478,12 +3090,15 @@
             document.getElementById("mQty").textContent = "1";
 
             const mMedia = document.getElementById("mMedia");
+            const mPad = document.getElementById("mPad");
             const mImg = document.getElementById("mImg");
             if (activeItem.imgBase) {
                 mMedia.style.display = "block";
+                mPad.classList.remove("no-media");
                 attachSmartImage(mImg, activeItem.imgBase);
             } else {
                 mMedia.style.display = "none";
+                mPad.classList.add("no-media");
             }
 
             document.getElementById("mExtras").innerHTML = EXTRAS.map(ex => `
@@ -2497,7 +3112,7 @@
     `).join("");
 
             refreshModalBtn();
-            document.getElementById("itemModal").classList.add("open");
+            openOverlay("itemModal");
         }
 
         function stepModal(d) {
@@ -2530,12 +3145,13 @@
             if (found) found.qty += mQty;
             else cart.push({ key, name: activeItem.name, price: activeItem.price, extras, note, qty: mQty });
 
+            saveCart();
             closeOverlay("itemModal");
             syncCart();
-            toast(`تمت إضافة "${activeItem.name}" للسلة ✓`);
+            toast(`تمت إضافة "${activeItem.name}" للسلة`);
         }
 
-        // ================= CART & CHECKOUT =================
+        // Cart & Checkout
         function calcCart() {
             let count = 0, sum = 0, unpriced = false;
             cart.forEach(l => {
@@ -2557,12 +3173,21 @@
             document.getElementById("mobTotal").textContent = text;
             document.getElementById("drawerTotal").textContent = text;
             document.getElementById("mobBar").classList.toggle("visible", count > 0);
+            document.getElementById("clearCartBtn").style.display = count > 0 ? "inline-block" : "none";
         }
 
         function openCart() {
             renderCart();
             syncCart();
-            document.getElementById("cartDrawer").classList.add("open");
+            openOverlay("cartDrawer");
+        }
+
+        function clearCart() {
+            cart = [];
+            saveCart();
+            renderCart();
+            syncCart();
+            toast("تم تفريغ السلة");
         }
 
         function renderCart() {
@@ -2570,7 +3195,7 @@
             const form = document.getElementById("cartForm");
 
             if (!cart.length) {
-                box.innerHTML = `<div style="text-align:center; padding:64px 16px; color:var(--muted); font-weight:700;">السلة فارغة حالياً 🍔<br><span style="font-size:13px; font-weight:600;">اختر وجبتك المفضلة من المنيو</span></div>`;
+                box.innerHTML = `<div style="text-align:center; padding:64px 16px; color:var(--muted); font-weight:700;">السلة فارغة حالياً<br><span style="font-size:13px; font-weight:600;">اختر وجبتك المفضلة من المنيو</span></div>`;
                 form.style.display = "none";
                 return;
             }
@@ -2591,9 +3216,9 @@
           <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
             <span style="font-size:13px; font-weight:800;">${pTxt}</span>
             <div class="stepper" style="padding:3px; gap:8px;">
-              <button style="width:26px; height:26px; font-size:15px;" onclick="stepCart(${idx}, -1)">−</button>
+              <button style="width:26px; height:26px;" onclick="stepCart(${idx}, -1)" aria-label="إنقاص">${ICON_MINUS}</button>
               <span style="font-size:13px;">${l.qty}</span>
-              <button style="width:26px; height:26px; font-size:15px;" onclick="stepCart(${idx}, 1)">+</button>
+              <button style="width:26px; height:26px;" onclick="stepCart(${idx}, 1)" aria-label="زيادة">${ICON_PLUS}</button>
             </div>
           </div>
         </div>
@@ -2604,6 +3229,7 @@
         function stepCart(idx, d) {
             cart[idx].qty += d;
             if (cart[idx].qty <= 0) cart.splice(idx, 1);
+            saveCart();
             renderCart();
             syncCart();
         }
@@ -2625,43 +3251,44 @@
             if (orderType === "delivery" && !addr) return toast("يرجى كتابة عنوان التوصيل");
 
             const { text } = calcCart();
-            let msg = `🍔 *طلب جديد — ${CONFIG.name}*\n━━━━━━━━━━━━━━\n`;
-            msg += `👤 *الاسم:* ${name}\n`;
-            msg += `📦 *النوع:* ${orderType === "delivery" ? "توصيل للمنزل 🛵" : "استلام / طاولة 🍽️"}\n`;
-            if (orderType === "delivery") msg += `📍 *العنوان:* ${addr}\n`;
-            else if (table) msg += `🪑 *التفاصيل:* ${table}\n`;
-            msg += `━━━━━━━━━━━━━━\n*الطلبات:*\n`;
+            let msg = `*طلب جديد — ${CONFIG.name}*\n`;
+            msg += `──────────────────\n`;
+            msg += `*الاسم:* ${name}\n`;
+            msg += `*نوع الطلب:* ${orderType === "delivery" ? "توصيل للمنزل" : "استلام / طاولة"}\n`;
+            if (orderType === "delivery") msg += `*العنوان:* ${addr}\n`;
+            else if (table) msg += `*التفاصيل:* ${table}\n`;
+            msg += `──────────────────\n*الأصناف المطلوبة:*\n`;
 
             cart.forEach((l, i) => {
                 const exSum = l.extras.reduce((s, e) => s + e.price, 0);
                 const p = l.price > 0 ? ` (${fmt((l.price + exSum) * l.qty)})` : "";
                 msg += `${i + 1}. *${l.qty}× ${l.name}*${p}\n`;
-                if (l.extras.length) msg += `   ↳ إضافات: ${l.extras.map(e => e.name).join("، ")}\n`;
-                if (l.note) msg += `   ↳ ملاحظة: ${l.note}\n`;
+                if (l.extras.length) msg += `   — إضافات: ${l.extras.map(e => e.name).join("، ")}\n`;
+                if (l.note) msg += `   — ملاحظة: ${l.note}\n`;
             });
 
-            msg += `━━━━━━━━━━━━━━\n💰 *المجموع التقديري:* ${text}`;
+            msg += `──────────────────\n*المجموع التقديري:* ${text}`;
             window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
         }
 
         function openQr() {
             document.getElementById("qrCodeImg").src =
                 `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=6&data=${encodeURIComponent(window.location.href)}`;
-            document.getElementById("qrModal").classList.add("open");
+            openOverlay("qrModal");
         }
 
-        function closeOverlay(id) {
-            document.getElementById(id).classList.remove("open");
-        }
-
-        function backdropClose(e, id) {
-            if (e.target.id === id) closeOverlay(id);
+        function copyMenuLink() {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(window.location.href).then(() => toast("تم نسخ رابط المنيو"));
+            } else {
+                toast("انسخ الرابط من شريط العنوان");
+            }
         }
 
         let tTimer;
         function toast(txt) {
+            document.getElementById("toastText").textContent = txt;
             const el = document.getElementById("toast");
-            el.textContent = txt;
             el.classList.add("show");
             clearTimeout(tTimer);
             tTimer = setTimeout(() => el.classList.remove("show"), 2300);
@@ -2671,7 +3298,6 @@
             document.getElementById("preloader").classList.add("done");
         }
 
-        // Scroll Effects
         window.addEventListener("scroll", () => {
             document.getElementById("navbar").classList.toggle("scrolled", window.scrollY > 30);
         });
@@ -2682,6 +3308,8 @@
         document.querySelectorAll(".reveal").forEach(el => obs.observe(el));
 
         // Boot
+        bindContactLinks();
+        updateLiveStatus();
         initAllSmartLogos();
         renderHeroSwitcher();
         setHero(0, false);
@@ -2689,6 +3317,7 @@
         renderSignature();
         renderTabs();
         renderMenu();
+        syncCart();
         setTimeout(dismissSplash, 1450);
     </script>
 </body>
